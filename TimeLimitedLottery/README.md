@@ -18,7 +18,7 @@ After deployment you can start playing the lottery.
 1. Deposit some funds with `playerDepositFund`. You need to put some ETH in the transaction "Value" to do this.
    - There are helper functions `usdToWei` and `WeitoUsd` to check real-time exchange rate on Chainlink's price feed
 2. Check your account balance in `playerViewFund`.
-3. Place a bet with `placeBet`! You will either earn _double_ of your bet, or lose all of it.
+3. Place a bet with `placeBet`! You will either a prize equal to your bet (in addition to your bet being returned, thus doubling the value of the bet), or lose all of the bet.
 4. To withdraw fund from your account, call `playerWithdrawFund`.
 5. If you are a philanthropist, you can also consider `donateToBank` by calling with ETH value. The amount will be stuck with the contract forever and is 100% guranteed not to be used for any good.
 
