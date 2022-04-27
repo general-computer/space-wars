@@ -15,7 +15,7 @@ The `TimeLimitedLottery` contract in `TimeLimitedLottery.sol` has been deployed 
 
 After deployment you can start playing the lottery.
 
-1. Deposit some fund with `playerDepositFund`. You need to put some ETH in the transaction "Value" to do this.
+1. Deposit some funds with `playerDepositFund`. You need to put some ETH in the transaction "Value" to do this.
    - There are helper functions `usdToWei` and `WeitoUsd` to check real-time exchange rate on Chainlink's price feed
 2. Check your account balance in `playerViewFund`.
 3. Place a bet with `placeBet`! You will either earn _double_ of your bet, or lose all of it.
@@ -35,6 +35,6 @@ PriceFeed_/
 - functions starting with the name `owner` only allows access to the _contract owner_ (== the contract creator in this case)
 - The `Ownable` contract is not the one with full functionality (like transferring ownership) as in OpenZeppelin
 
-## Knwon flaws
+## Known flaws
 
-- The random number generation is based on `block.timestamp` and is not trully secure. Maybe use Chainlink VRF in the future!
+- The random number generation is based on `block.timestamp` and is not truly secure. Maybe use Chainlink VRF in the future!
