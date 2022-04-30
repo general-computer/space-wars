@@ -13,20 +13,6 @@
   align-items: center;
 }
 
-.grid {
-  background-color: white;
-  border: 0.1rem white solid;
-
-  /* Make the whole grid fits .fullSizeWrapper */
-  width: min(70vw, 70vh);
-  height: min(70vw, 70vh);
-
-  display: grid;
-  gap: 0.1rem;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-}
-
 .cell {
   background-color: black;
 }
