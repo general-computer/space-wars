@@ -1,4 +1,4 @@
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import Map from "./components/Map";
 import cl from "./App.module.css";
 
 const TANK_DATA = [
@@ -13,17 +13,7 @@ const TANK_DATA = [
 function App() {
   return (
     <div className={cl.App}>
-      <div className={cl.map}>
-        <TransformWrapper>
-          <TransformComponent>
-            <div className={cl.grid}>
-              {TANK_DATA.map((data) => (
-                <div className={`${cl.cell} ${data ? cl.hasTank : ""}`}></div>
-              ))}
-            </div>
-          </TransformComponent>
-        </TransformWrapper>
-      </div>
+      <Map data={TANK_DATA} />
     </div>
   );
 }

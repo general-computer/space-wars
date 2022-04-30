@@ -1,31 +1,9 @@
 .App {
+  /****** Now only have Map to center. May change these later on */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: black;
-}
-
-.map {
-  border: 2px cyan solid;
-}
-
-.grid {
-  height: 500px;
-  width: 500px;
-  background-color: white;
-  border: 2px white solid;
-
-  display: grid;
-  gap: 0.2rem;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-}
-
-.cell {
-  background-color: black;
-}
-
-.cell.hasTank {
-  background-color: blue;
 }
