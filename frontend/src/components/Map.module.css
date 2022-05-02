@@ -1,5 +1,7 @@
 .map {
   border: 0.1rem cyan solid;
+  width: 70vw;
+  height: 70vh;
   /* To make the grid inside not overflowing */
   box-sizing: content-box;
 }
@@ -11,6 +13,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.loadingText {
+  padding-right: 1rem;
 }
 
 .cell {

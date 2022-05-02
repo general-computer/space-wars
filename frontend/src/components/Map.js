@@ -1,4 +1,6 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useSelector } from "react-redux";
+import { Spinner } from "react-bootstrap";
 import styled from "styled-components";
 import cl from "./Map.module.css";
 
@@ -17,13 +19,17 @@ const Grid = styled.div`
   grid-template-rows: repeat(${({ len }) => len}, 1fr);
 `;
 
-export default function Map({ data, len }) {
+export default function Map() {
+  const { isDataLoaded, mapLength, spaceshipXYPos } = useSelector(
+    (state) => state.data
+  );
+
   // An empty len*len array for rendering the map
   const cellArray = (function () {
     const yxArray = [];
-    for (let y = 0; y < len; y++) {
+    for (let y = 0; y < mapLength; y++) {
       const yArray = [];
-      for (let x = 0; x < len; x++) {
+      for (let x = 0; x < mapLength; x++) {
         yArray.push(0);
       }
       yxArray.push(yArray);
@@ -32,7 +38,7 @@ export default function Map({ data, len }) {
   })();
 
   // Filling in cellArray with data
-  for (const spaceship of data) {
+  for (const spaceship of spaceshipXYPos) {
     const [x, y] = spaceship;
     console.log(x, y);
     cellArray[y][x] = 1;
@@ -40,22 +46,33 @@ export default function Map({ data, len }) {
 
   return (
     <div className={cl.map}>
-      <TransformWrapper>
-        <TransformComponent>
-          <div className={cl.fullSizeWrapper}>
-            <Grid len={len}>
-              {cellArray.map((yArray) =>
-                yArray.map((data, id) => (
-                  <div
-                    className={`${cl.cell} ${data === 1 ? cl.hasTank : ""}`}
-                    key={id}
-                  ></div>
-                ))
-              )}
-            </Grid>
-          </div>
-        </TransformComponent>
-      </TransformWrapper>
+      {isDataLoaded ? (
+        <TransformWrapper>
+          <TransformComponent>
+            <div className={cl.fullSizeWrapper}>
+              <Grid len={mapLength}>
+                {cellArray.map((yArray) =>
+                  yArray.map((data, id) => (
+                    <div
+                      className={`${cl.cell} ${data === 1 ? cl.hasTank : ""}`}
+                      key={id}
+                    ></div>
+                  ))
+                )}
+              </Grid>
+            </div>
+          </TransformComponent>
+        </TransformWrapper>
+      ) : (
+        <div className={cl.fullSizeWrapper}>
+          <span className={`h3 text-light ${cl.loadingText}`}>
+            Map Loading...
+          </span>
+          <Spinner animation="border" role="status" variant="light">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
     </div>
   );
 }

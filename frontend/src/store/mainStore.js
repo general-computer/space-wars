@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import exampleSlice from "./exampleSlice";
+import dataSlice from "./dataSlice";
 
 const store = configureStore({
   reducer: {
-    example: exampleSlice.reducer,
+    data: dataSlice.reducer,
   },
 });
 
 export const actions = {
-  example: exampleSlice.actions,
+  data: dataSlice.actions,
 };
 
 export default store;
