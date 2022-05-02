@@ -26,3 +26,19 @@
 .cell.hasTank {
   background-color: blue;
 }
+
+.cell.activeShip :global {
+  animation: blink 1s steps(1) infinite alternate;
+}
+
+@keyframes :global(blink) {
+  from {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  to {
+    opacity: 0;
+  }
+}

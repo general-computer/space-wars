@@ -38,12 +38,12 @@ export default function Map() {
   })();
 
   // Filling in cellArray with data
-  for (const spaceship of spaceshipXYPos) {
+  for (let i = 0; i < spaceshipXYPos.length; i++) {
+    const spaceship = spaceshipXYPos[i];
     const [x, y] = spaceship;
-    console.log(x, y);
-    cellArray[y][x] = 1;
+    /********* Highlight the first spaceship in the spaceshipXYPos as 2, faking the owner's ship; otherwise assign 0. Modify this logic later !!! */
+    cellArray[y][x] = i === 0 ? 2 : 1;
   }
-
   return (
     <div className={cl.map}>
       {isDataLoaded ? (
@@ -53,8 +53,12 @@ export default function Map() {
               <Grid len={mapLength}>
                 {cellArray.map((yArray) =>
                   yArray.map((data, id) => (
+                    /********* Flash the first spaceship in the spaceshipXYPos. Change to the owner's spaceship later */
                     <div
-                      className={`${cl.cell} ${data === 1 ? cl.hasTank : ""}`}
+                      className={`${cl.cell} ${
+                        data === 1 || data === 2 ? cl.hasTank : ""
+                      } ${data === 2 ? cl.activeShip : ""}
+                      `}
                       key={id}
                     ></div>
                   ))
