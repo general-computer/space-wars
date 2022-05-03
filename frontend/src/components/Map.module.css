@@ -18,31 +18,3 @@
 .loadingText {
   padding-right: 1rem;
 }
-
-.cell {
-  background-color: black;
-}
-
-.cell.isDying {
-  box-shadow: inset 100vw 100vh rgba(204, 21, 21, 0.405);
-}
-
-.cell.hasShip {
-  background-color: blue;
-}
-
-.cell.activeShip :global {
-  animation: blink 1s steps(1) infinite alternate;
-}
-
-@keyframes :global(blink) {
-  from {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  to {
-    opacity: 0;
-  }
-}

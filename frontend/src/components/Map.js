@@ -1,11 +1,15 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useSelector } from "react-redux";
-import { Spinner } from "react-bootstrap";
 import styled from "styled-components";
+
+import { Spinner } from "react-bootstrap";
+import Cell from "./Map/Cell";
+
 import cl from "./Map.module.css";
 
+/* The <Grid> need special care on styling with CSS-in-JS */
 const Grid = styled.div`
-  background-color: white;
+  background-color: black;
   border: 0.05rem white solid;
 
   /* Make the whole grid fits its .fullSizeWrapper parent */
@@ -63,6 +67,7 @@ export default function Map() {
   }
   return (
     <div className={cl.map}>
+      {/* Show map only when data is loaded */}
       {isDataLoaded ? (
         <TransformWrapper>
           <TransformComponent>
@@ -70,19 +75,7 @@ export default function Map() {
               <Grid len={mapLength}>
                 {cellArray.map((yArray, y) =>
                   yArray.map((data, x) => (
-                    /********* Flash the first spaceship in the spaceshipXYPos. Change to the owner's spaceship later */
-                    <div
-                      className={
-                        cl.cell +
-                        " " +
-                        (data === 1 || data === 2 ? cl.hasShip : "") +
-                        " " +
-                        (data === 2 ? cl.activeShip : "") +
-                        " " +
-                        (isDying(x, y) ? cl.isDying : "")
-                      }
-                      key={x}
-                    ></div>
+                    <Cell isDying={isDying(x, y)} data={data} key={x} />
                   ))
                 )}
               </Grid>
@@ -90,6 +83,7 @@ export default function Map() {
           </TransformComponent>
         </TransformWrapper>
       ) : (
+        /* Otherwise, show "Loading..." */
         <div className={cl.fullSizeWrapper}>
           <span className={`h3 text-light ${cl.loadingText}`}>
             Map Loading...

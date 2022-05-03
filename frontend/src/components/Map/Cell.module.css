@@ -1,0 +1,38 @@
+.cell {
+  position: relative; /* To enable z-index in its children & to position it so the children have anchor to do "abosolute" positioning */
+  z-index: 1;
+}
+
+/* Flash the active spaceship */
+/* :global is needed to tell CSS Module not to local scope this (@keyframe can't recognise local-scoped animaton name) */
+.cell.isActiveShip :global {
+  animation: blink 1s steps(1) infinite alternate;
+}
+
+.cell .isDying {
+  background-color: rgba(204, 21, 21, 0.405);
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* To go above the image it contains */
+}
+
+.cell .ship {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  z-index: -1;
+}
+
+@keyframes :global(blink) {
+  from {
+    filter: none;
+  }
+  50% {
+    filter: invert(100%);
+  }
+  to {
+    filter: invert(100%);
+  }
+}
