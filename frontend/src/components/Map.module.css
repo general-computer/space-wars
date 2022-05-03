@@ -23,6 +23,10 @@
   background-color: black;
 }
 
+.cell.isDying {
+  box-shadow: inset 100vw 100vh rgba(204, 21, 21, 0.405);
+}
+
 .cell.hasTank {
   background-color: blue;
 }

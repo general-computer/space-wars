@@ -1,7 +1,10 @@
 import dataSlice from "./dataSlice";
 
 /******** Generating random sample tank data *****/
+// Length of the whole map
 const MAP_LENGTH = 100;
+// The length of the ever reducing alive zone
+const ZONE_LENGTH = 50;
 const NUM_OF_SPACESHIPS = 69;
 
 const randXYArr = () => {
@@ -31,10 +34,10 @@ async function timeoutFunc(timeout) {
 export default function loadData() {
   return async (dispatch) => {
     await timeoutFunc(2000);
-    console.log("Data Loaded");
     dispatch(
       dataSlice.actions.showData({
         mapLength: MAP_LENGTH,
+        zoneLength: ZONE_LENGTH,
         spaceshipXYPos: SPACESHIP_XYPOS,
       })
     );

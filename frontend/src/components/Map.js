@@ -20,9 +20,26 @@ const Grid = styled.div`
 `;
 
 export default function Map() {
-  const { isDataLoaded, mapLength, spaceshipXYPos } = useSelector(
+  // Data fetching
+  const { isDataLoaded, mapLength, spaceshipXYPos, zoneLength } = useSelector(
     (state) => state.data
   );
+  // Calculate the dead zone boudaries
+  const deadZoneWidth = (mapLength - zoneLength) / 2;
+  const liveZoneBoundary = {
+    lower: deadZoneWidth,
+    upper: mapLength - deadZoneWidth,
+  };
+  function isDying(x, y) {
+    if (
+      x < liveZoneBoundary.lower ||
+      x > liveZoneBoundary.upper ||
+      y < liveZoneBoundary.lower ||
+      y > liveZoneBoundary.upper
+    )
+      return true;
+    else return false;
+  }
 
   // An empty len*len array for rendering the map
   const cellArray = (function () {
@@ -51,15 +68,20 @@ export default function Map() {
           <TransformComponent>
             <div className={cl.fullSizeWrapper}>
               <Grid len={mapLength}>
-                {cellArray.map((yArray) =>
-                  yArray.map((data, id) => (
+                {cellArray.map((yArray, y) =>
+                  yArray.map((data, x) => (
                     /********* Flash the first spaceship in the spaceshipXYPos. Change to the owner's spaceship later */
                     <div
-                      className={`${cl.cell} ${
-                        data === 1 || data === 2 ? cl.hasTank : ""
-                      } ${data === 2 ? cl.activeShip : ""}
-                      `}
-                      key={id}
+                      className={
+                        cl.cell +
+                        " " +
+                        (data === 1 || data === 2 ? cl.hasTank : "") +
+                        " " +
+                        (data === 2 ? cl.activeShip : "") +
+                        " " +
+                        (isDying(x, y) ? cl.isDying : "")
+                      }
+                      key={x}
                     ></div>
                   ))
                 )}
