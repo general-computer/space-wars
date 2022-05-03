@@ -27,7 +27,7 @@
   box-shadow: inset 100vw 100vh rgba(204, 21, 21, 0.405);
 }
 
-.cell.hasTank {
+.cell.hasShip {
   background-color: blue;
 }
 

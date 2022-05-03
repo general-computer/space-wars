@@ -75,7 +75,7 @@ export default function Map() {
                       className={
                         cl.cell +
                         " " +
-                        (data === 1 || data === 2 ? cl.hasTank : "") +
+                        (data === 1 || data === 2 ? cl.hasShip : "") +
                         " " +
                         (data === 2 ? cl.activeShip : "") +
                         " " +
