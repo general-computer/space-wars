@@ -9,7 +9,7 @@ const walletSlice = createSlice({
   reducers: {
     changeWalletStatus(state, action) {
       const { addr } = action.payload;
-      state.isConnected = true;
+      state.isConnected = addr !== "";
       state.walletAddress = addr;
     },
   },

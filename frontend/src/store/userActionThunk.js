@@ -1,7 +1,7 @@
 import walletSlice from "./walletSlice";
 
 export default function userAction({ type }) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     switch (type) {
       case "CONNECT":
         if (window?.ethereum) {
@@ -10,7 +10,6 @@ export default function userAction({ type }) {
           });
           dispatch(
             walletSlice.actions.changeWalletStatus({
-              isConnected: true,
               addr: accounts[0],
             })
           );

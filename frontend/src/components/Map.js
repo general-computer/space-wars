@@ -28,6 +28,7 @@ export default function Map() {
   const { isDataLoaded, mapLength, spaceshipXYPos, zoneLength } = useSelector(
     (state) => state.data
   );
+  const { isConnected } = useSelector((state) => state.wallet);
   // Calculate the dead zone boudaries
   const deadZoneWidth = (mapLength - zoneLength) / 2;
   const liveZoneBoundary = {
@@ -63,7 +64,8 @@ export default function Map() {
     const spaceship = spaceshipXYPos[i];
     const [x, y] = spaceship;
     /********* Highlight the first spaceship in the spaceshipXYPos as 2, faking the owner's ship; otherwise assign 0. Modify this logic later !!! */
-    cellArray[y][x] = i === 0 ? 2 : 1;
+    // Only blink when wallet is connected (thus possible to see if it owns a spaceship)
+    cellArray[y][x] = i === 0 && isConnected ? 2 : 1;
   }
   return (
     <div className={cl.map}>
@@ -75,7 +77,11 @@ export default function Map() {
               <Grid len={mapLength}>
                 {cellArray.map((yArray, y) =>
                   yArray.map((data, x) => (
-                    <Cell isDying={isDying(x, y)} data={data} key={x} />
+                    <Cell
+                      isDying={isDying(x, y)}
+                      data={data}
+                      key={`${x},${y}`}
+                    />
                   ))
                 )}
               </Grid>
