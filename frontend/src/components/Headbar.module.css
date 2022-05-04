@@ -1,0 +1,12 @@
+.headbar {
+  position: absolute;
+  inset: 0 0 auto 0;
+
+  background-color: var(--bs-dark);
+  padding: 0.7rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+}

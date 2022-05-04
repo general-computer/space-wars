@@ -4,9 +4,11 @@ import { Provider } from "react-redux";
 import store from "./store/mainStore";
 
 import App from "./App";
-import "./index.css";
 // Bootstrap (incl. normalise)
 import "bootstrap/dist/css/bootstrap.min.css";
+// Global styles that overrides Boostrap reboot
+import "./reset.css";
+import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>
