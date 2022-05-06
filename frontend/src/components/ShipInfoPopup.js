@@ -42,7 +42,7 @@ export default (function () {
 
         <p className={cl.health + " h3"}>
           Health:
-          {Array(actionPoints)
+          {Array(health)
             .fill("")
             .map((item, index) => (
               <img src={heartSvg} className={cl.healthSvg} key={index} />
