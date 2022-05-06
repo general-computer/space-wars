@@ -1,15 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import exampleSlice from "./exampleSlice";
+import dataSlice from "./dataSlice";
+import walletSlice from "./walletSlice";
 
 const store = configureStore({
   reducer: {
-    example: exampleSlice.reducer,
+    data: dataSlice.reducer,
+    wallet: walletSlice.reducer,
   },
 });
-
-export const actions = {
-  example: exampleSlice.actions,
-};
 
 export default store;
