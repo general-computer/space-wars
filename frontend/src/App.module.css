@@ -1,9 +1,11 @@
 .App {
-  /****** Now only have Map to center. May change these later on */
+  height: 100vh;
+  background-color: black;
+}
+
+.main {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: black;
 }

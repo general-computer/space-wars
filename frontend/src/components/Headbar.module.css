@@ -1,6 +1,6 @@
 .headbar {
-  position: absolute;
-  inset: 0 0 auto 0;
+  /*   position: absolute;
+  inset: 0 0 auto 0; */
 
   background-color: var(--bs-dark);
   padding: 0.7rem;
@@ -9,4 +9,10 @@
   align-items: center;
 
   gap: 1rem;
+}
+
+.address {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

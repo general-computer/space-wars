@@ -9,14 +9,6 @@ import cl from "./Map.module.css";
 
 /* The <Grid> need special care on styling with CSS-in-JS */
 const Grid = styled.div`
-  background-color: black;
-  border: 0.05rem white solid;
-
-  /* Make the whole grid fits its .fullSizeWrapper parent */
-  width: min(70vw, 70vh);
-  height: min(70vw, 70vh);
-
-  display: grid;
   /* "gap" doesn't work well when dimension of the map is large */
   /* gap: 0.1rem; */
   grid-template-columns: repeat(${({ len }) => len}, 1fr);
@@ -74,7 +66,7 @@ export default function Map() {
         <TransformWrapper>
           <TransformComponent>
             <div className={cl.fullSizeWrapper}>
-              <Grid len={mapLength}>
+              <Grid len={mapLength} className={cl.grid}>
                 {cellArray.map((yArray, y) =>
                   yArray.map((data, x) => (
                     <Cell

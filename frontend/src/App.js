@@ -16,7 +16,9 @@ function App() {
   return (
     <div className={cl.App}>
       <Headbar />
-      <Map />
+      <main className={cl.main}>
+        <Map />
+      </main>
     </div>
   );
 }

@@ -12,11 +12,11 @@ export default function Headbar() {
   };
 
   return (
-    <div className={[cl.headbar, "text-light"].join(" ")}>
+    <header className={[cl.headbar, "text-light"].join(" ")}>
       <Button variant="dark border" onClick={connect} disabled={isConnected}>
         <span className="retro-font h3">Connect Wallet</span>
       </Button>
-      <span className="retro-font h3 m-0">{walletAddress}</span>
-    </div>
+      <span className={`retro-font h3 m-0 ${cl.address}`}>{walletAddress}</span>
+    </header>
   );
 }
