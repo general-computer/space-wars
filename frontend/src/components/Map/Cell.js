@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import uiSlice from "../../store/uiSlice";
 import cl from "./Cell.module.css";
 
-export default function Cell({ shipIndex, isDying }) {
+export default function Cell({ shipIndex, isDying, id }) {
   const dispatch = useDispatch();
   const { shipDataArray } = useSelector((state) => state.data);
 
@@ -13,9 +13,7 @@ export default function Cell({ shipIndex, isDying }) {
   const isOwnersShip = false;
 
   const handleClick = () => {
-    if (hasShip) {
-      dispatch(uiSlice.actions.clickShip(shipIndex));
-    }
+    dispatch(uiSlice.actions.clickShip(shipIndex));
   };
 
   return (
@@ -25,6 +23,7 @@ export default function Cell({ shipIndex, isDying }) {
         hasShip ? cl.hasShip : "",
         isOwnersShip ? cl.isActiveShip : "",
       ].join(" ")}
+      id={id}
       onClick={handleClick}
     >
       {/* Only render an img when there is a spaceship */}

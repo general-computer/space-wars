@@ -16,6 +16,8 @@
 .closeBtn {
   position: absolute;
   inset: 0 0 auto auto;
+}
+.closeBtn * {
   font-size: 1.5rem;
 }
 
@@ -32,6 +34,17 @@
 .imgContainer > img {
   height: 100%;
   object-fit: contain;
+}
+
+.infoContainer {
+  max-width: 90%;
+  margin-left: 1rem;
+}
+
+.infoContainer p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .health,
@@ -60,6 +73,7 @@
   }
 
   .infoContainer {
+    max-width: 50%;
     margin-left: 1rem;
   }
 }

@@ -1,4 +1,8 @@
-- Disabled blinking at the moment
+- Disabled blinking at the moment <-- fix it
+- Choose your ship
+- V Disable wallet connection before data loading
+- V Scale can be 999x times now
+- V Use addresse with realistic length, first three from Hardhat Network
 
 - function that returns game state (zone size, units)
 - events to change the game state
