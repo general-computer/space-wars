@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import userAction from "../store/userActionThunk";
+import userAction from "../store/thunks/userActionThunk";
 import cl from "./Headbar.module.css";
 
 export default function Headbar() {

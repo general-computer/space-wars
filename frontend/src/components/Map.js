@@ -17,7 +17,7 @@ const Grid = styled.div`
 
 export default function Map() {
   // Data fetching
-  const { isDataLoaded, mapLength, spaceshipXYPos, zoneLength } = useSelector(
+  const { isDataLoaded, mapLength, zoneLength, shipDataArray } = useSelector(
     (state) => state.data
   );
   const { isConnected } = useSelector((state) => state.wallet);
@@ -44,23 +44,24 @@ export default function Map() {
     for (let y = 0; y < mapLength; y++) {
       const yArray = [];
       for (let x = 0; x < mapLength; x++) {
-        yArray.push(0);
+        yArray.push(null);
       }
       yxArray.push(yArray);
     }
     return yxArray;
   })();
-
-  // Filling in cellArray with data
-  for (let i = 0; i < spaceshipXYPos.length; i++) {
-    const spaceship = spaceshipXYPos[i];
-    const [x, y] = spaceship;
+  // Filling in cellArray with spaceship data
+  // If a cell has a spaceship, store the shipDataArray's INDEX of the ship in cellArray
+  for (let i = 0; i < shipDataArray.length; i++) {
+    const { posX: x, posY: y } = shipDataArray[i];
     /********* Highlight the first spaceship in the spaceshipXYPos as 2, faking the owner's ship; otherwise assign 0. Modify this logic later !!! */
     // Only blink when wallet is connected (thus possible to see if it owns a spaceship)
-    cellArray[y][x] = i === 0 && isConnected ? 2 : 1;
+    // cellArray[y][x] = i === 0 && isConnected ? 2 : 1;
+    //
+    cellArray[y][x] = i;
   }
   return (
-    <div className={cl.map}>
+    <section className={cl.map}>
       {/* Show map only when data is loaded */}
       {isDataLoaded ? (
         <TransformWrapper>
@@ -68,10 +69,10 @@ export default function Map() {
             <div className={cl.fullSizeWrapper}>
               <Grid len={mapLength} className={cl.grid}>
                 {cellArray.map((yArray, y) =>
-                  yArray.map((data, x) => (
+                  yArray.map((shipIndex, x) => (
                     <Cell
                       isDying={isDying(x, y)}
-                      data={data}
+                      shipIndex={shipIndex}
                       key={`${x},${y}`}
                     />
                   ))
@@ -91,6 +92,6 @@ export default function Map() {
           </Spinner>
         </div>
       )}
-    </div>
+    </section>
   );
 }

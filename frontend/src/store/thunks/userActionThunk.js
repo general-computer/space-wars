@@ -1,4 +1,4 @@
-import walletSlice from "./walletSlice";
+import walletSlice from "../walletSlice";
 
 export default function userAction({ type }) {
   return async (dispatch) => {

@@ -1,0 +1,65 @@
+.popup {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: 50vw;
+  height: auto;
+
+  background-color: var(--bs-light);
+  border-radius: 0.2rem 0 0 0.2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn {
+  position: absolute;
+  inset: 0 0 auto auto;
+  font-size: 1.5rem;
+}
+
+.imgContainer {
+  height: 30vh;
+  width: 30vh;
+  border: 0.1rem solid black;
+  margin-bottom: 1rem;
+
+  display: flex;
+  justify-content: center;
+}
+
+.imgContainer > img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.health,
+.actionPt {
+  display: flex;
+  align-items: center;
+}
+
+.actionPtSvg {
+  height: 1.5rem;
+}
+
+.healthSvg {
+  height: 1.5rem;
+}
+
+/* For vertical screens */
+@media (max-aspect-ratio: 4/5) {
+  .popup {
+    inset: auto 0 0 0;
+    width: auto;
+    height: 40vh;
+
+    border-radius: 0.2rem 0.2rem 0 0;
+    flex-direction: row;
+  }
+
+  .infoContainer {
+    margin-left: 1rem;
+  }
+}

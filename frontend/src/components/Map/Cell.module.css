@@ -1,6 +1,10 @@
 .cell {
-  position: relative; /* To enable z-index in its children & to position it so the children have anchor to do "abosolute" positioning */
-  z-index: 1;
+  position: relative; /* To position it so the children have anchor to do "abosolute" positioning */
+  z-index: 0;
+}
+
+.cell.hasShip {
+  cursor: pointer;
 }
 
 /* Flash the active spaceship */
@@ -13,16 +17,14 @@
   background-color: rgba(204, 21, 21, 0.405);
   position: absolute;
   inset: 0;
-  z-index: 1; /* To go above the image it contains */
 }
 
-.cell .ship {
+.cell .shipImg {
   position: absolute;
   inset: 0;
   height: 100%;
   width: 100%;
   object-fit: contain;
-  z-index: -1;
 }
 
 @keyframes :global(blink) {

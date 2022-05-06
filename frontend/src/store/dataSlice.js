@@ -6,22 +6,29 @@ const dataSlice = createSlice({
     isDataLoaded: false,
     mapLength: 0,
     zoneLength: 0,
-    spaceshipXYPos: [],
-    // For testing:
-    /* isDataLoaded: true,
-    mapLength: 100,
-    zoneLength: 70,
-    spaceshipXYPos: [], */
+    // The array below is has items with this structure:
+    /* 
+      {
+        avatarString: "",
+        tokenId: genRandomNum(1000000).toString(),
+        owner: genRandomNum(100000000000).toString(16),
+        posX: genRandomNum(MAP_LENGTH - 1),
+        posY: genRandomNum(MAP_LENGTH - 1),
+        actionPoints: genRandomNum(5),
+        health: genRandomNum(3),
+      }
+    */
+    shipDataArray: [],
   },
   reducers: {
     showData(state, action) {
-      const { mapLength, spaceshipXYPos, zoneLength } = action.payload;
+      const { mapLength, shipDataArray, zoneLength } = action.payload;
       return {
         ...state,
         isDataLoaded: true,
         mapLength,
         zoneLength,
-        spaceshipXYPos,
+        shipDataArray,
       };
     },
   },

@@ -1,9 +1,11 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import init from "./store/initThunk";
+import { useDispatch, useSelector } from "react-redux";
+import init from "./store/thunks/initThunk";
 
-import Map from "./components/Map";
 import Headbar from "./components/Headbar";
+import Map from "./components/Map";
+import ShipInfoPopup from "./components/ShipInfoPopup";
+
 import cl from "./App.module.css";
 
 function App() {
@@ -12,6 +14,7 @@ function App() {
   }, []);
 
   const dispatch = useDispatch();
+  const { clickedShipIndex } = useSelector((state) => state.ui);
 
   return (
     <div className={cl.App}>
@@ -19,6 +22,7 @@ function App() {
       <main className={cl.main}>
         <Map />
       </main>
+      {clickedShipIndex !== null && <ShipInfoPopup />}
     </div>
   );
 }

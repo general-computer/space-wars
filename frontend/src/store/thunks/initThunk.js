@@ -1,5 +1,5 @@
 import loadData from "./loadDataThunk";
-import walletSlice from "./walletSlice";
+import walletSlice from "../walletSlice";
 
 export default function init() {
   return async (dispatch) => {
