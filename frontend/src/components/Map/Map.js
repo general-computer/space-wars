@@ -54,14 +54,10 @@ export default function Map() {
     }
     return yxArray;
   })();
-  // Filling in cellArray with spaceship data
-  // If a cell has a spaceship, store the shipDataArray's INDEX of the ship in cellArray
+  // Filling in cellArray with spaceship indexes
+  // If a cell has a spaceship, store its shipDataArray's of the ship in cellArray
   for (let i = 0; i < shipDataArray.length; i++) {
     const { posX: x, posY: y } = shipDataArray[i];
-    /********* Highlight the first spaceship in the spaceshipXYPos as 2, faking the owner's ship; otherwise assign 0. Modify this logic later !!! */
-    // Only blink when wallet is connected (thus possible to see if it owns a spaceship)
-    // cellArray[y][x] = i === 0 && isConnected ? 2 : 1;
-    //
     cellArray[y][x] = i;
   }
 
@@ -93,7 +89,8 @@ export default function Map() {
                     <Cell
                       isDying={isDying(x, y)}
                       shipIndex={shipIndex}
-                      id={`cell-${x}-${y}`}
+                      x={x}
+                      y={y}
                       key={`${x},${y}`}
                     />
                   ))

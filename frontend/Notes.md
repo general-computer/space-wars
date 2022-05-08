@@ -1,14 +1,3 @@
-- V Rewrite redux logic
-- V Let user choose your ship
-- V let player choose no spacship
-- V Allow user choose ship from same address again
-- V Handle player has no ships
-- V Handle wallet disconnection; no address & ship chosen
-
-- Enable blinking on chosen ship
-- When disconnected, don't blink any ship (maybe zoom out too) +
-- Center chosen ship on clicking own ship
-
 - Add Error boundary
 - Re-structure folder structures
 

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import mapSlice from "../store/map/mapSlice";
 
-import { Button } from "react-bootstrap";
+import { CloseButton } from "react-bootstrap";
 import cl from "./ShipInfoPopup.module.css";
 import heartSvg from "../img/noun-heart-pixel-2651784.svg";
 import actionPtSvg from "../img/lightning-optimised.svg";
@@ -19,9 +19,7 @@ export default (function () {
   return (
     <section className={cl.popup + " retro-font"}>
       <h1>Ship Info</h1>
-      <Button variant="light" className={cl.closeBtn} onClick={handleClose}>
-        <i className="bi bi-x-lg"></i>
-      </Button>
+      <CloseButton className={cl.closeBtn + " p-3"} onClick={handleClose} />
       <div className={cl.imgContainer}>
         <img src={avatarString} alt="" />
       </div>

@@ -2,17 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 import mapSlice from "../../store/map/mapSlice";
 import cl from "./Cell.module.css";
 
-export default function Cell({ shipIndex, isDying, id }) {
+export default function Cell({ shipIndex, isDying, x, y }) {
   const dispatch = useDispatch();
   const shipData = useSelector((state) => state.data.shipDataArray[shipIndex]);
+  const ownerChosenShip = useSelector(
+    (state) => state.userInfo.ownerChosenShip
+  );
+  const walletAddr = useSelector((state) => state.userInfo.walletAddress);
 
   // Props processing
   const hasShip = shipIndex !== null;
-  /********* Flash the first spaceship in the spaceshipXYPos. Change to the owner's spaceship later */
-  // const isOwnersShip = shipIndex === 2;
-  const isOwnersShip = false;
+  const isOwnerChosenShip =
+    walletAddr !== "" && hasShip && ownerChosenShip === shipIndex;
 
-  const handleClick = () => {
+  const handleClickInfo = () => {
     dispatch(mapSlice.actions.clickShip(shipIndex));
   };
 
@@ -21,10 +24,10 @@ export default function Cell({ shipIndex, isDying, id }) {
       className={[
         cl.cell,
         hasShip ? cl.hasShip : "",
-        isOwnersShip ? cl.isActiveShip : "",
+        isOwnerChosenShip ? cl.isActiveShip : "",
       ].join(" ")}
-      id={id}
-      onClick={handleClick}
+      id={`cell-${x}-${y}`}
+      onClick={handleClickInfo}
     >
       {/* Only render an img when there is a spaceship */}
       {hasShip && (

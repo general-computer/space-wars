@@ -16,9 +16,7 @@
 .closeBtn {
   position: absolute;
   inset: 0 0 auto auto;
-}
-.closeBtn * {
-  font-size: 1.5rem;
+  padding: 5rem;
 }
 
 .imgContainer {

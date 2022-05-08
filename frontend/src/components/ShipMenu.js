@@ -7,6 +7,9 @@ import cl from "./ShipMenu.module.css";
 export default function ShipMenu() {
   const isChoosingShip = useSelector((state) => state.userInfo.isChoosingShip);
   const walletAddress = useSelector((state) => state.userInfo.walletAddress);
+  const ownerChosenShip = useSelector(
+    (state) => state.userInfo.ownerChosenShip
+  );
   const shipDataArray = useSelector((state) => state.data.shipDataArray);
   const dispatch = useDispatch();
 
@@ -17,7 +20,7 @@ export default function ShipMenu() {
   });
 
   const handleChooseShip = (event) => {
-    const shipIndex = event.target.name;
+    const shipIndex = parseInt(event.target.name);
     dispatch(userInfoSlice.actions.confirmShip(shipIndex));
   };
 
@@ -45,9 +48,10 @@ export default function ShipMenu() {
               <ListGroup.Item
                 action
                 onClick={handleChooseShip}
-                key={key}
                 name={shipIndex}
+                active={shipIndex === ownerChosenShip}
                 className={cl.items + " d-flex align-items-center"}
+                key={key}
               >
                 <Image
                   src={shipDataArray[shipIndex].avatarString}

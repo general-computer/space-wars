@@ -17,11 +17,7 @@ export default function init() {
 
       // Listen to account changes in the wallet in the future
       window.ethereum.on("accountsChanged", (accounts) => {
-        if (accounts[0] !== undefined) {
-          dispatch(userInfoSlice.actions.changeUserAddr(accounts[0]));
-        } else {
-          dispatch(userInfoSlice.actions.changeUserAddr(""));
-        }
+        dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
       });
     } catch (error) {
       if (error.cause === "NO-ETHEREUM")
