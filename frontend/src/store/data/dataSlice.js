@@ -14,6 +14,7 @@ const dataSlice = createSlice({
         owner: genRandomNum(100000000000).toString(16),
         posX: genRandomNum(MAP_LENGTH - 1),
         posY: genRandomNum(MAP_LENGTH - 1),
+        level: genRandomNum(2) + 1,
         actionPoints: genRandomNum(5),
         health: genRandomNum(3),
       }

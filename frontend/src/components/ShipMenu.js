@@ -3,6 +3,7 @@ import userInfoSlice from "../store/userInfo/userInfoSlice";
 
 import { Modal, ListGroup, Image } from "react-bootstrap";
 import cl from "./ShipMenu.module.css";
+import CloseButton from "./CloseButton";
 
 export default function ShipMenu() {
   const isChoosingShip = useSelector((state) => state.userInfo.isChoosingShip);
@@ -34,10 +35,11 @@ export default function ShipMenu() {
       animation={false}
       centered
       onHide={handleClose}
-      className="retro-font"
+      className={cl.shipMenu}
     >
-      <Modal.Header closeButton>
-        <Modal.Title>Choose your ship</Modal.Title>
+      <Modal.Header className="pb-0">
+        <Modal.Title as="h2">Choose your ship</Modal.Title>
+        <CloseButton onClick={handleClose} />
       </Modal.Header>
       <Modal.Body>
         {shipsOfOwner.length === 0 ? (
@@ -49,15 +51,20 @@ export default function ShipMenu() {
                 action
                 onClick={handleChooseShip}
                 name={shipIndex}
-                active={shipIndex === ownerChosenShip}
-                className={cl.items + " d-flex align-items-center"}
+                className={[
+                  cl.items,
+                  shipIndex === ownerChosenShip ? cl.activeShip : "",
+                  "d-flex align-items-center",
+                ].join(" ")}
                 key={key}
               >
                 <Image
                   src={shipDataArray[shipIndex].avatarString}
                   className={cl.shipImg}
                 />
-                <span>{shipDataArray[shipIndex].tokenId}</span>
+                <span className="h3 m-0">
+                  {shipDataArray[shipIndex].tokenId}
+                </span>
               </ListGroup.Item>
             ))}
           </ListGroup>

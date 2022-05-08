@@ -1,0 +1,9 @@
+.closebutton {
+  border: none;
+  background-color: transparent;
+  padding: 1rem;
+}
+
+.closebutton img {
+  height: 1.5rem;
+}

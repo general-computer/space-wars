@@ -1,3 +1,6 @@
+- !! Range
+- Improve styling
+
 - Add Error boundary
 - Re-structure folder structures
 

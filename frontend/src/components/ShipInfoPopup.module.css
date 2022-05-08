@@ -9,14 +9,24 @@
 
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .closeBtn {
   position: absolute;
   inset: 0 0 auto auto;
-  padding: 5rem;
+}
+
+.popup h1 {
+  text-align: center;
+}
+
+.popupBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .imgContainer {
@@ -45,17 +55,16 @@
   text-overflow: ellipsis;
 }
 
-.health,
-.actionPt {
+.pointsCtn {
   display: flex;
   align-items: center;
+  gap: 0.3rem;
+
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.actionPtSvg {
-  height: 1.5rem;
-}
-
-.healthSvg {
+.ptsSvg {
   height: 1.5rem;
 }
 
@@ -64,10 +73,16 @@
   .popup {
     inset: auto 0 0 0;
     width: auto;
-    height: 40vh;
+    height: 50vh;
 
     border-radius: 0.2rem 0.2rem 0 0;
+  }
+
+  .popupBody {
     flex-direction: row;
+    margin-top: 0;
+    padding: 0 1.5rem;
+    gap: 1rem;
   }
 
   .infoContainer {

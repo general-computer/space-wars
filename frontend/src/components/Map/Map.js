@@ -102,7 +102,7 @@ export default function Map() {
       ) : (
         /* Otherwise, show "Loading..." */
         <div className={cl.fullSizeWrapper}>
-          <span className={`h3 text-light ${cl.loadingText}`}>
+          <span className={`h1 text-light ${cl.loadingText}`}>
             Map Loading...
           </span>
           <Spinner animation="border" role="status" variant="light">

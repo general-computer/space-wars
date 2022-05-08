@@ -1,6 +1,7 @@
 .cell {
   position: relative; /* To position it so the children have anchor to do "abosolute" positioning */
   z-index: 0;
+  background-color: black;
 }
 
 .cell.hasShip {

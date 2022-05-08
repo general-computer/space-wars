@@ -32,7 +32,9 @@ export default function Headbar() {
         onClick={handleConnect}
         disabled={!isConnectable}
       >
-        <span className="h3">Connect Wallet</span>
+        <span className="h3">
+          {walletAddress === "" ? "Connect Wallet" : "Connected"}
+        </span>
       </Button>
 
       <Button

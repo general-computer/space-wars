@@ -25,8 +25,9 @@ const SHIP_DATA_ARRAY = (function () {
       owner: SAMPLE_OWNERS[genRandomNum(2)],
       posX: genRandomNum(MAP_LENGTH - 1),
       posY: genRandomNum(MAP_LENGTH - 1),
-      actionPoints: genRandomNum(5),
-      health: genRandomNum(3),
+      level: genRandomNum(2) + 1,
+      actionPoints: genRandomNum(10),
+      health: genRandomNum(2) + 1,
     };
     arr.push(ship);
   }
