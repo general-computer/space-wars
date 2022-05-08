@@ -1,4 +1,4 @@
-import dataSlice from "../dataSlice";
+import dataSlice from "./dataSlice";
 
 // **************** The svg code is an example only
 import SHIPS from "./example_ships";
@@ -47,8 +47,8 @@ async function timeoutFunc(timeout) {
 }
 
 export default function loadData() {
-  return async (dispatch) => {
-    await timeoutFunc(2000);
+  return async (dispatch, getState) => {
+    await timeoutFunc(1000);
     dispatch(
       dataSlice.actions.showData({
         mapLength: MAP_LENGTH,

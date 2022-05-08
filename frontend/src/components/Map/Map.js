@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { Spinner } from "react-bootstrap";
-import Cell from "./Map/Cell";
+import Cell from "./Cell";
 
 import cl from "./Map.module.css";
 
@@ -21,7 +21,9 @@ export default function Map() {
   const { isDataLoaded, mapLength, zoneLength, shipDataArray } = useSelector(
     (state) => state.data
   );
-  const { walletAddress } = useSelector((state) => state.wallet);
+  const ownerChosenShip = useSelector(
+    (state) => state.userInfo.ownerChosenShip
+  );
 
   // Calculate the dead zone boudaries
   const deadZoneWidth = (mapLength - zoneLength) / 2;
@@ -63,29 +65,20 @@ export default function Map() {
     cellArray[y][x] = i;
   }
 
+  /*
+   * Zoom to ship when new ship is chosen by the owner
+   */
   // For accessing TransformWrapper's handlers
   const transformWrapperRef = useRef(null);
-  console.log(transformWrapperRef);
   useEffect(() => {
-    /* ***** SHould I just disable the connect button until data is loaded? */
-    if (walletAddress !== "" && isDataLoaded) {
-      const x = Math.floor(Math.random() * 100);
-      const y = Math.floor(Math.random() * 100);
-      console.log(`cell-${x}-${y}`);
-      transformWrapperRef.current.zoomToElement(
-        `cell-${x}-${y}`,
-        10,
-        2000,
-        "linear"
-      );
+    if (ownerChosenShip !== null && isDataLoaded) {
+      const currShipData = shipDataArray[ownerChosenShip];
+      const x = currShipData.posX;
+      const y = currShipData.posY;
+      // zoomToElement(node, scale, animationTime, animationType)
+      transformWrapperRef.current.zoomToElement(`cell-${x}-${y}`, 10, 100);
     }
-  }, [walletAddress]);
-
-  // setTransform(x, y, scale, animationTime, animationType)
-  /*   if (setTransform && walletAddress !== "") {
-    console.log(setTransform);
-    setTransform(Math.random() * 100 - 100, Math.random() * 100 - 100, 3, 2000);
-  } */
+  }, [ownerChosenShip]);
 
   return (
     <section className={cl.map}>

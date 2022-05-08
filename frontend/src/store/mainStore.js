@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import dataSlice from "./dataSlice";
-import walletSlice from "./walletSlice";
-import uiSlice from "./uiSlice";
+import dataSlice from "./data/dataSlice";
+import mapSlice from "./map/mapSlice";
+import userInfoSlice from "./userInfo/userInfoSlice";
 
 const store = configureStore({
   reducer: {
     data: dataSlice.reducer,
-    wallet: walletSlice.reducer,
-    ui: uiSlice.reducer,
+    userInfo: userInfoSlice.reducer,
+    map: mapSlice.reducer,
   },
 });
 

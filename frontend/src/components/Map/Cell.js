@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import uiSlice from "../../store/uiSlice";
+import mapSlice from "../../store/map/mapSlice";
 import cl from "./Cell.module.css";
 
 export default function Cell({ shipIndex, isDying, id }) {
   const dispatch = useDispatch();
-  const { shipDataArray } = useSelector((state) => state.data);
+  const shipData = useSelector((state) => state.data.shipDataArray[shipIndex]);
 
   // Props processing
   const hasShip = shipIndex !== null;
@@ -13,7 +13,7 @@ export default function Cell({ shipIndex, isDying, id }) {
   const isOwnersShip = false;
 
   const handleClick = () => {
-    dispatch(uiSlice.actions.clickShip(shipIndex));
+    dispatch(mapSlice.actions.clickShip(shipIndex));
   };
 
   return (
@@ -28,11 +28,7 @@ export default function Cell({ shipIndex, isDying, id }) {
     >
       {/* Only render an img when there is a spaceship */}
       {hasShip && (
-        <img
-          className={cl.shipImg}
-          src={shipDataArray[shipIndex].avatarString}
-          alt=""
-        />
+        <img className={cl.shipImg} src={shipData.avatarString} alt="" />
       )}
       {/* Only render red shadow if the cell is in the dying zone */}
       {isDying && <div className={cl.isDying}></div>}

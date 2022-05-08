@@ -1,28 +1,54 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import userAction from "../store/thunks/userActionThunk";
+import connectWallet from "../store/userInfo/connectThunk";
+import userInfoSlice from "../store/userInfo/userInfoSlice";
 import cl from "./Headbar.module.css";
 
 export default function Headbar() {
-  const { walletAddress } = useSelector((state) => state.wallet);
-  const { isDataLoaded } = useSelector((state) => state.data);
+  const { walletAddress, ownerChosenShip } = useSelector(
+    (state) => state.userInfo
+  );
+  const isDataLoaded = useSelector((state) => state.data.isDataLoaded);
+  const chosenShipData = useSelector(
+    (state) => state.data.shipDataArray[ownerChosenShip]
+  );
   const dispatch = useDispatch();
 
-  const connect = () => {
-    dispatch(userAction({ type: "CONNECT" }));
+  // Allow wallet connection after data loaded, but disable again when an address is already detected
+  const isConnectable = isDataLoaded && walletAddress === "";
+
+  const handleConnect = () => {
+    dispatch(connectWallet());
+  };
+
+  const handleChooseShip = () => {
+    dispatch(userInfoSlice.actions.chooseShip());
   };
 
   return (
-    <header className={[cl.headbar, "text-light"].join(" ")}>
+    <header className={[cl.headbar, "text-light retro-font"].join(" ")}>
       <Button
         variant="dark border"
-        onClick={connect}
-        // Allow wallet connection after data loaded, but disable again when an address is already detected
-        disabled={!isDataLoaded || walletAddress !== ""}
+        onClick={handleConnect}
+        disabled={!isConnectable}
       >
-        <span className="retro-font h3">Connect Wallet</span>
+        <span className="h3">Connect Wallet</span>
       </Button>
-      <span className={`retro-font h3 m-0 ${cl.address}`}>{walletAddress}</span>
+
+      <Button
+        className={cl.shipBtn + " btn-dark"}
+        onClick={handleChooseShip}
+        disabled={walletAddress === ""}
+      >
+        {walletAddress !== "" &&
+          (ownerChosenShip === null ? (
+            <span className={`h1`}>?</span>
+          ) : (
+            <img src={chosenShipData.avatarString} alt="" />
+          ))}
+      </Button>
+
+      <span className={`h3 m-0 ${cl.address}`}>{walletAddress}</span>
     </header>
   );
 }

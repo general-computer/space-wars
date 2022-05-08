@@ -1,8 +1,16 @@
-- Disabled blinking at the moment <-- fix it
-- Choose your ship
-- V Disable wallet connection before data loading
-- V Scale can be 999x times now
-- V Use addresse with realistic length, first three from Hardhat Network
+- V Rewrite redux logic
+- V Let user choose your ship
+- V let player choose no spacship
+- V Allow user choose ship from same address again
+- V Handle player has no ships
+- V Handle wallet disconnection; no address & ship chosen
+
+- Enable blinking on chosen ship
+- When disconnected, don't blink any ship (maybe zoom out too) +
+- Center chosen ship on clicking own ship
+
+- Add Error boundary
+- Re-structure folder structures
 
 - function that returns game state (zone size, units)
 - events to change the game state

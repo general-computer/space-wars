@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import uiSlice from "../store/uiSlice";
+import mapSlice from "../store/map/mapSlice";
 
 import { Button } from "react-bootstrap";
 import cl from "./ShipInfoPopup.module.css";
@@ -7,18 +7,18 @@ import heartSvg from "../img/noun-heart-pixel-2651784.svg";
 import actionPtSvg from "../img/lightning-optimised.svg";
 
 export default (function () {
-  const { clickedShipIndex } = useSelector((state) => state.ui);
-  const { shipDataArray } = useSelector((state) => state.data);
+  const clickedShipIndex = useSelector((state) => state.map.clickedShipIndex);
   const { avatarString, tokenId, owner, posX, posY, actionPoints, health } =
-    shipDataArray[clickedShipIndex];
+    useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(uiSlice.actions.clickShip(null));
+    dispatch(mapSlice.actions.clickShip(null));
   };
 
   return (
     <section className={cl.popup + " retro-font"}>
+      <h1>Ship Info</h1>
       <Button variant="light" className={cl.closeBtn} onClick={handleClose}>
         <i className="bi bi-x-lg"></i>
       </Button>
@@ -26,7 +26,7 @@ export default (function () {
         <img src={avatarString} alt="" />
       </div>
       <div className={cl.infoContainer}>
-        <p className="h3">Ship Id: {tokenId}</p>
+        <p className="h3">Token Id: {tokenId}</p>
         <p className="h3">Owner: {owner}</p>
         <p className="h3">
           Coordinate: ({posX}, {posY})
@@ -36,7 +36,12 @@ export default (function () {
           {Array(actionPoints)
             .fill("")
             .map((item, index) => (
-              <img src={actionPtSvg} className={cl.actionPtSvg} key={index} />
+              <img
+                src={actionPtSvg}
+                alt=""
+                className={cl.actionPtSvg}
+                key={index}
+              />
             ))}
         </p>
 

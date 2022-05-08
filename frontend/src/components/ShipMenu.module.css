@@ -1,0 +1,15 @@
+.shipMenu {
+  height: 80vh;
+  width: 80vw;
+  border-radius: 1vh;
+}
+
+.items {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.shipImg {
+  height: 2rem;
+}

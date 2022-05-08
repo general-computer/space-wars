@@ -8,7 +8,6 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 // Global styles that overrides Boostrap reboot
-import "./reset.css";
 import "./index.css";
 
 ReactDOM.render(
