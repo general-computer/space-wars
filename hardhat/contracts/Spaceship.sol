@@ -86,6 +86,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     error NotEnoughPoints();
     error BadArguments();
     error NoAccess();
+    error DeadSpaceship();
 
     int56 constant playfieldSize = 100;
     function move(uint256 unit, int56 x, int56 y) public {
@@ -97,6 +98,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
             revert NoAccess();
 
         UnitData memory data = s_units[unit];
+
+        if (data.lives == 0)
+            revert DeadSpaceship();
 
         if (data.points == 0)
             revert NotEnoughPoints();
@@ -126,6 +130,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (damage > att.points)
             revert NotEnoughPoints();
 
+        if (att.lives == 0)
+            revert DeadSpaceship();
+
         UnitData memory vict = s_units[victId];
 
         if (damage > vict.lives)
@@ -154,6 +161,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
         if (amount > from.points)
             revert NotEnoughPoints();
+
+        if (from.lives == 0)
+            revert DeadSpaceship();
 
         from.points -= amount;
         s_units[toId].points += amount;
