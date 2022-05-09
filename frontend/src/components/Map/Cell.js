@@ -16,7 +16,7 @@ export default function Cell({ shipIndex, isDying, x, y }) {
     walletAddr !== "" && hasShip && ownerChosenShip === shipIndex;
 
   const handleClickInfo = () => {
-    dispatch(mapSlice.actions.clickShip(shipIndex));
+    if (shipIndex !== null) dispatch(mapSlice.actions.clickShip(shipIndex));
   };
 
   return (

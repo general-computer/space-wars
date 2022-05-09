@@ -1,5 +1,8 @@
-- !! Range
-- Improve styling
+### Simulated state (check using block.timestamp)
+
+- zone shrink
+- people outside zone -1 point every day
+- AP increase 1 every day
 
 - Add Error boundary
 - Re-structure folder structures

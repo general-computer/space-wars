@@ -11,13 +11,14 @@
 /* Flash the active spaceship */
 /* :global is needed to tell CSS Module not to local scope this (@keyframe can't recognise local-scoped animaton name) */
 .cell.isActiveShip :global {
-  animation: blink 1s steps(1) infinite alternate;
+  animation: blinkShip 2s steps(1) infinite;
 }
 
-.cell .isDying {
+.cell .isDying :global {
   background-color: rgba(204, 21, 21, 0.405);
   position: absolute;
   inset: 0;
+  /* animation: blinkZone 2s steps(1) infinite; */
 }
 
 .cell .shipImg {
@@ -28,14 +29,20 @@
   object-fit: contain;
 }
 
-@keyframes :global(blink) {
+@keyframes :global(blinkShip) {
   from {
     filter: none;
   }
   50% {
     filter: invert(100%);
   }
-  to {
-    filter: invert(100%);
-  }
 }
+
+/* @keyframes :global(blinkZone) {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+} */
