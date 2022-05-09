@@ -13,6 +13,23 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     Counters.Counter private _tokenIdCounter;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
 
+    event UnitMoved(uint256 tokenId, int56 x, int56 y);
+    event UnitShot(uint256 tokenId, uint8 newHealth);
+    //event UnitUpgraded(uint256 tokenId, uint256 level);
+    event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint128 amount);
+
+    // this in theory should take 1 slot
+    struct UnitData {
+        int56 x;
+        int56 y;
+        uint8 level; // 0 or 1 or 2
+        uint8 lives; // 0 (ded) or 1 or 2 or 3
+        uint128 points;
+    }
+
+    // structs in ethers.js https://github.com/ethers-io/ethers.js/issues/315
+    UnitData[SUPPLY] public s_units;
+
     constructor() ERC721("Spaceship", "SHIP") {}
 
     function safeMint(address to) public onlyOwner {
@@ -45,18 +62,6 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         // take helth from zon
         // gib points
     }
-
-    // this in theory should take 1 slot
-    struct UnitData {
-        int56 x;
-        int56 y;
-        uint8 level; // 0 or 1 or 2
-        uint8 lives; // 0 (ded) or 1 or 2 or 3
-        uint128 points;
-    }
-
-    // structs in ethers.js https://github.com/ethers-io/ethers.js/issues/315
-    UnitData[SUPPLY] public s_units;
 
 /*
     function inRange(uint256 unitAtt, uint256 unitVict) public view returns (bool) {
@@ -104,6 +109,8 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         data.x = x;
         data.y = y;
         s_units[unit] = data;
+
+        emit UnitMoved(unit, x, y);
     }
 
     // the damage type matches UnitData.lives type here
@@ -132,6 +139,8 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
         s_units[attId] = att;
         s_units[victId] = vict;
+
+        emit UnitShot(victId, vict.lives);
     }
 
     function givePoints(uint256 fromId, uint256 toId, uint128 amount) public {
