@@ -1,3 +1,5 @@
-#Accent Menagerie
+Spaceship Wars! 
 
-It's because every person has a different English accent. We're proud to be distributed across the world. We're not proud of what's in this repository - yet.
+Finally, a game that simulates the austere reaches of outer space - with the minting of a spaceship nft, you join the ranks of scores of pilots trying to win the prize by being the last space floating.
+
+Built for the Chainlink Spring Hackathon
