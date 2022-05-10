@@ -13,7 +13,7 @@ export default createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(userInfoSlice.actions.confirmShip(), (state, action) => {
+    builder.addCase(userInfoSlice.actions.confirmShip, (state, action) => {
       const shipIndex = action.payload;
       state.clickedShipIndex = shipIndex;
     });

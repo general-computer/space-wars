@@ -14,11 +14,10 @@
   animation: blinkShip 2s steps(1) infinite;
 }
 
-.cell .isDying :global {
+.cell .isDying {
   background-color: rgba(204, 21, 21, 0.405);
   position: absolute;
   inset: 0;
-  /* animation: blinkZone 2s steps(1) infinite; */
 }
 
 .cell .shipImg {
@@ -37,12 +36,3 @@
     filter: invert(100%);
   }
 }
-
-/* @keyframes :global(blinkZone) {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-} */

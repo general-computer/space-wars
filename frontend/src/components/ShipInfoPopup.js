@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import mapSlice from "../store/map/mapSlice";
+import { isDying } from "../utils/deadzone";
 
 import CloseButton from "./CloseButton";
 import cl from "./ShipInfoPopup.module.css";
@@ -31,7 +32,11 @@ export default (function () {
     actionPoints,
     health,
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
+  const mapLength = useSelector((state) => state.data.mapLength);
+  const zoneLength = useSelector((state) => state.data.zoneLength);
   const dispatch = useDispatch();
+
+  const isShipDying = isDying(posX, posY, mapLength, zoneLength);
 
   // "rangeLevel" here is +1 of "level" from the contract
   const rangeLevel = level + 1;
@@ -50,27 +55,40 @@ export default (function () {
         </div>
         <div className={cl.infoContainer}>
           <p className="h3">Token Id: {tokenId}</p>
-          <p className="h3">Owner: {owner}</p>
-          <p className="h3">
-            Coordinate: ({posX}, {posY})
-          </p>
-          <p className={cl.pointsCtn + " h3"}>
-            Level:
-            <SvgRepeats repeats={rangeLevel} url={swordPtSvg} />
-          </p>
-          <p className={cl.pointsCtn + " h3"}>
-            Energy points:
-            <SvgRepeats repeats={actionPoints} url={lightningSvg} />
-          </p>
+          <p className={cl.addrText + " h3"}>Owner: {owner}</p>
           {health <= 0 ? (
             <p className={cl.warningText + " h3"}>
               This ship has been destroyed
             </p>
           ) : (
-            <p className={cl.pointsCtn + " h3"}>
-              Shield:
-              <SvgRepeats repeats={health} url={heartSvg} />
-            </p>
+            <>
+              <p className="h3">
+                Coordinate: ({posX}, {posY})
+              </p>
+              <p className={cl.pointsCtn + " h3"}>
+                Level:
+                <SvgRepeats repeats={rangeLevel} url={swordPtSvg} />
+              </p>
+              <p className={cl.pointsCtn + " h3"}>
+                Energy points:
+                <SvgRepeats repeats={actionPoints} url={lightningSvg} />
+              </p>
+              <p
+                className={[
+                  cl.pointsCtn,
+                  isShipDying ? cl.isDying : "",
+                  "h3",
+                ].join(" ")}
+              >
+                Shield:
+                <SvgRepeats repeats={health} url={heartSvg} />
+              </p>
+              {isShipDying && (
+                <p className={cl.warningText + " h3"}>
+                  Being attacked by magnetosonic wave
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>

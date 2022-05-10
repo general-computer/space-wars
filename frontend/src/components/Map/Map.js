@@ -2,6 +2,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { isDying } from "../../utils/deadzone";
 
 import { Spinner } from "react-bootstrap";
 import Cell from "./Cell";
@@ -25,23 +26,6 @@ export default function Map() {
     (state) => state.userInfo.ownerChosenShip
   );
 
-  // Calculate the dead zone boudaries
-  const deadZoneWidth = (mapLength - zoneLength) / 2;
-  const liveZoneBoundary = {
-    lower: deadZoneWidth,
-    upper: mapLength - deadZoneWidth,
-  };
-  function isDying(x, y) {
-    if (
-      x < liveZoneBoundary.lower ||
-      x > liveZoneBoundary.upper ||
-      y < liveZoneBoundary.lower ||
-      y > liveZoneBoundary.upper
-    )
-      return true;
-    else return false;
-  }
-
   // An empty len*len array for rendering the map
   const cellArray = (function () {
     const yxArray = [];
@@ -57,8 +41,10 @@ export default function Map() {
   // Filling in cellArray with spaceship indexes
   // If a cell has a spaceship, store its shipDataArray's of the ship in cellArray
   for (let i = 0; i < shipDataArray.length; i++) {
-    const { posX: x, posY: y } = shipDataArray[i];
-    cellArray[y][x] = i;
+    const { posX: x, posY: y, health } = shipDataArray[i];
+    if (health > 0) {
+      cellArray[y][x] = i;
+    }
   }
 
   /*
@@ -67,7 +53,14 @@ export default function Map() {
   // For accessing TransformWrapper's handlers
   const transformWrapperRef = useRef(null);
   useEffect(() => {
-    if (ownerChosenShip !== null && isDataLoaded) {
+    if (
+      // 1. data must be loaded to get the ship DOM node
+      isDataLoaded &&
+      // 2. a ship must be selected
+      ownerChosenShip !== null &&
+      // 3. The ship must be alive
+      shipDataArray[ownerChosenShip].health > 0
+    ) {
       const currShipData = shipDataArray[ownerChosenShip];
       const x = currShipData.posX;
       const y = currShipData.posY;
@@ -87,7 +80,7 @@ export default function Map() {
                 {cellArray.map((yArray, y) =>
                   yArray.map((shipIndex, x) => (
                     <Cell
-                      isDying={isDying(x, y)}
+                      isDying={isDying(x, y, mapLength, zoneLength)}
                       shipIndex={shipIndex}
                       x={x}
                       y={y}
