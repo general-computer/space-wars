@@ -1,0 +1,92 @@
+.popup {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: 50vw;
+  height: auto;
+
+  background-color: var(--bs-light);
+  border-radius: 0.2rem 0 0 0.2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.closeBtn {
+  position: absolute;
+  inset: 0 0 auto auto;
+}
+
+.popup h1 {
+  text-align: center;
+}
+
+.popupBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.imgContainer {
+  height: 30vh;
+  width: 30vh;
+  border: 0.1rem solid black;
+  margin-bottom: 1rem;
+
+  display: flex;
+  justify-content: center;
+}
+
+.imgContainer > img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.infoContainer {
+  max-width: 90%;
+  margin-left: 1rem;
+}
+
+.infoContainer p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pointsCtn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ptsSvg {
+  height: 1.5rem;
+}
+
+/* For vertical screens */
+@media (max-aspect-ratio: 4/5) {
+  .popup {
+    inset: auto 0 0 0;
+    width: auto;
+    height: 50vh;
+
+    border-radius: 0.2rem 0.2rem 0 0;
+  }
+
+  .popupBody {
+    flex-direction: row;
+    margin-top: 0;
+    padding: 0 1.5rem;
+    gap: 1rem;
+  }
+
+  .infoContainer {
+    max-width: 50%;
+    margin-left: 1rem;
+  }
+}
