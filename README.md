@@ -4,6 +4,7 @@ Welcome to the source code reposition Space Wars. We are one of the first live p
 
 We've created this experimental game design to see how exogenus play affects blockchain games. This code is in an alpha state and should be not be used for production, investment, or any use.
 
+➡️ Live preview: https://general-computer.github.io/space-wars/
 
 ![image](https://user-images.githubusercontent.com/99992004/167917993-5b285730-4a52-4fe1-9da6-dd26c329d2de.png)
 
