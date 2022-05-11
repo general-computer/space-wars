@@ -14,14 +14,14 @@ export default function ShipMenu() {
   const shipDataArray = useSelector((state) => state.data.shipDataArray);
   const dispatch = useDispatch();
 
-  // Get all ships of walletAddress
+  // Get DATA of all ships owned by walletAddress, attaching its shipIndex as well
   const shipsOfOwner = [];
-  shipDataArray.forEach((ship, index) => {
-    if (ship.owner === walletAddress) shipsOfOwner.push(index);
+  shipDataArray.forEach((shipData, shipIndex) => {
+    if (shipData.owner === walletAddress)
+      shipsOfOwner.push({ ...shipData, shipIndex });
   });
 
-  const handleChooseShip = (event) => {
-    const shipIndex = parseInt(event.target.name);
+  const handleChooseShip = (shipIndex) => {
     dispatch(userInfoSlice.actions.confirmShip(shipIndex));
   };
 
@@ -46,25 +46,30 @@ export default function ShipMenu() {
           <h3>You have no ships!</h3>
         ) : (
           <ListGroup>
-            {shipsOfOwner.map((shipIndex, key) => (
+            {shipsOfOwner.map((shipData, key) => (
               <ListGroup.Item
                 action
-                onClick={handleChooseShip}
-                name={shipIndex}
+                onClick={() => {
+                  handleChooseShip(shipData.shipIndex);
+                }}
+                name={shipData.shipIndex}
                 className={[
                   cl.items,
-                  shipIndex === ownerChosenShip ? cl.activeShip : "",
+                  shipData.shipIndex === ownerChosenShip ? cl.activeShip : "",
                   "d-flex align-items-center",
                 ].join(" ")}
                 key={key}
               >
-                <Image
-                  src={shipDataArray[shipIndex].avatarString}
-                  className={cl.shipImg}
-                />
-                <span className="h3 m-0">
-                  {shipDataArray[shipIndex].tokenId}
-                </span>
+                <Image src={shipData.avatarString} className={cl.shipImg} />
+                <span className="h3 m-0">{shipData.tokenId}</span>
+                {shipData.health <= 0 && (
+                  <span
+                    className={["h5 m-0"].join("")}
+                    style={{ color: "red" }}
+                  >
+                    Destroyed
+                  </span>
+                )}
               </ListGroup.Item>
             ))}
           </ListGroup>

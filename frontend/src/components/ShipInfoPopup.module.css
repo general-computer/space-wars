@@ -49,7 +49,7 @@
   margin-left: 1rem;
 }
 
-.infoContainer p {
+.infoContainer .addrText {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -66,6 +66,24 @@
 
 .ptsSvg {
   height: 1.5rem;
+}
+
+.warningText {
+  color: rgb(237, 13, 13);
+}
+
+.popup .isDying :global {
+  color: rgb(237, 13, 13);
+  animation: blinkDyingText 1.5s steps(1) infinite;
+}
+
+@keyframes :global(blinkDyingText) {
+  from {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
 }
 
 /* For vertical screens */

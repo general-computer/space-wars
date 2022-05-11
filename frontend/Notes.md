@@ -1,8 +1,13 @@
-- !! Range
-- Improve styling
+## Front-end to-do
 
 - Add Error boundary
 - Re-structure folder structures
+
+### Simulated state (check using block.timestamp)
+
+- zone shrink
+- people outside zone -1 point every day
+- AP increase 1 every day
 
 - function that returns game state (zone size, units)
 - events to change the game state
