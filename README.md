@@ -3,13 +3,15 @@
 Welcome to the source code reposition Space Wars. We are one of the first live products to come out of the Chainlink 2022 Spring Hackathon.
 
 We've created this experimental game design to see how exogenus play affects blockchain games. This code is in an alpha state and should be not be used for production, investment, or any use.
+
+
 ![image](https://user-images.githubusercontent.com/99992004/167917993-5b285730-4a52-4fe1-9da6-dd26c329d2de.png)
 
 
 ## Basic Gameplay Overview
 Space Wars is an on-chain strategy game with player-run alliances and diplomacy.
 
-After mint, a random location is chosen for each spaceship. Each ship is powered by [ that replentish at a rate of 1 per 24 hours. To move in the X or Y direction consumes one energy - and to attack another spaceship consumes one as well. 
+After mint, a random location is chosen for each spaceship. Each ship is powered by Energy Points that replentish at a rate of 1 per 24 hours. To move in the X or Y direction consumes one energy - and to attack another spaceship consumes one as well. 
 
 Spaceships can also use an energy point to upgrade the range of their ship's weapons, up to a maximum of 3 range.
 
