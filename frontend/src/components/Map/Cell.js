@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import mapSlice from "../../store/map/mapSlice";
+import mapSlice from "../../store/shipInfo/shipInfoSlice";
 import cl from "./Cell.module.css";
 
 export default function Cell({ shipIndex, isDying, x, y }) {

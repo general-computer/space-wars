@@ -1,0 +1,37 @@
+.clipOverflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.subInfo.addr {
+  flex-wrap: nowrap;
+}
+
+.warningText {
+  color: rgb(237, 13, 13);
+}
+
+.isDying :global {
+  color: rgb(237, 13, 13);
+  animation: blinkDyingText 1.5s steps(1) infinite;
+}
+
+.actionBtnsContainer {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.actionBtnsContainer button {
+  width: 10rem;
+}
+
+@keyframes :global(blinkDyingText) {
+  from {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+}

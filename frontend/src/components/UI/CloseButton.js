@@ -1,5 +1,5 @@
 import cl from "./CloseButton.module.css";
-import crossSvg from "../img/cross-optimised.svg";
+import crossSvg from "../../img/cross-optimised.svg";
 
 export default function CloseButton({ className, ...attr }) {
   return (

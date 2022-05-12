@@ -1,0 +1,25 @@
+.popup {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: 50vw;
+  height: auto;
+
+  background-color: white;
+  border-radius: 0.2rem 0 0 0.2rem;
+}
+
+.closeBtn {
+  position: absolute;
+  inset: 0 0 auto auto;
+}
+
+/* For vertical screens */
+@media (max-aspect-ratio: 4/5) {
+  .popup {
+    inset: auto 0 0 0;
+    width: auto;
+    height: 50vh;
+
+    border-radius: 0.2rem 0.2rem 0 0;
+  }
+}

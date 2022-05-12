@@ -3,6 +3,8 @@
 - Add Error boundary
 - Re-structure folder structures
 
+?? Take action points to move?
+
 ### Simulated state (check using block.timestamp)
 
 - zone shrink
