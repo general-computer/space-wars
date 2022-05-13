@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/space-wars/static/css/main.f3193949.css",
-    "main.js": "/space-wars/static/js/main.c5d77468.js",
+    "main.css": "/space-wars/static/css/main.7c99990f.css",
+    "main.js": "/space-wars/static/js/main.bb6e785b.js",
     "static/media/sword-optimised.svg": "/space-wars/static/media/sword-optimised.5e9fd023dad70fb777a4c1b55b5421c4.svg",
     "static/media/lightning-optimised.svg": "/space-wars/static/media/lightning-optimised.1a9cfb04feb143cb8d3503b11359a796.svg",
     "static/media/heart-optimised.svg": "/space-wars/static/media/heart-optimised.636bc2384673f4d275d0ae4389746791.svg",
     "static/media/cross-optimised.svg": "/space-wars/static/media/cross-optimised.c211a8ef489d9db44cba2e955b7aebc4.svg",
     "index.html": "/space-wars/index.html",
-    "main.f3193949.css.map": "/space-wars/static/css/main.f3193949.css.map",
-    "main.c5d77468.js.map": "/space-wars/static/js/main.c5d77468.js.map"
+    "main.7c99990f.css.map": "/space-wars/static/css/main.7c99990f.css.map",
+    "main.bb6e785b.js.map": "/space-wars/static/js/main.bb6e785b.js.map"
   },
   "entrypoints": [
-    "static/css/main.f3193949.css",
-    "static/js/main.c5d77468.js"
+    "static/css/main.7c99990f.css",
+    "static/js/main.bb6e785b.js"
   ]
 }
