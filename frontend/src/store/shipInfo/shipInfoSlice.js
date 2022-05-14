@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import userInfoSlice from "../userInfo/userInfoSlice";
 
 export default createSlice({
   name: "shipInfo",
