@@ -1,6 +1,6 @@
 ## Front-end to-do
 
--?? push map to the side when side menu is open?
+- Don't show ship in clickable/range layer if it is dead!!!
 
 - Add Error boundary
 - Re-structure folder structures

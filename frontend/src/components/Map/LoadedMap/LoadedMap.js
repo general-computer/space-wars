@@ -9,7 +9,7 @@ import AvatarLayer from "./AvatarLayer";
 import ShootingRangeLayer from "./ShootingRangeLayer";
 import ClickableLayer from "./ClickableLayer";
 
-export default (function () {
+export default function LoadedMap() {
   // Data fetching
   const { isDataLoaded, shipDataArray } = useSelector((state) => state.data);
   const ownerChosenShip = useSelector(
@@ -20,29 +20,35 @@ export default (function () {
   );
 
   /*
-   * Zoom to ship when new ship is chosen by the owner
+   * Zoom to ship when new ship is CLICKED
+   * Note: a dead ship can also be "clicked" by choosing on the ChoosingShip component
    */
   // For accessing TransformWrapper's handlers
   const transformWrapperRef = useRef(null);
-  const shipIsZoomable =
-    // 1. data must be loaded to get the ship DOM node
-    isDataLoaded &&
-    // 2. a ship must be selected
-    ownerChosenShip !== null &&
-    // 3. The ship must be alive
-    shipDataArray[ownerChosenShip].health > 0;
+  const lastClickedShip = useRef(null);
   useEffect(() => {
-    if (shipIsZoomable) {
-      const currShipData = shipDataArray[ownerChosenShip];
-      const x = currShipData.posX;
-      const y = currShipData.posY;
-      // zoomToElement(node, scale, animationTime, animationType)
-      transformWrapperRef.current.zoomToElement(`cell-${x}-${y}`, 10, 100);
-    }
-  }, [ownerChosenShip]);
+    // Use clickedShipIndex, or lastClickedShip if available
+    let targetShipIndex;
+    if (clickedShipIndex === null) {
+      if (lastClickedShip.current === null) return;
+      else targetShipIndex = lastClickedShip.current;
+    } else targetShipIndex = clickedShipIndex;
+
+    // But no zoom if the target ship is dead
+    if (shipDataArray[targetShipIndex].health <= 0) return;
+
+    const targetShipData = shipDataArray[targetShipIndex];
+    const x = targetShipData.posX;
+    const y = targetShipData.posY;
+    // Usage: zoomToElement(node, scale, animationTime, animationType)
+    transformWrapperRef.current.zoomToElement(`cell-${x}-${y}`, 5, 1);
+
+    // Store the last clicked ship
+    lastClickedShip.current = clickedShipIndex;
+  }, [clickedShipIndex]);
 
   return (
-    <TransformWrapper maxScale={999} ref={transformWrapperRef}>
+    <TransformWrapper minScale={0.8} maxScale={999} ref={transformWrapperRef}>
       <TransformComponent>
         <FullSizeWrapper>
           <LayersWrapper>
@@ -55,4 +61,4 @@ export default (function () {
       </TransformComponent>
     </TransformWrapper>
   );
-});
+}

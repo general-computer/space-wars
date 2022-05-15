@@ -19,18 +19,6 @@ import InfoContainer, {
 } from "./components/InfoContainer";
 import ActionBtnsContainer from "./components/ActionBtnsContainer";
 
-const SvgRepeats = ({ repeats, url }) => {
-  return (
-    <span className={cl.svgWrapper}>
-      {Array(repeats)
-        .fill("")
-        .map((item, index) => (
-          <img src={url} alt="" className={cl.ptsSvg} key={index} />
-        ))}
-    </span>
-  );
-};
-
 export default (function () {
   const clickedShipIndex = useSelector(
     (state) => state.sideMenu.clickedShipIndex
@@ -55,11 +43,11 @@ export default (function () {
   const isShipDying = isDying(posX, posY, mapLength, zoneLength);
 
   const chooseMove = () => {
-    dispatch(sideMenuSlice.actions.chooseAction("move"));
+    dispatch(sideMenuSlice.actions.chooseMenuType("move"));
   };
 
   const chooseUpgrade = () => {
-    dispatch(sideMenuSlice.actions.chooseAction("upgrade"));
+    dispatch(sideMenuSlice.actions.chooseMenuType("upgrade"));
   };
 
   return (
@@ -107,10 +95,8 @@ export default (function () {
 
       {ownerChosenShip === clickedShipIndex && health > 0 && (
         <ActionBtnsContainer>
-          <Button>
-            <span className="h3" onClick={chooseMove}>
-              Move
-            </span>
+          <Button onClick={chooseMove}>
+            <span className="h3">Move</span>
           </Button>
           <Button variant="success" onClick={chooseUpgrade}>
             <span className="h5">Expand Impulse Horizon</span>

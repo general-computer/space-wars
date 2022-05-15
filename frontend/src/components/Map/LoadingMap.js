@@ -6,7 +6,7 @@ const LoadingText = styled.span`
   padding-right: 1rem;
 `;
 
-export default (function () {
+export default function LoadingMap() {
   return (
     <FullSizeWrapper>
       <LoadingText className={`h1 text-light`}>Map Loading...</LoadingText>
@@ -15,4 +15,4 @@ export default (function () {
       </Spinner>
     </FullSizeWrapper>
   );
-});
+}

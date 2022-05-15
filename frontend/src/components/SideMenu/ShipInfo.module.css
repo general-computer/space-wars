@@ -17,16 +17,6 @@
   animation: blinkDyingText 1.5s steps(1) infinite;
 }
 
-.actionBtnsContainer {
-  align-self: stretch;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.actionBtnsContainer button {
-  width: 10rem;
-}
-
 @keyframes :global(blinkDyingText) {
   from {
     opacity: 1;

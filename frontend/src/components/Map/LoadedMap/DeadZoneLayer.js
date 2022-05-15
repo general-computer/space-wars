@@ -23,7 +23,7 @@ const DeadZone3 = styled(DeadZone)`
   grid-row: -${(props) => props.deadZoneWidth + 1} / -1;
 `;
 
-export default (function ({ zIndex }) {
+export default function DeadZoneLayer({ zIndex }) {
   const mapLength = useSelector((state) => state.data.mapLength);
   const zoneLength = useSelector((state) => state.data.zoneLength);
 
@@ -37,4 +37,4 @@ export default (function ({ zIndex }) {
       <DeadZone3 deadZoneWidth={deadZoneWidth} />
     </Grid>
   );
-});
+}

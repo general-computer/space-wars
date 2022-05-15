@@ -4,7 +4,7 @@ export default styled.div`
   /* background-color: black; */
   border: 0.05rem white solid;
 
-  /* Make the whole grid fits its FullSizeWrapper parent */
+  /* Make the grid area a square that is always contained by its FullSizeWrapper parent */
   width: min(var(--map-width), var(--map-height));
   height: min(var(--map-width), var(--map-height));
 

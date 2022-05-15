@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
 
-const Grid = styled.div`
+const StyledGrid = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -15,12 +15,12 @@ const Grid = styled.div`
   grid-template-rows: repeat(${(props) => props.len}, 1fr);
 `;
 
-export default (function ({ children, zIndex, ...attr }) {
+export default function Grid({ children, zIndex, ...attr }) {
   const mapLength = useSelector((state) => state.data.mapLength);
 
   return (
-    <Grid len={mapLength} zIndex={zIndex} {...attr}>
+    <StyledGrid len={mapLength} zIndex={zIndex} {...attr}>
       {children}
-    </Grid>
+    </StyledGrid>
   );
-});
+}

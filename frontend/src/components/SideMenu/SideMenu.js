@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
 import CloseButton from "../UI/CloseButton";
+import MoveMenu from "./MoveMenu";
 import ShipInfo from "./ShipInfo";
 import cl from "./SideMenu.module.css";
 
@@ -22,6 +23,8 @@ export default (function () {
         switch (menuType) {
           case "info":
             return <ShipInfo />;
+          case "move":
+            return <MoveMenu />;
           default:
             return;
         }

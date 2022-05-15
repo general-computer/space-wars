@@ -4,19 +4,18 @@ import styled from "styled-components/macro";
 import LoadingMap from "./LoadingMap";
 import LoadedMap from "./LoadedMap/LoadedMap";
 
-const Map = styled.section`
-  --map-width: 90vw;
-  --map-height: 75vh;
+const StyledMap = styled.main`
+  flex-grow: 1;
   border: 0.1rem cyan solid;
-  width: var(--map-width);
-  height: var(--map-height);
-  margin: 5vh 0;
-  /* To make the grid inside not overflowing */
-  box-sizing: content-box;
+  margin: min(5vw, 5vh);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-export default (function () {
+export default function Map() {
   const isDataLoaded = useSelector((state) => state.data.isDataLoaded);
 
-  return <Map>{isDataLoaded ? <LoadedMap /> : <LoadingMap />}</Map>;
-});
+  return <StyledMap>{isDataLoaded ? <LoadedMap /> : <LoadingMap />}</StyledMap>;
+}

@@ -8,6 +8,13 @@ import SideMenu from "./components/SideMenu/SideMenu";
 import ChooseShip from "./components/UserInfo/ChooseShip";
 
 import cl from "./App.module.css";
+import styled from "styled-components/macro";
+
+const MainPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
 
 function App() {
   const dispatch = useDispatch();
@@ -23,10 +30,10 @@ function App() {
 
   return (
     <div className={cl.App}>
-      <Headbar />
-      <main className={cl.main}>
+      <MainPage>
+        <Headbar />
         <Map />
-      </main>
+      </MainPage>
       {/* The pop-up menus are in below */}
       {clickedShipIndex !== null && <SideMenu />}
       {isChoosingShip && <ChooseShip />}

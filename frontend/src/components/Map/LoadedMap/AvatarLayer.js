@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Grid from "../components/Grid";
 import { BlinkableAvatar } from "../components/BlinkableAvatar";
 
-export default (function ({ zIndex }) {
+export default function AvatarLayer({ zIndex }) {
   const shipDataArray = useSelector((state) => state.data.shipDataArray);
   const ownerChosenShip = useSelector(
     (state) => state.userInfo.ownerChosenShip
@@ -26,4 +26,4 @@ export default (function ({ zIndex }) {
       )}
     </Grid>
   );
-});
+}
