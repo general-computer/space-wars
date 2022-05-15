@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export default createSlice({
-  name: "shipInfo",
+  name: "sideMenu",
   initialState: {
     clickedShipIndex: null,
     menuType: "info",

@@ -12,7 +12,7 @@ import cl from "./App.module.css";
 function App() {
   const dispatch = useDispatch();
   const clickedShipIndex = useSelector(
-    (state) => state.shipInfo.clickedShipIndex
+    (state) => state.sideMenu.clickedShipIndex
   );
   const isChoosingShip = useSelector((state) => state.userInfo.isChoosingShip);
 

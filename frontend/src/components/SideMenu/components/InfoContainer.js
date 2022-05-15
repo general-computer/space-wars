@@ -22,16 +22,16 @@ export const SubInfo = styled.p`
 export const SubInfoProp = styled.span``;
 export const SubInfoValue = styled.span``;
 
-export const SubInfoSvgValue = ({ repeats, url }) => {
-  const StyledSubInfoSvgValue = styled.span`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
+const StyledSubInfoSvgValue = styled.span`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
 
-    & .ptsSvg {
-      height: 1.5rem;
-    }
-  `;
+  & .ptsSvg {
+    height: 1.5rem;
+  }
+`;
+export const SubInfoSvgValue = ({ repeats, url }) => {
   return (
     <StyledSubInfoSvgValue>
       {Array(repeats)

@@ -1,5 +1,7 @@
 ## Front-end to-do
 
+-?? push map to the side when side menu is open?
+
 - Add Error boundary
 - Re-structure folder structures
 

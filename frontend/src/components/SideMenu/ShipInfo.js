@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { isDying } from "../../utils/deadzone";
-import shipInfoSlice from "../../store/shipInfo/shipInfoSlice";
+import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
 import cl from "./ShipInfo.module.css";
 import heartSvg from "../../img/heart-optimised.svg";
@@ -33,7 +33,7 @@ const SvgRepeats = ({ repeats, url }) => {
 
 export default (function () {
   const clickedShipIndex = useSelector(
-    (state) => state.shipInfo.clickedShipIndex
+    (state) => state.sideMenu.clickedShipIndex
   );
   const {
     avatarString,
@@ -41,7 +41,7 @@ export default (function () {
     owner,
     posX,
     posY,
-    level,
+    range,
     actionPoints,
     health,
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
@@ -54,15 +54,12 @@ export default (function () {
 
   const isShipDying = isDying(posX, posY, mapLength, zoneLength);
 
-  // "rangeLevel" here is +1 of "level" from the contract
-  const rangeLevel = level + 1;
-
   const chooseMove = () => {
-    dispatch(shipInfoSlice.actions.chooseAction("move"));
+    dispatch(sideMenuSlice.actions.chooseAction("move"));
   };
 
   const chooseUpgrade = () => {
-    dispatch(shipInfoSlice.actions.chooseAction("upgrade"));
+    dispatch(sideMenuSlice.actions.chooseAction("upgrade"));
   };
 
   return (
@@ -94,7 +91,7 @@ export default (function () {
             </SubInfo>
             <SubInfo>
               <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-              <SubInfoSvgValue repeats={rangeLevel} url={swordPtSvg} />
+              <SubInfoSvgValue repeats={range} url={swordPtSvg} />
             </SubInfo>
             <SubInfo>
               <SubInfoProp>DARK MATTER</SubInfoProp>

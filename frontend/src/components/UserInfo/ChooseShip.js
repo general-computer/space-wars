@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import userInfoSlice from "../../store/userInfo/userInfoSlice";
-import shipInfoSlice from "../../store/shipInfo/shipInfoSlice";
+import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
 import { Modal, ListGroup, Image } from "react-bootstrap";
 import CloseButton from "../UI/CloseButton";
@@ -23,7 +23,7 @@ export default function ShipMenu() {
 
   const handleChooseShip = (shipIndex) => {
     dispatch(userInfoSlice.actions.confirmShip(shipIndex));
-    dispatch(shipInfoSlice.actions.clickShip(shipIndex));
+    dispatch(sideMenuSlice.actions.clickShip(shipIndex));
   };
 
   const handleClose = () => {
