@@ -19,8 +19,12 @@ export const SubInfo = styled.p`
 
   font-size: 1.5rem;
 `;
-export const SubInfoProp = styled.span``;
-export const SubInfoValue = styled.span``;
+export const SubInfoProp = styled.span`
+  ${(props) => (props.warning ? "color: red" : "")}
+`;
+export const SubInfoValue = styled.span`
+  ${(props) => (props.warning ? "color: red" : "")}
+`;
 
 const StyledSubInfoSvgValue = styled.span`
   display: flex;

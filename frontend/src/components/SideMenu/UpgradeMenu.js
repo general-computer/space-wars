@@ -19,8 +19,7 @@ import InfoContainer, {
 import ActionBtnsContainer from "./components/ActionBtnsContainer";
 
 const StyledMenuContainer = styled(MenuContainer)`
-  background-color: rgb(35 144 71);
-  color: white;
+  background-color: rgb(255 200 0);
 `;
 
 export default function UpgradeMenu() {
@@ -51,10 +50,10 @@ export default function UpgradeMenu() {
         </SubInfo>
       </InfoContainer>
       <ActionBtnsContainer>
-        <Button variant="outline-light" onClick={goBack}>
+        <Button variant="outline-dark" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="light">
+        <Button variant="secondary">
           <span className="h4">Confirm Expansion</span>
         </Button>
       </ActionBtnsContainer>

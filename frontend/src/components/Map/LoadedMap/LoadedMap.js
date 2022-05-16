@@ -8,6 +8,7 @@ import DeadZoneLayer from "./DeadZoneLayer";
 import AvatarLayer from "./AvatarLayer";
 import ShootingRangeLayer from "./ShootingRangeLayer";
 import ClickableLayer from "./ClickableLayer";
+import MovableRangeLayer from "./MovableRangeLayer";
 
 export default function LoadedMap() {
   // Data fetching
@@ -50,7 +51,12 @@ export default function LoadedMap() {
         <FullSizeWrapper>
           <LayersWrapper>
             <ClickableLayer zIndex={100} />
-            {clickedShipIndex !== null && <ShootingRangeLayer zIndex={70} />}
+            {clickedShipIndex !== null && (
+              <>
+                <ShootingRangeLayer zIndex={70} />
+                <MovableRangeLayer zIndex={50} />
+              </>
+            )}
             <AvatarLayer zIndex={30} />
             <DeadZoneLayer zIndex={10} />
           </LayersWrapper>

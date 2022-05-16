@@ -1,7 +1,7 @@
 ## Front-end to-do
 
-- Add checks on mock moves: 1. clashing on other ships, 2. hitting map boudary, 3. running out of APs
 - Responsiveness: deliver map length to transform component children using getComputedStyle()?
+- Grid lines
 
 - Add Error boundary
 - Re-structure folder structures

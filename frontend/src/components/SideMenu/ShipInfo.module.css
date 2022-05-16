@@ -4,16 +4,7 @@
   text-overflow: ellipsis;
 }
 
-.subInfo.addr {
-  flex-wrap: nowrap;
-}
-
-.warningText {
-  color: rgb(237, 13, 13);
-}
-
 .isDying :global {
-  color: rgb(237, 13, 13);
   animation: blinkDyingText 1.5s steps(1) infinite;
 }
 

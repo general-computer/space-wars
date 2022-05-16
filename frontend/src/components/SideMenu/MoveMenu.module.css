@@ -2,3 +2,11 @@
   background-color: #0d6efd;
   color: white;
 }
+
+.disabledText {
+  color: grey;
+}
+
+.warningText {
+  color: #440d13;
+}

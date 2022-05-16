@@ -65,9 +65,7 @@ export default (function () {
         </SubInfo>
         {health <= 0 ? (
           <SubInfo>
-            <SubInfoProp className={cl.warningText}>
-              This ship has been destroyed
-            </SubInfoProp>
+            <SubInfoProp warning>This ship has been destroyed</SubInfoProp>
           </SubInfo>
         ) : (
           <>
@@ -86,7 +84,7 @@ export default (function () {
               <SubInfoSvgValue repeats={actionPoints} url={lightningSvg} />
             </SubInfo>
             <SubInfo className={isShipDying ? cl.isDying : ""}>
-              <SubInfoProp>STABILIZER</SubInfoProp>
+              <SubInfoProp warning={isShipDying}>STABILIZER</SubInfoProp>
               <SubInfoSvgValue repeats={health} url={heartSvg} />
             </SubInfo>
           </>
@@ -98,7 +96,7 @@ export default (function () {
           <Button onClick={chooseMove}>
             <span className="h3">Move</span>
           </Button>
-          <Button variant="success" onClick={chooseUpgrade}>
+          <Button variant="warning" onClick={chooseUpgrade}>
             <span className="h5">Expand Impulse Horizon</span>
           </Button>
         </ActionBtnsContainer>
