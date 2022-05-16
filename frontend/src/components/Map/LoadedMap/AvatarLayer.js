@@ -9,21 +9,22 @@ export default function AvatarLayer({ zIndex }) {
     (state) => state.userInfo.ownerChosenShip
   );
 
+  const aliveShipsData = [];
+  shipDataArray.forEach((shipData, shipIndex) => {
+    if (shipData.health > 0) aliveShipsData.push({ ...shipData, shipIndex });
+  });
+
   return (
     <Grid zIndex={zIndex}>
-      {shipDataArray.map(
-        (shipData, shipIndex) =>
-          // Not showing dead ships!
-          shipData.health > 0 && (
-            <BlinkableAvatar
-              src={shipData.avatarString}
-              x={shipData.posX}
-              y={shipData.posY}
-              isBlink={ownerChosenShip === shipIndex}
-              key={shipIndex}
-            />
-          )
-      )}
+      {aliveShipsData.map((shipData) => (
+        <BlinkableAvatar
+          src={shipData.avatarString}
+          x={shipData.posX}
+          y={shipData.posY}
+          isBlink={shipData.shipIndex === ownerChosenShip}
+          key={shipData.shipIndex}
+        />
+      ))}
     </Grid>
   );
 }

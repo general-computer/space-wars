@@ -1,7 +1,5 @@
 ## Front-end to-do
 
-- Don't show ship in clickable/range layer if it is dead!!!
-
 - Add Error boundary
 - Re-structure folder structures
 

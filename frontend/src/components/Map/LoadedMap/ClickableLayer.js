@@ -25,7 +25,16 @@ export default function ClickableLayer({ zIndex }) {
   );
   const dispatch = useDispatch();
 
-  const clickedShipData = shipDataArray[clickedShipIndex];
+  const aliveShipsData = [];
+  shipDataArray.forEach((shipData, shipIndex) => {
+    if (shipData.health > 0) aliveShipsData.push({ ...shipData, shipIndex });
+  });
+  const clickedShipData =
+    clickedShipIndex === null
+      ? []
+      : aliveShipsData.filter(
+          (shipData) => shipData.shipIndex === clickedShipIndex
+        );
 
   const handleClickInfo = (shipIndex) => {
     dispatch(sideMenuSlice.actions.clickShip(shipIndex));
@@ -33,30 +42,27 @@ export default function ClickableLayer({ zIndex }) {
 
   return (
     <Grid zIndex={zIndex}>
-      {shipDataArray.map(
-        (shipData, shipIndex) =>
-          // Not showing dead ships!
-          shipData.health > 0 && (
-            <DummyAvatar
-              x={shipData.posX}
-              y={shipData.posY}
-              id={`cell-${shipData.posX}-${shipData.posY}`}
-              onClick={() => {
-                handleClickInfo(shipIndex);
-              }}
-              key={shipIndex}
-            />
-          )
-      )}
-      {clickedShipIndex !== null && (
-        <ClickedAvatar
-          src={clickedShipData.avatarString}
-          x={clickedShipData.posX}
-          y={clickedShipData.posY}
-          isBlink={ownerChosenShip === clickedShipIndex}
-          id={`cell-${clickedShipData.posX}-${clickedShipData.posY}`}
+      {aliveShipsData.map((shipData) => (
+        <DummyAvatar
+          x={shipData.posX}
+          y={shipData.posY}
+          id={`cell-${shipData.posX}-${shipData.posY}`}
+          onClick={() => {
+            handleClickInfo(shipData.shipIndex);
+          }}
+          key={shipData.shipIndex}
         />
-      )}
+      ))}
+      {clickedShipData.map((shipData) => (
+        <ClickedAvatar
+          src={shipData.avatarString}
+          x={shipData.posX}
+          y={shipData.posY}
+          isBlink={ownerChosenShip === clickedShipIndex}
+          id={`cell-${shipData.posX}-${shipData.posY}`}
+          key={shipData.shipIndex}
+        />
+      ))}
     </Grid>
   );
 }

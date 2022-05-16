@@ -11,10 +11,7 @@ import ClickableLayer from "./ClickableLayer";
 
 export default function LoadedMap() {
   // Data fetching
-  const { isDataLoaded, shipDataArray } = useSelector((state) => state.data);
-  const ownerChosenShip = useSelector(
-    (state) => state.userInfo.ownerChosenShip
-  );
+  const shipDataArray = useSelector((state) => state.data.shipDataArray);
   const clickedShipIndex = useSelector(
     (state) => state.sideMenu.clickedShipIndex
   );

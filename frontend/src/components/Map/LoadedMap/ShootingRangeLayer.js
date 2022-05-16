@@ -5,7 +5,6 @@ import Grid from "../components/Grid";
 
 const RangeBlock = styled.div`
   background-color: rgb(13 110 253 / 62%);
-  // To calculate the span start & end, taking into account out-of-map shooting range
   grid-column: ${(props) => props.xGutters.min} /
     ${(props) => props.xGutters.max};
   grid-row: ${(props) => props.yGutters.min} / ${(props) => props.yGutters.max};
@@ -32,8 +31,10 @@ export default function ShootingRangeLayer({ zIndex }) {
   };
 
   return (
-    <Grid zIndex={zIndex}>
-      <RangeBlock xGutters={xGutters} yGutters={yGutters} />
-    </Grid>
+    shipData.health > 0 && (
+      <Grid zIndex={zIndex}>
+        <RangeBlock xGutters={xGutters} yGutters={yGutters} />
+      </Grid>
+    )
   );
 }
