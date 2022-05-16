@@ -16,6 +16,7 @@ export default function ShootingRangeLayer({ zIndex }) {
   const clickedShipIndex = useSelector(
     (state) => state.sideMenu.clickedShipIndex
   );
+  const mockRangeIncr = useSelector((state) => state.sideMenu.mockRangeIncr);
   const shipData = useSelector(
     (state) => state.data.shipDataArray[clickedShipIndex]
   );
@@ -24,18 +25,19 @@ export default function ShootingRangeLayer({ zIndex }) {
   /**
    * Data Processing
    */
-  const { range, posX: origX, posY: origY, avatarString } = shipData;
+  const { range: currRange, posX: origX, posY: origY, avatarString } = shipData;
   const translatedX = origX + transX;
   const translatedY = origY + transY;
+  const mockRange = currRange + mockRangeIncr;
 
   // CSS grid's gutter starts from 1. Also, the shooting zone cannot lie out of the CSS grid. Need some calculations.
   const xGutters = {
-    min: Math.max(translatedX - range + 1, 1),
-    max: Math.min(translatedX + range + 2, mapLength + 1),
+    min: Math.max(translatedX - mockRange + 1, 1),
+    max: Math.min(translatedX + mockRange + 2, mapLength + 1),
   };
   const yGutters = {
-    min: Math.max(translatedY - range + 1, 1),
-    max: Math.min(translatedY + range + 2, mapLength + 1),
+    min: Math.max(translatedY - mockRange + 1, 1),
+    max: Math.min(translatedY + mockRange + 2, mapLength + 1),
   };
 
   return (

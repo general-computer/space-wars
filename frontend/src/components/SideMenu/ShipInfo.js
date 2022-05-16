@@ -93,10 +93,14 @@ export default (function () {
 
       {ownerChosenShip === clickedShipIndex && health > 0 && (
         <ActionBtnsContainer>
-          <Button onClick={chooseMove}>
+          <Button disabled={actionPoints <= 0} onClick={chooseMove}>
             <span className="h3">Move</span>
           </Button>
-          <Button variant="warning" onClick={chooseUpgrade}>
+          <Button
+            variant="warning"
+            disabled={actionPoints <= 0 || range >= 3}
+            onClick={chooseUpgrade}
+          >
             <span className="h5">Expand Impulse Horizon</span>
           </Button>
         </ActionBtnsContainer>

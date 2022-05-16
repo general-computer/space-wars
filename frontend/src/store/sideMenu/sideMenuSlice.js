@@ -7,6 +7,7 @@ const INITIALSTATE = {
     transX: 0,
     transY: 0,
   },
+  mockRangeIncr: 0,
 };
 
 export default createSlice({
@@ -50,6 +51,14 @@ export default createSlice({
         state.mockMoves.transX += buttonMapMove[button].x;
         state.mockMoves.transY += buttonMapMove[button].y;
       }
+    },
+    tryUpgrade(state, action) {
+      if (action.payload.currRange + state.mockRangeIncr >= 3) return;
+      state.mockRangeIncr++;
+    },
+    tryRevertUpgrade(state) {
+      if (state.mockRangeIncr < 0) return;
+      state.mockRangeIncr--;
     },
   },
 });

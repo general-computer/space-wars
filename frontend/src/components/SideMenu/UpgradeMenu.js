@@ -13,7 +13,6 @@ import ImgContainer from "./components/ImgContainer";
 import InfoContainer, {
   SubInfo,
   SubInfoProp,
-  SubInfoValue,
   SubInfoSvgValue,
 } from "./components/InfoContainer";
 import ActionBtnsContainer from "./components/ActionBtnsContainer";
@@ -26,10 +25,20 @@ export default function UpgradeMenu() {
   const clickedShipIndex = useSelector(
     (state) => state.sideMenu.clickedShipIndex
   );
-  const { avatarString, range, actionPoints } = useSelector(
-    (state) => state.data.shipDataArray[clickedShipIndex]
-  );
+  const mockRangeIncr = useSelector((state) => state.sideMenu.mockRangeIncr);
+  const {
+    avatarString,
+    range: currRange,
+    actionPoints,
+  } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
   const dispatch = useDispatch();
+
+  const tryUpgrade = () => {
+    dispatch(sideMenuSlice.actions.tryUpgrade({ currRange }));
+  };
+  const tryRevertUpgrade = () => {
+    dispatch(sideMenuSlice.actions.tryRevertUpgrade());
+  };
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
@@ -42,18 +51,40 @@ export default function UpgradeMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-          <SubInfoSvgValue repeats={range} url={swordPtSvg} />
+          <SubInfoSvgValue
+            repeats={currRange + mockRangeIncr}
+            url={swordPtSvg}
+          />
         </SubInfo>
         <SubInfo>
           <SubInfoProp>DARK MATTER</SubInfoProp>
-          <SubInfoSvgValue repeats={actionPoints} url={lightningSvg} />
+          <SubInfoSvgValue
+            repeats={actionPoints - mockRangeIncr}
+            url={lightningSvg}
+          />
         </SubInfo>
       </InfoContainer>
+
+      <Button
+        variant="dark"
+        disabled={currRange + mockRangeIncr >= 3}
+        onClick={tryUpgrade}
+      >
+        <span className="h3">Expand</span>
+      </Button>
+      <Button
+        variant="light"
+        disabled={mockRangeIncr <= 0}
+        onClick={tryRevertUpgrade}
+      >
+        <span className="h3">Revert</span>
+      </Button>
+
       <ActionBtnsContainer>
         <Button variant="outline-dark" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="secondary">
+        <Button variant="dark" disabled={mockRangeIncr <= 0}>
           <span className="h4">Confirm Expansion</span>
         </Button>
       </ActionBtnsContainer>
