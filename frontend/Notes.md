@@ -1,5 +1,7 @@
 ## Front-end to-do
 
+- Responsiveness: deliver map length to transform component children using getComputedStyle()?
+
 - Add Error boundary
 - Re-structure folder structures
 

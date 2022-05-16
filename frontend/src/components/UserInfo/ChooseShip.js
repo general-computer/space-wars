@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
-import userInfoSlice from "../store/userInfo/userInfoSlice";
+import userInfoSlice from "../../store/userInfo/userInfoSlice";
+import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
 import { Modal, ListGroup, Image } from "react-bootstrap";
-import cl from "./ShipMenu.module.css";
-import CloseButton from "./CloseButton";
+import CloseButton from "../UI/CloseButton";
+import cl from "./ChooseShip.module.css";
 
 export default function ShipMenu() {
-  const isChoosingShip = useSelector((state) => state.userInfo.isChoosingShip);
   const walletAddress = useSelector((state) => state.userInfo.walletAddress);
   const ownerChosenShip = useSelector(
     (state) => state.userInfo.ownerChosenShip
@@ -23,6 +23,7 @@ export default function ShipMenu() {
 
   const handleChooseShip = (shipIndex) => {
     dispatch(userInfoSlice.actions.confirmShip(shipIndex));
+    dispatch(sideMenuSlice.actions.clickShip(shipIndex));
   };
 
   const handleClose = () => {
@@ -31,7 +32,7 @@ export default function ShipMenu() {
 
   return (
     <Modal
-      show={isChoosingShip}
+      show={true}
       animation={false}
       centered
       onHide={handleClose}
