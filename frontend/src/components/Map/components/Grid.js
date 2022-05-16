@@ -9,10 +9,20 @@ const StyledGrid = styled.div`
   z-index: ${(props) => props.zIndex};
 
   display: grid;
-  /* "gap" doesn't work well when dimension of the map is large */
-  /* gap: 0.1rem; */
   grid-template-columns: repeat(${(props) => props.len}, 1fr);
   grid-template-rows: repeat(${(props) => props.len}, 1fr);
+
+  /**
+  * Display grid mesh
+  */
+  /* "gap" doesn't work well when dimension of the map is large */
+  /* gap: 0.1rem; */
+  background-size: calc(
+      min(var(--map-width), var(--map-height)) / ${(props) => props.len}
+    )
+    calc(min(var(--map-width), var(--map-height)) / ${(props) => props.len});
+  background-image: linear-gradient(to right, grey 0.1px, transparent 0.1px),
+    linear-gradient(to bottom, grey 0.1px, transparent 0.1px);
 `;
 
 export default function Grid({ children, zIndex, ...attr }) {

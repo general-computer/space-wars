@@ -1,8 +1,7 @@
 import styled from "styled-components/macro";
 
 export default styled.div`
-  /* background-color: black; */
-  border: 0.05rem white solid;
+  /* border: 0.05rem white solid; */
 
   /* Make the grid area a square that is always contained by its FullSizeWrapper parent */
   width: min(var(--map-width), var(--map-height));
