@@ -1,17 +1,26 @@
 {
   "files": {
-    "main.css": "/space-wars/static/css/main.ef96359e.css",
-    "main.js": "/space-wars/static/js/main.f6911e9d.js",
+    "main.css": "/space-wars/static/css/main.3ad95be2.css",
+    "main.js": "/space-wars/static/js/main.4bc152a1.js",
+    "static/media/1.svg": "/space-wars/static/media/1.fa79e3c5aaa1e53532ab7c10933b45c2.svg",
+    "static/media/9.svg": "/space-wars/static/media/9.3fad288b5f6586d077d8f8e818b0aafe.svg",
+    "static/media/3.svg": "/space-wars/static/media/3.45ca78455051478b8f3cb00f1800f4bb.svg",
+    "static/media/5.svg": "/space-wars/static/media/5.cd7a45b0a2932f2fa41757bc371dcbb5.svg",
+    "static/media/7.svg": "/space-wars/static/media/7.369c67bba774ca52cfc42d070a25bb52.svg",
+    "static/media/4.svg": "/space-wars/static/media/4.ebd32a7e54577484607a29654188af2f.svg",
+    "static/media/6.svg": "/space-wars/static/media/6.366e98045b3948576d3abb4f6b14f5e5.svg",
+    "static/media/2.svg": "/space-wars/static/media/2.69f7f098416a3bc9946b19a8efd92539.svg",
+    "static/media/8.svg": "/space-wars/static/media/8.09216d05dbb9e458e8bc1b2716c89f2f.svg",
     "static/media/sword-optimised.svg": "/space-wars/static/media/sword-optimised.5e9fd023dad70fb777a4c1b55b5421c4.svg",
     "static/media/lightning-optimised.svg": "/space-wars/static/media/lightning-optimised.1a9cfb04feb143cb8d3503b11359a796.svg",
     "static/media/heart-optimised.svg": "/space-wars/static/media/heart-optimised.636bc2384673f4d275d0ae4389746791.svg",
     "static/media/cross-optimised.svg": "/space-wars/static/media/cross-optimised.c211a8ef489d9db44cba2e955b7aebc4.svg",
     "index.html": "/space-wars/index.html",
-    "main.ef96359e.css.map": "/space-wars/static/css/main.ef96359e.css.map",
-    "main.f6911e9d.js.map": "/space-wars/static/js/main.f6911e9d.js.map"
+    "main.3ad95be2.css.map": "/space-wars/static/css/main.3ad95be2.css.map",
+    "main.4bc152a1.js.map": "/space-wars/static/js/main.4bc152a1.js.map"
   },
   "entrypoints": [
-    "static/css/main.ef96359e.css",
-    "static/js/main.f6911e9d.js"
+    "static/css/main.3ad95be2.css",
+    "static/js/main.4bc152a1.js"
   ]
 }
