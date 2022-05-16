@@ -7,6 +7,8 @@ const StyledFullSizeWrapper = styled.div`
   * Unfortunately the TransformWrapper & TransformComponent always uses "fit-content" so will be hard-coded here
   */
   --map-width: ${(props) => (props.isMenuOpen ? 50 : 80)}vw;
+  // **** Alternative way to set map width; still on testing
+  /* --map-width: calc(${() => window.mapWidth} - 5vw); */
   --map-height: 80vh;
 
   width: var(--map-width);

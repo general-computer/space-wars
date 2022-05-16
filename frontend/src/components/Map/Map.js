@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 
 import LoadingMap from "./LoadingMap";
 import LoadedMap from "./LoadedMap/LoadedMap";
+import { useRef } from "react";
 
 const StyledMap = styled.main`
   flex-grow: 1;
@@ -17,5 +18,14 @@ const StyledMap = styled.main`
 export default function Map() {
   const isDataLoaded = useSelector((state) => state.data.isDataLoaded);
 
-  return <StyledMap>{isDataLoaded ? <LoadedMap /> : <LoadingMap />}</StyledMap>;
+  // **** Alternative way to set map width; still on testing
+  const mapRef = useRef(null);
+  /* if (mapRef.current !== null)
+    window.mapWidth = getComputedStyle(mapRef.current).width; */
+
+  return (
+    <StyledMap ref={mapRef}>
+      {isDataLoaded ? <LoadedMap /> : <LoadingMap />}
+    </StyledMap>
+  );
 }

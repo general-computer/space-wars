@@ -8,10 +8,10 @@ export default styled.div`
   justify-content: space-evenly;
 
   /* For vertical screens */
-  @media (max-aspect-ratio: 4/5) {
+  /*   @media (max-aspect-ratio: 4/5) {
     flex-direction: row;
     margin-top: 0;
     padding: 0 1.5rem;
     gap: 1rem;
-  }
+  } */
 `;

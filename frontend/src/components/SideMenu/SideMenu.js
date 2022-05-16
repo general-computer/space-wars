@@ -5,12 +5,11 @@ import CloseButton from "../UI/CloseButton";
 import MoveMenu from "./MoveMenu";
 import ShipInfo from "./ShipInfo";
 import cl from "./SideMenu.module.css";
+import UpgradeMenu from "./UpgradeMenu";
 
 export default (function () {
   const dispatch = useDispatch();
   const menuType = useSelector((state) => state.sideMenu.menuType);
-  /******************  For debug */
-  console.log(menuType);
 
   const handleClose = () => {
     dispatch(sideMenuSlice.actions.clickShip(null));
@@ -25,6 +24,8 @@ export default (function () {
             return <ShipInfo />;
           case "move":
             return <MoveMenu />;
+          case "upgrade":
+            return <UpgradeMenu />;
           default:
             return;
         }
