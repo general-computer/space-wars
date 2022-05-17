@@ -18,7 +18,7 @@ import InfoContainer, {
   SubInfoSvgValue,
 } from "./components/InfoContainer";
 import ActionBtnsContainer, {
-  MutableSpan,
+  DimmableSpan,
 } from "./components/ActionBtnsContainer";
 
 export default (function () {
@@ -139,12 +139,12 @@ export default (function () {
               disabled={actionPoints <= 0 || clickedShipRange >= 3}
               onClick={chooseUpgrade}
             >
-              <MutableSpan
+              <DimmableSpan
                 className="h5"
-                muted={actionPoints <= 0 || clickedShipRange >= 3}
+                dim={actionPoints <= 0 || clickedShipRange >= 3}
               >
                 Expand Impulse Horizon
-              </MutableSpan>
+              </DimmableSpan>
             </Button>
           </ActionBtnsContainer>
         ) : (

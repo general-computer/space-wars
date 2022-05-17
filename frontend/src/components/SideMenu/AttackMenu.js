@@ -17,7 +17,7 @@ import InfoContainer, {
   SubInfoSvgValue,
 } from "./components/InfoContainer";
 import ActionBtnsContainer, {
-  MutableSpan,
+  DimmableSpan,
 } from "./components/ActionBtnsContainer";
 
 const StyledMenuContainer = styled(MenuContainer)`
@@ -104,9 +104,9 @@ export default function AttackMenu() {
           <span className="h5">Back to Ship Info</span>
         </Button>
         <Button variant="light" disabled={mockHits <= 0}>
-          <MutableSpan className="h4" muted={mockHits <= 0}>
+          <DimmableSpan className="h4" dim={mockHits <= 0}>
             Confirm Destabilization
-          </MutableSpan>
+          </DimmableSpan>
         </Button>
       </ActionBtnsContainer>
     </StyledMenuContainer>

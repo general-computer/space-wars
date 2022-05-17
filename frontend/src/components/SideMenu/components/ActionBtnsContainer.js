@@ -14,9 +14,9 @@ export default styled.div`
   } */
 `;
 
-export const MutableSpan = styled.span`
+export const DimmableSpan = styled.span`
   ${(props) =>
-    props.muted &&
+    props.dim &&
     css`
       color: grey;
     `}

@@ -39,7 +39,12 @@ export default function LoadedMap() {
     const x = targetShipData.posX;
     const y = targetShipData.posY;
     // Usage: zoomToElement(node, scale, animationTime, animationType)
-    transformWrapperRef.current.zoomToElement(`cell-${x}-${y}`, 5, 1);
+    transformWrapperRef.current.zoomToElement(
+      `cell-${x}-${y}`,
+      // retain the current zooming scale
+      transformWrapperRef.current.state.scale,
+      1
+    );
 
     // Store the last clicked ship
     lastClickedShip.current = clickedShipIndex;
