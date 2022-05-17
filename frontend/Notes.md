@@ -1,5 +1,6 @@
 ## Front-end to-do
 
+- Whenever a new address is connected, either click a null ship, or click the original ship BUT show "Info" only
 - Responsiveness: deliver map length to transform component children using getComputedStyle()?
 
 - Add Error boundary

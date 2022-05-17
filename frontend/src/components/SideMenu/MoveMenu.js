@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
-import { filterAliveShips } from "../../utils/filterAliveShips";
+import { filterAliveShips } from "../../utils/shipFilters";
 
 import cl from "./MoveMenu.module.css";
 import lightningSvg from "../../img/lightning-optimised.svg";

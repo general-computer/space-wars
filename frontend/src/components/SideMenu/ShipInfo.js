@@ -23,24 +23,50 @@ export default (function () {
   const clickedShipIndex = useSelector(
     (state) => state.sideMenu.clickedShipIndex
   );
+  const ownerChosenShip = useSelector(
+    (state) => state.userInfo.ownerChosenShip
+  );
   const {
     avatarString,
     tokenId,
     owner,
-    posX,
-    posY,
-    range,
+    posX: clickedShipX,
+    posY: clickedShipY,
+    range: clickedShipRange,
     actionPoints,
     health,
-  } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
-  const ownerChosenShip = useSelector(
-    (state) => state.userInfo.ownerChosenShip
+  } = useSelector((state) =>
+    clickedShipIndex ? state.data.shipDataArray[clickedShipIndex] : {}
+  );
+  const {
+    range: ownerChosenShipRange,
+    posX: ownerChosenShipX,
+    posY: ownerChosenShipY,
+    actionPoints: ownerChosenShipAP,
+  } = useSelector((state) =>
+    ownerChosenShip !== null ? state.data.shipDataArray[ownerChosenShip] : {}
   );
   const mapLength = useSelector((state) => state.data.mapLength);
   const zoneLength = useSelector((state) => state.data.zoneLength);
   const dispatch = useDispatch();
 
-  const isShipDying = isDying(posX, posY, mapLength, zoneLength);
+  /**
+   * Data processing
+   */
+  const isShipDying = isDying(
+    clickedShipX,
+    clickedShipY,
+    mapLength,
+    zoneLength
+  );
+  const isShipAttackable = (function () {
+    if (ownerChosenShip === null) return undefined;
+    if (ownerChosenShip === clickedShipIndex) return false;
+    return (
+      Math.abs(clickedShipX - ownerChosenShipX) <= ownerChosenShipRange &&
+      Math.abs(clickedShipY - ownerChosenShipY) <= ownerChosenShipRange
+    );
+  })();
 
   const chooseMove = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("move"));
@@ -48,6 +74,10 @@ export default (function () {
 
   const chooseUpgrade = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("upgrade"));
+  };
+
+  const chooseGiveAP = () => {
+    dispatch(sideMenuSlice.actions.chooseMenuType("giveAP"));
   };
 
   return (
@@ -60,24 +90,20 @@ export default (function () {
           <SubInfoValue>{tokenId}</SubInfoValue>
         </SubInfo>
         <SubInfo>
-          <SubInfoProp className={cl.addr}>CAPTAIN</SubInfoProp>
+          <SubInfoProp>CAPTAIN</SubInfoProp>
           <SubInfoValue className={cl.clipOverflow}>{owner}</SubInfoValue>
         </SubInfo>
-        {health <= 0 ? (
-          <SubInfo>
-            <SubInfoProp warning>This ship has been destroyed</SubInfoProp>
-          </SubInfo>
-        ) : (
+        {health > 0 ? (
           <>
             <SubInfo>
               <SubInfoProp>COORDINATES</SubInfoProp>
               <SubInfoValue>
-                ({posX}, {posY})
+                ({clickedShipX}, {clickedShipY})
               </SubInfoValue>
             </SubInfo>
             <SubInfo>
               <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-              <SubInfoSvgValue repeats={range} url={swordPtSvg} />
+              <SubInfoSvgValue repeats={clickedShipRange} url={swordPtSvg} />
             </SubInfo>
             <SubInfo>
               <SubInfoProp>DARK MATTER</SubInfoProp>
@@ -88,23 +114,46 @@ export default (function () {
               <SubInfoSvgValue repeats={health} url={heartSvg} />
             </SubInfo>
           </>
+        ) : (
+          <SubInfo>
+            <SubInfoProp warning>This ship has been destroyed</SubInfoProp>
+          </SubInfo>
         )}
       </InfoContainer>
 
-      {ownerChosenShip === clickedShipIndex && health > 0 && (
-        <ActionBtnsContainer>
-          <Button disabled={actionPoints <= 0} onClick={chooseMove}>
-            <span className="h3">Move</span>
-          </Button>
-          <Button
-            variant="warning"
-            disabled={actionPoints <= 0 || range >= 3}
-            onClick={chooseUpgrade}
-          >
-            <span className="h5">Expand Impulse Horizon</span>
-          </Button>
-        </ActionBtnsContainer>
-      )}
+      {health > 0 &&
+        ownerChosenShip !== null &&
+        (ownerChosenShip === clickedShipIndex ? (
+          <ActionBtnsContainer>
+            <Button disabled={actionPoints <= 0} onClick={chooseMove}>
+              <span className="h3">Move</span>
+            </Button>
+            <Button
+              variant="warning"
+              disabled={actionPoints <= 0 || clickedShipRange >= 3}
+              onClick={chooseUpgrade}
+            >
+              <span className="h5">Expand Impulse Horizon</span>
+            </Button>
+          </ActionBtnsContainer>
+        ) : (
+          <ActionBtnsContainer>
+            <Button
+              variant="success"
+              disabled={ownerChosenShipAP <= 0}
+              onClick={chooseGiveAP}
+            >
+              <span className="h5">Teleport Dark Matter</span>
+            </Button>
+            <Button
+              variant="danger"
+              disabled={ownerChosenShipAP <= 0 || !isShipAttackable}
+              // onClick={chooseUpgrade}
+            >
+              <span className="h3">Destabilise</span>
+            </Button>
+          </ActionBtnsContainer>
+        ))}
     </MenuContainer>
   );
 });
