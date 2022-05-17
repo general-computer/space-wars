@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// https://twitter.com/Kibou_web3
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; // TODO: use a more optimized base
@@ -12,6 +13,8 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // TODO: replace the counter
     Counters.Counter private _tokenIdCounter;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
+    int56 constant playfieldSize = 100;
+    uint56 constant ZONE_SIZE = 100;
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 tokenId, uint8 newHealth);
@@ -38,7 +41,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
-        if (tokenId >= SUPPLY)
+        if (hasGameStarted())
             revert ExceedsSupply();
 
         _tokenIdCounter.increment();
@@ -64,19 +67,29 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
     }
 
+    function getMaxSupply() external pure returns (uint256) {
+        return SUPPLY;
+    }
+
+    function getCurrentSupply() public view returns (uint256) {
+        return _tokenIdCounter.current() + 1;
+    }
+
     //
     // game state getters/builders
     // (these things restore the current game state, hence "builders")
     //
 
-    uint56 constant ZONE_SIZE = 100;
+    function hasGameStarted() public view returns (bool) {
+        return getCurrentSupply() >= SUPPLY;
+    }
 
     function getCurrentDay() public view returns (uint56) { // it's prob gonna be shorter than 256 later
         return uint56((block.timestamp - s_gameStartTime) / (1 days));
     }
 
     // zone size decreases by 1 per day (speed is subject to change)
-    function getZoneSize(uint56 day) public pure returns (uint56) {
+    function getZoneSize(uint56 day) internal pure returns (uint56) {
         return (day > ZONE_SIZE) ? 0 : (ZONE_SIZE - day);
     }
 
@@ -91,7 +104,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     // this is where the magic happens
     // simulates 1 day worth of "external" changes to a unit
-    function simulateUnitOnce(UnitData memory unit) public pure returns (UnitData memory) {
+    function simulateUnitOnce(UnitData memory unit) internal pure returns (UnitData memory) {
         unit.lastSimulatedDay++;
 
         // take helth from zon
@@ -108,7 +121,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     // simulates the unit out until today
-    function simulateUnitOut(UnitData memory unit) public view returns (UnitData memory) {
+    function simulateUnitOut(UnitData memory unit) internal view returns (UnitData memory) {
         for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); day++) {
             unit = simulateUnitOnce(unit);
         }
@@ -116,11 +129,11 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         return unit;
     }
 
-    function getUnit(uint256 id) public view returns (UnitData memory) {
+    function getUnit(uint256 id) internal view returns (UnitData memory) {
         return simulateUnitOut(s_units[id]);
     }
 
-    function getAllUnits() public view returns (UnitData[SUPPLY] memory) {
+    function getAllUnits() internal view returns (UnitData[SUPPLY] memory) {
         UnitData[SUPPLY] memory units;
         for (uint256 id = 0; id <= _tokenIdCounter.current(); id++) {
             units[id] = getUnit(id);
@@ -151,7 +164,6 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     error NoAccess();
     error DeadSpaceship();
 
-    int56 constant playfieldSize = 100;
     // TODO: check that the slot is empty
     function move(uint256 unit, int56 x, int56 y) public {
         // limit the play field
