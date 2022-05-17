@@ -16,7 +16,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 tokenId, uint8 newHealth);
     //event UnitUpgraded(uint256 tokenId, uint256 level);
-    event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint128 amount);
+    event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount);
 
     // this in theory should take 1 slot
     struct UnitData {
@@ -24,16 +24,23 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         int56 y;
         uint8 level; // 0 or 1 or 2
         uint8 lives; // 0 (ded) or 1 or 2 or 3
-        uint128 points;
+        uint64 points;
+        uint56 lastSimulatedDay;
     }
 
     // structs in ethers.js https://github.com/ethers-io/ethers.js/issues/315
     UnitData[SUPPLY] public s_units;
+    uint256 public s_gameStartTime;
 
     constructor() ERC721("Spaceship", "SHIP") {}
 
+    error ExceedsSupply();
+
     function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
+        if (tokenId >= SUPPLY)
+            revert ExceedsSupply();
+
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
 
@@ -43,44 +50,100 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
             level: 0,
             points: 1,
-            lives: 3
+            lives: 3,
+            lastSimulatedDay: 0
         });
+
+        if (tokenId == SUPPLY) {
+            s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
+        }
     }
 
-    uint256 public startTime;
+    // DEBUG
     function startGame() public onlyOwner {
-        startTime = block.timestamp; // is it better to pass it as an argument? hmmmmmmmmm
+        s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
     }
 
-    uint256 public currentDay;
-    uint256 zoneSize = 100;
+    //
+    // game state getters/builders
+    // (these things restore the current game state, hence "builders")
+    //
 
-    function simulateDay() public onlyOwner {
-        currentDay++;
-        zoneSize--;
+    uint56 constant ZONE_SIZE = 100;
+
+    function getCurrentDay() public view returns (uint56) { // it's prob gonna be shorter than 256 later
+        return uint56((block.timestamp - s_gameStartTime) / (1 days));
+    }
+
+    // zone size decreases by 1 per day (speed is subject to change)
+    function getZoneSize(uint56 day) public pure returns (uint56) {
+        return (day > ZONE_SIZE) ? 0 : (ZONE_SIZE - day);
+    }
+
+    function getCurrentZoneSize() public view returns (uint256) {
+        return getZoneSize(getCurrentDay());
+    }
+
+    // TODO: returns true when only 1 player left alive
+    function isGameOver() public view returns (bool) {
+        return false;
+    }
+
+    // this is where the magic happens
+    // simulates 1 day worth of "external" changes to a unit
+    function simulateUnitOnce(UnitData memory unit) public pure returns (UnitData memory) {
+        unit.lastSimulatedDay++;
 
         // take helth from zon
+        if (unit.lives > 0 && !inCircle(0, 0, int56(uint56(getZoneSize(unit.lastSimulatedDay))), unit.x, unit.y)) {
+            unit.lives--;
+        }
+
         // gib points
+        if (unit.lives > 0) {
+            unit.points++;
+        }
+
+        return unit;
     }
 
-/*
-    function inRange(uint256 unitAtt, uint256 unitVict) public view returns (bool) {
-        UnitData attData = s_units[unitAtt];
-        UnitData victData = s_units[unitVict];
+    // simulates the unit out until today
+    function simulateUnitOut(UnitData memory unit) public view returns (UnitData memory) {
+        for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); day++) {
+            unit = simulateUnitOnce(unit);
+        }
 
-        return ((attData.x - victData.x)**2 + (attData.y - victData.y)**2) <= (attData.level + 1)**2;
-    }
-*/
-
-    function abs(int56 x) internal pure returns (int56) {
-        return x < 0 ? -x : x;
+        return unit;
     }
 
-    function inCircle(int56 centre_x, int56 centre_y, int56 size, int56 x, int56 y) internal pure returns (bool) {
-        return ((abs(centre_x - x) <= size) && (abs(centre_y - y) <= size));
+    function getUnit(uint256 id) public view returns (UnitData memory) {
+        return simulateUnitOut(s_units[id]);
     }
 
+    function getAllUnits() public view returns (UnitData[SUPPLY] memory) {
+        UnitData[SUPPLY] memory units;
+        for (uint256 id = 0; id <= _tokenIdCounter.current(); id++) {
+            units[id] = getUnit(id);
+        }
+        return units;
+    }
+
+    // this function is called by the browser when you open the game
+    function getState() external view returns(uint256, uint256, UnitData[SUPPLY] memory, string[SUPPLY] memory) {
+        uint256 amt = _tokenIdCounter.current();
+        string[SUPPLY] memory images;
+
+        for (uint256 i = 0; i < amt; i++) {
+            images[i] = imageURI(i);
+        }
+
+        return (getCurrentZoneSize(), getCurrentDay(), getAllUnits(), images);
+    }
+
+    //
     // moves
+    //
+
     // TODO: chain moves to save on gas? (several moves with 1 sload/sstore)
 
     error NotEnoughPoints();
@@ -89,6 +152,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     error DeadSpaceship();
 
     int56 constant playfieldSize = 100;
+    // TODO: check that the slot is empty
     function move(uint256 unit, int56 x, int56 y) public {
         // limit the play field
         if (x < -playfieldSize || x > playfieldSize || y < -playfieldSize || y > playfieldSize)
@@ -97,7 +161,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (ownerOf(unit) != msg.sender)
             revert NoAccess();
 
-        UnitData memory data = s_units[unit];
+        UnitData memory data = getUnit(unit);
 
         if (data.lives == 0)
             revert DeadSpaceship();
@@ -125,7 +189,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (ownerOf(attId) != msg.sender)
             revert NoAccess();
 
-        UnitData memory att = s_units[attId];
+        UnitData memory att = getUnit(attId);
 
         if (damage > att.points)
             revert NotEnoughPoints();
@@ -133,7 +197,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (att.lives == 0)
             revert DeadSpaceship();
 
-        UnitData memory vict = s_units[victId];
+        UnitData memory vict = getUnit(victId);
 
         if (damage > vict.lives)
             revert BadArguments();
@@ -150,14 +214,14 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         emit UnitShot(victId, vict.lives);
     }
 
-    function givePoints(uint256 fromId, uint256 toId, uint128 amount) public {
+    function givePoints(uint256 fromId, uint256 toId, uint64 amount) public {
         if (fromId == toId || amount == 0)
             revert BadArguments();
 
         if (ownerOf(fromId) != msg.sender)
             revert NoAccess();
 
-        UnitData memory from = s_units[fromId];
+        UnitData memory from = getUnit(fromId);
 
         if (amount > from.points)
             revert NotEnoughPoints();
@@ -165,10 +229,19 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (from.lives == 0)
             revert DeadSpaceship();
 
+        UnitData memory to = getUnit(toId);
         from.points -= amount;
-        s_units[toId].points += amount;
+        to.points += amount;
+
+        s_units[toId] = to;
         s_units[fromId] = from;
+
+        emit UnitGavePoints(fromId, toId, amount);
     }
+
+    //
+    // metadata
+    //
 
     function imageURI(uint256 _tokenId) public pure returns (string memory) {
         return string('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
@@ -185,18 +258,15 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     //
-    // get the entire game state
+    // utilities
     //
 
-    // this function is called by the browser when you open the game
-    function getState() external view returns(uint256, uint256, UnitData[SUPPLY] memory, string[SUPPLY] memory) {
-        uint256 amt = _tokenIdCounter.current();
-        string[SUPPLY] memory images;
+    function abs(int56 x) internal pure returns (int56) {
+        return x < 0 ? -x : x;
+    }
 
-        for (uint256 i = 0; i < amt; i++) {
-            images[i] = imageURI(i);
-        }
-
-        return (zoneSize, currentDay, s_units, images);
+    // is actually a square, am dumb.
+    function inCircle(int56 centre_x, int56 centre_y, int56 size, int56 x, int56 y) internal pure returns (bool) {
+        return ((abs(centre_x - x) <= size) && (abs(centre_y - y) <= size));
     }
 }
