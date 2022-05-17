@@ -150,7 +150,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
             images[i] = imageURI(i);
         }
 
-        return (getCurrentZoneSize(), getCurrentDay(), getAllUnits(), images);
+        return (getCurrentZoneSize(), s_gameStartTime, getAllUnits(), images);
     }
 
     //
