@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 export const InfoContainer = styled.div`
   max-width: 90%;
@@ -24,6 +24,13 @@ export const SubInfoProp = styled.span`
 `;
 export const SubInfoValue = styled.span`
   ${(props) => (props.warning ? "color: red" : "")}
+  ${(props) =>
+    props.clipOverflow &&
+    css`
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    `}
 `;
 
 const StyledSubInfoSvgValue = styled.span`

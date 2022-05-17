@@ -17,7 +17,9 @@ import InfoContainer, {
   SubInfoProp,
   SubInfoSvgValue,
 } from "./components/InfoContainer";
-import ActionBtnsContainer from "./components/ActionBtnsContainer";
+import ActionBtnsContainer, {
+  MutableSpan,
+} from "./components/ActionBtnsContainer";
 
 export default (function () {
   const clickedShipIndex = useSelector(
@@ -80,6 +82,10 @@ export default (function () {
     dispatch(sideMenuSlice.actions.chooseMenuType("giveAP"));
   };
 
+  const chooseAttack = () => {
+    dispatch(sideMenuSlice.actions.chooseMenuType("attack"));
+  };
+
   return (
     <MenuContainer>
       <MenuHeader>Ship Info</MenuHeader>
@@ -91,7 +97,7 @@ export default (function () {
         </SubInfo>
         <SubInfo>
           <SubInfoProp>CAPTAIN</SubInfoProp>
-          <SubInfoValue className={cl.clipOverflow}>{owner}</SubInfoValue>
+          <SubInfoValue clipOverflow>{owner}</SubInfoValue>
         </SubInfo>
         {health > 0 ? (
           <>
@@ -110,7 +116,7 @@ export default (function () {
               <SubInfoSvgValue repeats={actionPoints} url={lightningSvg} />
             </SubInfo>
             <SubInfo className={isShipDying ? cl.isDying : ""}>
-              <SubInfoProp warning={isShipDying}>STABILIZER</SubInfoProp>
+              <SubInfoProp warning={isShipDying}>STABILIZERS</SubInfoProp>
               <SubInfoSvgValue repeats={health} url={heartSvg} />
             </SubInfo>
           </>
@@ -133,7 +139,12 @@ export default (function () {
               disabled={actionPoints <= 0 || clickedShipRange >= 3}
               onClick={chooseUpgrade}
             >
-              <span className="h5">Expand Impulse Horizon</span>
+              <MutableSpan
+                className="h5"
+                muted={actionPoints <= 0 || clickedShipRange >= 3}
+              >
+                Expand Impulse Horizon
+              </MutableSpan>
             </Button>
           </ActionBtnsContainer>
         ) : (
@@ -148,9 +159,9 @@ export default (function () {
             <Button
               variant="danger"
               disabled={ownerChosenShipAP <= 0 || !isShipAttackable}
-              // onClick={chooseUpgrade}
+              onClick={chooseAttack}
             >
-              <span className="h3">Destabilise</span>
+              <span className="h3">Destabilize</span>
             </Button>
           </ActionBtnsContainer>
         ))}

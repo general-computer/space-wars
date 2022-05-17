@@ -9,6 +9,7 @@ const INITIALSTATE = {
   },
   mockRangeIncr: 0,
   mockAPIncr: 0,
+  mockHits: 0,
 };
 
 export default createSlice({
@@ -80,6 +81,13 @@ export default createSlice({
     tryRevertGiveAP(state) {
       if (state.mockAPIncr <= 0) return;
       state.mockAPIncr--;
+    },
+    tryHit(state) {
+      state.mockHits++;
+    },
+    tryRevertHit(state) {
+      if (state.mockHits <= 0) return;
+      state.mockHits--;
     },
   },
 });

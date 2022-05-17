@@ -7,6 +7,7 @@ import GiveAPMenu from "./GiveAPMenu";
 import MoveMenu from "./MoveMenu";
 import ShipInfo from "./ShipInfo";
 import UpgradeMenu from "./UpgradeMenu";
+import AttackMenu from "./AttackMenu";
 
 export default (function () {
   const dispatch = useDispatch();
@@ -29,6 +30,8 @@ export default (function () {
             return <UpgradeMenu />;
           case "giveAP":
             return <GiveAPMenu />;
+          case "attack":
+            return <AttackMenu />;
           default:
             return;
         }

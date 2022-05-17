@@ -73,7 +73,7 @@ export default function GiveAPMenu() {
         disabled={mockOwnerFinalAP <= 0}
         onClick={tryGiveAP}
       >
-        <span className="h3">Give 1 Dark Matter</span>
+        <span className="h3">Give Dark Matter</span>
       </Button>
       <Button
         variant="outline-light"
