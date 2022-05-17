@@ -1,9 +1,7 @@
 .App {
-  /****** Now only have Map to center. May change these later on */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  width: 100vw;
   background-color: black;
+
+  display: flex;
 }

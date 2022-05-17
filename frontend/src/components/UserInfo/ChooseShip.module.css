@@ -1,0 +1,17 @@
+.shipMenu * {
+  border: none !important;
+}
+
+.items {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.items.activeShip {
+  background-color: #c1c1c1c1;
+}
+
+.shipImg {
+  height: 2rem;
+}

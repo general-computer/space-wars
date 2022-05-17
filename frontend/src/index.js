@@ -7,7 +7,6 @@ import App from "./App";
 // Bootstrap (incl. normalise)
 import "bootstrap/dist/css/bootstrap.min.css";
 // Global styles that overrides Boostrap reboot
-import "./reset.css";
 import "./index.css";
 
 ReactDOM.render(

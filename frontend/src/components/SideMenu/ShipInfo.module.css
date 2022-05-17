@@ -1,0 +1,18 @@
+.clipOverflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.isDying :global {
+  animation: blinkDyingText 1.5s steps(1) infinite;
+}
+
+@keyframes :global(blinkDyingText) {
+  from {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+}
