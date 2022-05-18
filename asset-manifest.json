@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/space-wars/static/css/main.a30d9611.css",
-    "main.js": "/space-wars/static/js/main.5277dd45.js",
+    "main.js": "/space-wars/static/js/main.af9fe41d.js",
     "static/media/1.svg": "/space-wars/static/media/1.fa79e3c5aaa1e53532ab7c10933b45c2.svg",
     "static/media/9.svg": "/space-wars/static/media/9.3fad288b5f6586d077d8f8e818b0aafe.svg",
     "static/media/3.svg": "/space-wars/static/media/3.45ca78455051478b8f3cb00f1800f4bb.svg",
@@ -11,16 +11,16 @@
     "static/media/6.svg": "/space-wars/static/media/6.366e98045b3948576d3abb4f6b14f5e5.svg",
     "static/media/2.svg": "/space-wars/static/media/2.69f7f098416a3bc9946b19a8efd92539.svg",
     "static/media/8.svg": "/space-wars/static/media/8.09216d05dbb9e458e8bc1b2716c89f2f.svg",
-    "static/media/sword-optimised.svg": "/space-wars/static/media/sword-optimised.5e9fd023dad70fb777a4c1b55b5421c4.svg",
-    "static/media/lightning-optimised.svg": "/space-wars/static/media/lightning-optimised.1a9cfb04feb143cb8d3503b11359a796.svg",
-    "static/media/heart-optimised.svg": "/space-wars/static/media/heart-optimised.636bc2384673f4d275d0ae4389746791.svg",
+    "static/media/actionPt.svg": "/space-wars/static/media/actionPt.dfffc360c1046c4172e156f2cef0080f.svg",
+    "static/media/health.svg": "/space-wars/static/media/health.c0ce43fddad5498c52bed6c70d34e25d.svg",
+    "static/media/range.svg": "/space-wars/static/media/range.f51d535d0ca9aa628e7f783bca00e789.svg",
     "static/media/cross-optimised.svg": "/space-wars/static/media/cross-optimised.c211a8ef489d9db44cba2e955b7aebc4.svg",
     "index.html": "/space-wars/index.html",
     "main.a30d9611.css.map": "/space-wars/static/css/main.a30d9611.css.map",
-    "main.5277dd45.js.map": "/space-wars/static/js/main.5277dd45.js.map"
+    "main.af9fe41d.js.map": "/space-wars/static/js/main.af9fe41d.js.map"
   },
   "entrypoints": [
     "static/css/main.a30d9611.css",
-    "static/js/main.5277dd45.js"
+    "static/js/main.af9fe41d.js"
   ]
 }
