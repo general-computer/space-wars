@@ -3,7 +3,7 @@ import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 import { filterAliveShips } from "../../utils/shipFilters";
 
 import cl from "./MoveMenu.module.css";
-import lightningSvg from "../../img/lightning-optimised.svg";
+import actionPtSvg from "../../img/actionPt.svg";
 
 import { Button } from "react-bootstrap";
 import MenuContainer from "./components/MenuContainer";
@@ -97,10 +97,7 @@ export default (function () {
         ) : (
           <SubInfo>
             <SubInfoProp>DARK MATTER</SubInfoProp>
-            <SubInfoSvgValue
-              repeats={actionPoints - moves}
-              url={lightningSvg}
-            />
+            <SubInfoSvgValue repeats={actionPoints - moves} url={actionPtSvg} />
           </SubInfo>
         )}
       </InfoContainer>

@@ -4,7 +4,7 @@ import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
 
-import lightningSvg from "../../img/lightning-optimised.svg";
+import actionPtSvg from "../../img/actionPt.svg";
 
 import MenuContainer from "./components/MenuContainer";
 import MenuHeader from "./components/MenuHeader";
@@ -60,11 +60,11 @@ export default function GiveAPMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>TARGET SHIP</SubInfoProp>
-          <SubInfoSvgValue repeats={targetAP + mockAPIncr} url={lightningSvg} />
+          <SubInfoSvgValue repeats={targetAP + mockAPIncr} url={actionPtSvg} />
         </SubInfo>
         <SubInfo>
           <SubInfoProp style={{ color: "black" }}>YOUR SHIP</SubInfoProp>
-          <SubInfoSvgValue repeats={mockOwnerFinalAP} url={lightningSvg} />
+          <SubInfoSvgValue repeats={mockOwnerFinalAP} url={actionPtSvg} />
         </SubInfo>
       </InfoContainer>
 

@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
-import styled, { css } from "styled-components/macro";
+import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
 
-import lightningSvg from "../../img/lightning-optimised.svg";
-import heartSvg from "../../img/heart-optimised.svg";
+import actionPtSvg from "../../img/actionPt.svg";
+import healthSvg from "../../img/health.svg";
 
 import MenuContainer from "./components/MenuContainer";
 import MenuHeader from "./components/MenuHeader";
@@ -76,11 +76,11 @@ export default function AttackMenu() {
         </SubInfo>
         <SubInfo>
           <SubInfoProp>TARGET'S STABILIZERS</SubInfoProp>
-          <SubInfoSvgValue repeats={mockTargetFinalHealth} url={heartSvg} />
+          <SubInfoSvgValue repeats={mockTargetFinalHealth} url={healthSvg} />
         </SubInfo>
         <SubInfo>
           <SubInfoProp style={{ color: "black" }}>YOUR DARK MATTER</SubInfoProp>
-          <SubInfoSvgValue repeats={ownerRemainingAP} url={lightningSvg} />
+          <SubInfoSvgValue repeats={ownerRemainingAP} url={actionPtSvg} />
         </SubInfo>
       </InfoContainer>
 

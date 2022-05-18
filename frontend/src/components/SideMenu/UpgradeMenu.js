@@ -4,8 +4,9 @@ import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
 
-import swordPtSvg from "../../img/sword-optimised.svg";
-import lightningSvg from "../../img/lightning-optimised.svg";
+import rangeSvg from "../../img/range.svg";
+
+import actionPtSvg from "../../img/actionPt.svg";
 
 import MenuContainer from "./components/MenuContainer";
 import MenuHeader from "./components/MenuHeader";
@@ -51,16 +52,13 @@ export default function UpgradeMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-          <SubInfoSvgValue
-            repeats={currRange + mockRangeIncr}
-            url={swordPtSvg}
-          />
+          <SubInfoSvgValue repeats={currRange + mockRangeIncr} url={rangeSvg} />
         </SubInfo>
         <SubInfo>
           <SubInfoProp>DARK MATTER</SubInfoProp>
           <SubInfoSvgValue
             repeats={actionPoints - mockRangeIncr}
-            url={lightningSvg}
+            url={actionPtSvg}
           />
         </SubInfo>
       </InfoContainer>

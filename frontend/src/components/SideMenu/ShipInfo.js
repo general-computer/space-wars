@@ -3,9 +3,9 @@ import { isDying } from "../../utils/deadzone";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
 
 import cl from "./ShipInfo.module.css";
-import heartSvg from "../../img/heart-optimised.svg";
-import lightningSvg from "../../img/lightning-optimised.svg";
-import swordPtSvg from "../../img/sword-optimised.svg";
+import healthSvg from "../../img/health.svg";
+import rangeSvg from "../../img/range.svg";
+import actionPtSvg from "../../img/actionPt.svg";
 
 import { Button } from "react-bootstrap";
 import MenuContainer from "./components/MenuContainer";
@@ -109,15 +109,15 @@ export default (function () {
             </SubInfo>
             <SubInfo>
               <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-              <SubInfoSvgValue repeats={clickedShipRange} url={swordPtSvg} />
+              <SubInfoSvgValue repeats={clickedShipRange} url={rangeSvg} />
             </SubInfo>
             <SubInfo>
               <SubInfoProp>DARK MATTER</SubInfoProp>
-              <SubInfoSvgValue repeats={actionPoints} url={lightningSvg} />
+              <SubInfoSvgValue repeats={actionPoints} url={actionPtSvg} />
             </SubInfo>
             <SubInfo className={isShipDying ? cl.isDying : ""}>
               <SubInfoProp warning={isShipDying}>STABILIZERS</SubInfoProp>
-              <SubInfoSvgValue repeats={health} url={heartSvg} />
+              <SubInfoSvgValue repeats={health} url={healthSvg} />
             </SubInfo>
           </>
         ) : (
