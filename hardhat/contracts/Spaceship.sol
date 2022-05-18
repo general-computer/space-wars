@@ -18,7 +18,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 tokenId, uint8 newHealth);
-    //event UnitUpgraded(uint256 tokenId, uint256 level);
+    event UnitUpgraded(uint256 tokenId, uint8 level);
     event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount);
 
     // this in theory should take 1 slot
@@ -39,7 +39,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     error ExceedsSupply();
 
-    function safeMint(address to) public onlyOwner {
+    function safeMint(address to) public {
         uint256 tokenId = _tokenIdCounter.current();
         if (hasGameStarted())
             revert ExceedsSupply();
@@ -249,6 +249,32 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         s_units[fromId] = from;
 
         emit UnitGavePoints(fromId, toId, amount);
+    }
+
+    function upgrade(uint256 unitId, uint8 byLevels) public {
+        if (byLevels == 0)
+            revert BadArguments();
+
+        if (ownerOf(fromId) != msg.sender)
+            revert NoAccess();
+
+        UnitData memory unit = getUnit(unitId);
+
+        if (byLevels > unit.points)
+            revert NotEnoughPoints();
+
+        if (unit.lives == 0)
+            revert DeadSpaceship();
+
+        uint8 newLevel = unit.level + byLevels;
+        if (newLevel > 2)
+            revert BadArguments();
+
+        unit.points -= byLevels;
+        unit.level = newLevel;
+        s_units[unitId] = unit;
+
+        emit UnitUpgraded(unitId, newLevel);
     }
 
     //
