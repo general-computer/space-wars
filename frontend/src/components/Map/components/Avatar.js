@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 
 const Avatar = styled.div`
   background-image: url(${(props) => props.src});
-  background-size: contain;
+  background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
 

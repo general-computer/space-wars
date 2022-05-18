@@ -16,6 +16,7 @@ export default function MovableRangeLayer({ zIndex }) {
     (state) => state.sideMenu.clickedShipIndex
   );
   const mockRangeIncr = useSelector((state) => state.sideMenu.mockRangeIncr);
+  const mockAPIncr = useSelector((state) => state.sideMenu.mockAPIncr);
   const shipData = useSelector(
     (state) => state.data.shipDataArray[clickedShipIndex]
   );
@@ -25,8 +26,11 @@ export default function MovableRangeLayer({ zIndex }) {
    */
   const { actionPoints, posX, posY } = shipData;
   // When mocking range upgrade, the AP usable for moves should decrease
-  const usableAP = actionPoints - mockRangeIncr;
-
+  const usableAP = (() => {
+    if (mockRangeIncr !== 0) return actionPoints - mockRangeIncr;
+    else if (mockAPIncr !== 0) return actionPoints + mockAPIncr;
+    else return actionPoints;
+  })();
   // CSS grid's gutter starts from 1. Also, the shooting zone cannot lie out of the CSS grid. Need some calculations.
   const xGutters = {
     min: Math.max(posX - usableAP + 1, 1),

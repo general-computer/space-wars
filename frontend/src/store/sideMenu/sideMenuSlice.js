@@ -8,6 +8,8 @@ const INITIALSTATE = {
     transY: 0,
   },
   mockRangeIncr: 0,
+  mockAPIncr: 0,
+  mockHits: 0,
 };
 
 export default createSlice({
@@ -23,6 +25,19 @@ export default createSlice({
     },
     chooseMenuType(state, action) {
       const actionType = action.payload;
+      const isAllowedTypes = [
+        "info",
+        "move",
+        "upgrade",
+        "giveAP",
+        "attack",
+      ].some((allowedType) => allowedType === actionType);
+      if (!isAllowedTypes) {
+        console.error(
+          `sideMenuSlice: "${actionType}" is not an allowed type in the reducer "chooseMenuType"`
+        );
+        return;
+      }
       return {
         ...INITIALSTATE,
         clickedShipIndex: state.clickedShipIndex,
@@ -57,8 +72,22 @@ export default createSlice({
       state.mockRangeIncr++;
     },
     tryRevertUpgrade(state) {
-      if (state.mockRangeIncr < 0) return;
+      if (state.mockRangeIncr <= 0) return;
       state.mockRangeIncr--;
+    },
+    tryGiveAP(state) {
+      state.mockAPIncr++;
+    },
+    tryRevertGiveAP(state) {
+      if (state.mockAPIncr <= 0) return;
+      state.mockAPIncr--;
+    },
+    tryHit(state) {
+      state.mockHits++;
+    },
+    tryRevertHit(state) {
+      if (state.mockHits <= 0) return;
+      state.mockHits--;
     },
   },
 });
