@@ -1,6 +1,7 @@
 require("dotenv").config();
 require("@nomiclabs/hardhat-ethers");
 //require("@nomiclabs/hardhat-etherscan");
+require('hardhat-exposed');
 
 /**
  * @type import('hardhat/config').HardhatUserConfig

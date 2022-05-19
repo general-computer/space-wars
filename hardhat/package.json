@@ -2,7 +2,10 @@
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@openzeppelin/contracts": "^4.6.0",
+    "chai": "^4.3.6",
     "dotenv": "^16.0.0",
-    "hardhat": "^2.9.3"
+    "ethereum-waffle": "^3.4.4",
+    "hardhat": "^2.9.3",
+    "hardhat-exposed": "^0.2.3"
   }
 }

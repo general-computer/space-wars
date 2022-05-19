@@ -33,7 +33,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     // structs in ethers.js https://github.com/ethers-io/ethers.js/issues/315
     UnitData[SUPPLY] public s_units;
-    uint256 public s_gameStartTime;
+    uint256 public s_gameStartTime = 0;
 
     constructor() ERC721("Spaceship", "SHIP") {}
 
@@ -62,11 +62,6 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         }
     }
 
-    // DEBUG
-    function startGame() public onlyOwner {
-        s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
-    }
-
     function getMaxSupply() external pure returns (uint256) {
         return SUPPLY;
     }
@@ -76,12 +71,25 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     //
+    // DEBUG
+    //
+
+    function startGame() public onlyOwner {
+        s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
+    }
+
+    function moveGameOneDay() internal {
+        s_gameStartTime -= 1 days;
+    }
+
+    //
     // game state getters/builders
     // (these things restore the current game state, hence "builders")
     //
 
     function hasGameStarted() public view returns (bool) {
-        return getCurrentSupply() >= SUPPLY;
+        //return getCurrentSupply() >= SUPPLY;
+        return s_gameStartTime != 0;
     }
 
     function getCurrentDay() public view returns (uint56) { // it's prob gonna be shorter than 256 later
@@ -255,7 +263,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (byLevels == 0)
             revert BadArguments();
 
-        if (ownerOf(fromId) != msg.sender)
+        if (ownerOf(unitId) != msg.sender)
             revert NoAccess();
 
         UnitData memory unit = getUnit(unitId);
