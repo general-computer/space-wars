@@ -129,6 +129,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     // simulates the unit out until today
+    // TODO: cap the amount of days (according to the block gas limit)
     function simulateUnitOut(UnitData memory unit) internal view returns (UnitData memory) {
         for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); day++) {
             unit = simulateUnitOnce(unit);

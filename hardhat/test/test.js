@@ -72,22 +72,40 @@ describe("Spaceship contract", function() {
     });
   });
 
-/*
-  describe('getUnit()', function() {
-    it('should be able to get correct nft data', )
-  });
-*/
 
-/*
+  describe('$getUnit()', function() {
+    it('should be able to get correct nft data after 1 day of the simulation', async function() {
+      const unitPre = await contract.callStatic.$getUnit(0);
+      expect(unitPre.x).to.equal(0);
+      expect(unitPre.y).to.equal(0);
+      expect(unitPre.level).to.equal(0);
+      expect(unitPre.points).to.equal(2);
+      expect(unitPre.lives).to.equal(3);
+    });
+  });
+
+
   describe('upgrade()', function() {
-    it('should change the state of the game', async function() {
+    it('should work...', async function() {
+      console.log('\t', 'trying to upgrade by 1 level...');
       const tx = await contract.upgrade(0, 1);
       const txResult = await tx.wait();
       expect(txResult.status).to.equal(1);
-      console.log('\t', txResult);
+
+      console.log('\t', 'checking the game state');
+      const unit = await contract.callStatic.$getUnit(0);
+      expect(unit.level).to.equal(1);
+      expect(unit.points).to.equal(1);
+
+/*
+      console.log('\t', 'trying to upgrade by 2 more levels (should be impossible)...');
+      const tx2 = await contract.upgrade(0, 2);
+      const tx2Result = await tx2.wait();
+      //expect(txResult.status).to.equal(1);
+      console.log('\t', tx2Result);
+*/
     });
 
   });
-*/
 
 });
