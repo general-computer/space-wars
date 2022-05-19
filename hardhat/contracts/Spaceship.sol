@@ -96,12 +96,12 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     // zone size decreases by 1 per day (speed is subject to change)
-    function getZoneSize(uint56 day) internal pure returns (uint56) {
-        return (day > playfieldSize) ? 0 : (playfieldSize - day);
+    function getZoneRadius(uint56 day) internal pure returns (uint56) {
+        return (day > (playfieldSize/2)) ? 0 : ((playfieldSize/2) - day);
     }
 
-    function getCurrentZoneSize() public view returns (uint256) {
-        return getZoneSize(getCurrentDay());
+    function getCurrentZoneRadius() public view returns (uint256) {
+        return getZoneRadius(getCurrentDay());
     }
 
     // TODO: returns true when only 1 player left alive
@@ -115,7 +115,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         unit.lastSimulatedDay++;
 
         // take helth from zon
-        if (unit.lives > 0 && !inCircle(playfieldSize/2, playfieldSize/2, int56(uint56(getZoneSize(unit.lastSimulatedDay))), unit.x, unit.y)) {
+        if (unit.lives > 0 && !inCircle(playfieldSize/2, playfieldSize/2, int56(uint56(getZoneRadius(unit.lastSimulatedDay))), unit.x, unit.y)) {
             unit.lives--;
         }
 
@@ -158,7 +158,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
             images[i] = imageURI(i);
         }
 
-        return (getCurrentZoneSize(), s_gameStartTime, getAllUnits(), images);
+        return (getCurrentZoneRadius(), s_gameStartTime, getAllUnits(), images);
     }
 
     //
