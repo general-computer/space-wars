@@ -80,7 +80,7 @@ describe("Spaceship contract", function() {
       expect(unitPre.y).to.equal(0);
       expect(unitPre.level).to.equal(0);
       expect(unitPre.points).to.equal(2);
-      expect(unitPre.lives).to.equal(3);
+      expect(unitPre.lives).to.equal(2); // (0,0) = in zone after a day
     });
   });
 
@@ -111,8 +111,8 @@ describe("Spaceship contract", function() {
 
   describe('getState()', function() {
     it('should return the correct game state after our manipulations', async function() {
-      const [zone, gameStartTime, units, images] = await contract.callStatic.getState();
-      expect(zone).to.equal(99);
+      const [zoneRadius, gameStartTime, units, images] = await contract.callStatic.getState();
+      expect(zoneRadius).to.equal(49);
       //expect(gameStartTime).to.equal(99);
       //expect(units.length).to.equal(1);
       //expect(images.length).to.equal(1);
@@ -122,7 +122,7 @@ describe("Spaceship contract", function() {
       expect(unit.y).to.equal(0);
       expect(unit.level).to.equal(1);
       expect(unit.points).to.equal(1);
-      expect(unit.lives).to.equal(3);
+      expect(unit.lives).to.equal(2);
 
       expect(images[0]).to.equal('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
     });

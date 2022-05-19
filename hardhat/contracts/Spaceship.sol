@@ -14,6 +14,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     Counters.Counter private _tokenIdCounter;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
     int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
+    uint56 constant unsignedPlayfieldSize = uint56(playfieldSize);
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 tokenId, uint8 newHealth);
@@ -97,7 +98,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     // zone size decreases by 1 per day (speed is subject to change)
     function getZoneRadius(uint56 day) internal pure returns (uint56) {
-        return (day > (playfieldSize/2)) ? 0 : ((playfieldSize/2) - day);
+        return (day > (unsignedPlayfieldSize/2)) ? 0 : ((unsignedPlayfieldSize/2) - day);
     }
 
     function getCurrentZoneRadius() public view returns (uint256) {
