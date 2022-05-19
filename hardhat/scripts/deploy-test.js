@@ -7,7 +7,7 @@ async function main() {
   const balance = await signer.getBalance();
   console.log('balance:', ethers.utils.formatEther(balance));
 
-  const Spaceship = await hre.ethers.getContractFactory("Spaceship");
+  const Spaceship = await hre.ethers.getContractFactory("$Spaceship");
 
   const spaceship = await Spaceship.deploy();
   await spaceship.deployed();
