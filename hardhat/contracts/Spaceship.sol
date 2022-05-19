@@ -13,8 +13,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // TODO: replace the counter
     Counters.Counter private _tokenIdCounter;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
-    int56 constant playfieldSize = 100;
-    uint56 constant INITIAL_ZONE_SIZE = 100;
+    int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 tokenId, uint8 newHealth);
@@ -98,7 +97,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     // zone size decreases by 1 per day (speed is subject to change)
     function getZoneSize(uint56 day) internal pure returns (uint56) {
-        return (day > INITIAL_ZONE_SIZE) ? 0 : (INITIAL_ZONE_SIZE - day);
+        return (day > playfieldSize) ? 0 : (playfieldSize - day);
     }
 
     function getCurrentZoneSize() public view returns (uint256) {
@@ -116,7 +115,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         unit.lastSimulatedDay++;
 
         // take helth from zon
-        if (unit.lives > 0 && !inCircle(0, 0, int56(uint56(getZoneSize(unit.lastSimulatedDay))), unit.x, unit.y)) {
+        if (unit.lives > 0 && !inCircle(playfieldSize/2, playfieldSize/2, int56(uint56(getZoneSize(unit.lastSimulatedDay))), unit.x, unit.y)) {
             unit.lives--;
         }
 
@@ -176,7 +175,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // TODO: check that the slot is empty
     function move(uint256 unit, int56 x, int56 y) public {
         // limit the play field
-        if (x < -playfieldSize || x > playfieldSize || y < -playfieldSize || y > playfieldSize)
+        if (x >= 0 || y >= 0 || x < playfieldSize || y < playfieldSize)
             revert BadArguments();
 
         if (ownerOf(unit) != msg.sender)
