@@ -32,7 +32,7 @@
      inkscape:snap-bbox-midpoints="false"
      showguides="false"
      inkscape:zoom="0.97459319"
-     inkscape:cx="230.35252"
+     inkscape:cx="325.77695"
      inkscape:cy="266.26494"
      inkscape:window-width="1440"
      inkscape:window-height="771"
@@ -51,7 +51,9 @@
        spacingx="6.6145834"
        spacingy="6.6145834"
        snapvisiblegridlinesonly="true"
-       empspacing="1" />
+       empspacing="5"
+       color="#d10900"
+       opacity="0.1254902" />
   </sodipodi:namedview>
   <defs
      id="defs983" />
