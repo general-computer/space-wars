@@ -1,12 +1,23 @@
 import styled from "styled-components/macro";
 
-export default styled.div`
-  /* border: 0.05rem white solid; */
+const LayersWrapper = styled.div`
+  border: 1px white solid;
+  box-sizing: content-box;
 
-  /* Make the grid area a square that is always contained by its FullSizeWrapper parent */
-  width: min(var(--map-width), var(--map-height));
-  height: min(var(--map-width), var(--map-height));
+  /* Make the grid area a square inside the TransformComponent */
+  /* !!! Setting width & height to % units will drastically slow down zooming */
+  /* !!! Setting width & height to big values will push everything outside the page */
+  /* !!! If it is too small, or does not yield an integer after divided by "mapLength" then the cells may look distorted */
+  --grid-length: 70vmin;
+  width: var(--grid-length);
+  height: var(--grid-length);
 
   /* enables position: absolute for children layers*/
   position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
+
+export default LayersWrapper;
