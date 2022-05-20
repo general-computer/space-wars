@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
+import { Provider as ReduxProvider } from "react-redux";
 import store from "./store/mainStore";
+import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 // Bootstrap (incl. normalise)
@@ -11,9 +12,11 @@ import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ReduxProvider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ReduxProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
