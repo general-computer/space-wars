@@ -3,12 +3,21 @@ import styled from "styled-components/macro";
 
 import LoadingMap from "./LoadingMap";
 import LoadedMap from "./LoadedMap/LoadedMap";
-import { useRef } from "react";
 
-const StyledMap = styled.main`
+// Map container
+const MapCtn = styled.main`
   flex-grow: 1;
+  padding: min(5vw, 5vh);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MapInner = styled.div`
   border: 0.1rem cyan solid;
-  margin: min(5vw, 5vh);
+  width: 100%;
+  height: 100%;
 
   display: flex;
   justify-content: center;
@@ -18,14 +27,9 @@ const StyledMap = styled.main`
 export default function Map() {
   const isDataLoaded = useSelector((state) => state.data.isDataLoaded);
 
-  // **** Alternative way to set map width; still on testing
-  const mapRef = useRef(null);
-  /* if (mapRef.current !== null)
-    window.mapWidth = getComputedStyle(mapRef.current).width; */
-
   return (
-    <StyledMap ref={mapRef}>
-      {isDataLoaded ? <LoadedMap /> : <LoadingMap />}
-    </StyledMap>
+    <MapCtn>
+      <MapInner>{isDataLoaded ? <LoadedMap /> : <LoadingMap />}</MapInner>
+    </MapCtn>
   );
 }
