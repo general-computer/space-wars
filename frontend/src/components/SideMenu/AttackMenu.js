@@ -72,7 +72,7 @@ export default function AttackMenu() {
         </SubInfo>
         <SubInfo>
           <SubInfoProp>CAPTAIN</SubInfoProp>
-          <SubInfoValue clipOverflow>{owner}</SubInfoValue>
+          <SubInfoValue>{owner}</SubInfoValue>
         </SubInfo>
         <SubInfo>
           <SubInfoProp>TARGET'S STABILIZERS</SubInfoProp>
