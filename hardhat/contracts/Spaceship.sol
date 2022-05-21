@@ -176,7 +176,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // TODO: check that the slot is empty
     function move(uint256 unit, int56 x, int56 y) public {
         // limit the play field
-        if (x >= 0 || y >= 0 || x < playfieldSize || y < playfieldSize)
+        if (x < 0 || y < 0 || x >= playfieldSize || y >= playfieldSize)
             revert BadArguments();
 
         if (ownerOf(unit) != msg.sender)
@@ -251,6 +251,10 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
             revert DeadSpaceship();
 
         UnitData memory to = getUnit(toId);
+
+        if (!inCircle(from.x, from.y, int56(uint56(from.level) + 1), to.x, to.y))
+            revert BadArguments();
+
         from.points -= amount;
         to.points += amount;
 
