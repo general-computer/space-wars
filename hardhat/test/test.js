@@ -42,6 +42,9 @@ describe("Spaceship contract", function() {
       expect(await contract.balanceOf(owner.address)).to.equal(
         startingBalance.add(1)
       );
+
+      console.log('\t', 'minting 1 more nft for later tests...');
+      await contract.callStatic.safeMint(owner.address);
     });
   });
 
@@ -97,13 +100,8 @@ describe("Spaceship contract", function() {
       expect(unit.level).to.equal(1);
       expect(unit.points).to.equal(1);
 
-/*
       console.log('\t', 'trying to upgrade by 2 more levels (should be impossible)...');
-      const tx2 = await contract.upgrade(0, 2);
-      const tx2Result = await tx2.wait();
-      //expect(txResult.status).to.equal(1);
-      console.log('\t', tx2Result);
-*/
+      await expect(contract.upgrade(0, 2)).to.be.revertedWith('NotEnoughPoints');
     });
 
   });
