@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { filterAliveShips } from "../../../utils/shipFilters";
 
 import Grid from "../components/Grid";
 import { BlinkableAvatar } from "../components/BlinkableAvatar";
@@ -9,10 +10,7 @@ export default function AvatarLayer({ zIndex }) {
     (state) => state.userInfo.ownerChosenShip
   );
 
-  const aliveShipsData = [];
-  shipDataArray.forEach((shipData, shipIndex) => {
-    if (shipData.health > 0) aliveShipsData.push({ ...shipData, shipIndex });
-  });
+  const aliveShipsData = filterAliveShips(shipDataArray);
 
   return (
     <Grid zIndex={zIndex}>

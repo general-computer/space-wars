@@ -40,17 +40,17 @@ function genRandomNum(maxNum) {
 /*****************************************/
 
 /******** Faking data loading delay. Change it to a real data fetching function later ****/
-async function timeoutFunc(timeout) {
+/* async function timeoutFunc(timeout) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
     }, timeout);
   });
-}
+} */
 
 export default function loadData() {
-  return async (dispatch, getState) => {
-    await timeoutFunc(1000);
+  return async (dispatch) => {
+    // await timeoutFunc(1000);
     dispatch(
       dataSlice.actions.showData({
         mapLength: MAP_LENGTH,

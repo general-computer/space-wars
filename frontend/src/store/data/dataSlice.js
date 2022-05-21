@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const dataSlice = createSlice({
   name: "data",
   initialState: {
+    // isDataLoaded: when the contract has replied with results
     isDataLoaded: false,
     mapLength: 0,
     zoneLength: 0,
