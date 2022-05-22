@@ -15,7 +15,7 @@ const gameContractStore = (function () {
     let signerAddr = null;
     try {
       signerAddr = await signer.getAddress();
-      console.log(signerAddr);
+      console.log("Signer address:", signerAddr);
     } catch {
       console.warn("gameContractStore.init: no wallet address connected");
     }

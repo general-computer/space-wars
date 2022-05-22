@@ -16,6 +16,10 @@ const MAP_LENGTH = 100;
 const ZONE_LENGTH = 50;
 // Random ship data
 const NUM_OF_SPACESHIPS = 69;
+// Random number generator
+function genRandomNum(maxNum) {
+  return Math.floor(Math.random() * (maxNum + 1));
+}
 const SHIP_DATA_ARRAY = (function () {
   const arr = [];
   for (let i = 0; i < NUM_OF_SPACESHIPS; i++) {
@@ -34,23 +38,21 @@ const SHIP_DATA_ARRAY = (function () {
   }
   return arr;
 })();
-function genRandomNum(maxNum) {
-  return Math.floor(Math.random() * (maxNum + 1));
-}
+
 /*****************************************/
 
 /******** Faking data loading delay. Change it to a real data fetching function later ****/
-/* async function timeoutFunc(timeout) {
+async function timeoutFunc(timeout) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
     }, timeout);
   });
-} */
+}
 
-export default function loadData() {
+export default function loadFakeData() {
   return async (dispatch) => {
-    // await timeoutFunc(1000);
+    await timeoutFunc(1000);
     dispatch(
       dataSlice.actions.showData({
         mapLength: MAP_LENGTH,

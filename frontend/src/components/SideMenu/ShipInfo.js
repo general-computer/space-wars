@@ -38,7 +38,7 @@ export default (function () {
     actionPoints,
     health,
   } = useSelector((state) =>
-    clickedShipIndex ? state.data.shipDataArray[clickedShipIndex] : {}
+    clickedShipIndex !== null ? state.data.shipDataArray[clickedShipIndex] : {}
   );
   const {
     range: ownerChosenShipRange,

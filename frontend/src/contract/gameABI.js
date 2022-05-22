@@ -36,6 +36,9 @@ const gameABI = [
   `function upgrade(uint256 unitId, uint8 byLevels) public`,
   `function imageURI(uint256 _tokenId) public pure returns (string memory)`,
   `function tokenURI(uint256 _tokenId) public view returns (string memory)`,
+
+  /* From ERC721 */
+  `function ownerOf(uint256 tokenId) external view returns (address owner)`,
 ];
 
 export default gameABI;

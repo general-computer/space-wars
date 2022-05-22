@@ -17,8 +17,10 @@ export default function ShipMenu() {
   // Get DATA of all ships owned by walletAddress, attaching its shipIndex as well
   const shipsOfOwner = [];
   shipDataArray.forEach((shipData, shipIndex) => {
-    if (shipData.owner === walletAddress)
+    // Ethereum has weird hex address with mixed upper & lowercase letters
+    if (shipData.owner.toLowerCase() === walletAddress.toLowerCase()) {
       shipsOfOwner.push({ ...shipData, shipIndex });
+    }
   });
 
   const handleChooseShip = (shipIndex) => {
