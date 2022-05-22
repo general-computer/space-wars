@@ -2,51 +2,69 @@ import loadData from "./loadDataThunk";
 import userInfoSlice from "../userInfo/userInfoSlice";
 import gameContractStore from "../../contract/gameContractStore";
 
+const chainNames = {
+  "0x1": "the Mainnet",
+  "0x4": "Rinkeby Testnet",
+  "0x7a69": "Hardhat Network",
+};
+
+const targetChain = "0x7a69"; // Hardhat
+
 export default function init() {
   return async (dispatch, getState) => {
-    try {
-      /**
-       * Connecting to wallet; no wallet address needed at the moment
-       */
-      // Check: the window object must have ethereum injected
-      if (window?.ethereum === undefined)
-        throw new Error("Ethereuem not enabled in browser", {
-          cause: "NO-ETHEREUM",
-        });
-      // Listen to address changes in the wallet in the future
-      window.ethereum.on("accountsChanged", async (accounts) => {
-        await gameContractStore.init();
-        dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
-      });
-
-      /**
-       * Connecting to contract (read-only possible if no wallet address available)
-       */
-      const gameContract = await gameContractStore.init();
-      const gameState = await gameContract.getState({
-        // !!! Wallet like Metamask will do gas fee estimation but it is both unnecesarry for read-only functions,
-        // and will throw for "Transaction run out of gas". So just hard-code it here.
-        gasLimit: "999999999999999",
-      });
-      console.log(`Got state`);
-      console.log(gameState);
-
-      /*************** Data is now loaded in the code like above. Change loadData() acoordingly */
-      await dispatch(loadData());
-    } catch (error) {
-      switch (error.cause) {
-        case "NO-ETHEREUM":
-          alert(
-            "Have an Ethereum wallet (like Metamask) installed and enabled in the browser to use this app!"
-          );
-          console.error("initThunk: window.ethereum does not exist");
-          break;
-        /* case "NO-ADDRESS":
-          alert(`Press "Connect" to connect an Ethereum address to this app.`);
-          break; */
-        default:
-          throw error;
-      }
+    /**
+     * Connecting to wallet; no wallet address needed at the moment
+     */
+    // Check: the window object must have ethereum injected
+    if (window?.ethereum === undefined) {
+      alert(
+        "Have an Ethereum wallet (like Metamask) installed and enabled in the browser to use this app!"
+      );
+      throw new Error("initThunk: window.ethereum does not exist");
     }
+    // Check: the chain ID is correct. Note: this is a HEX string
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    console.log(`Chain ID: ${chainId}`);
+    if (chainId !== targetChain) {
+      alert(
+        `You are now on ${
+          chainNames[chainId] || "a network with an unrecognised chain ID"
+        }. Switch to ${chainNames[targetChain]} in your wallet to use the app.`
+      );
+      throw new Error("initThunk: incorrect chain ID");
+    }
+
+    /**
+     * Connecting to contract (read-only possible if no wallet address available)
+     */
+    const gameContract = await gameContractStore.init();
+
+    /**
+     * Load game state
+     */
+    const gameState = await gameContract.getState({
+      // !!! Wallet like Metamask will do gas fee estimation but it is both unnecesarry for read-only functions,
+      // and will throw for "Transaction run out of gas". So just hard-code it here.
+      gasLimit: "999999999999999",
+    });
+    console.log(`Got state:`);
+    console.log(gameState);
+
+    /*************** Data is now loaded in the code like above. Change loadData() acoordingly */
+    await dispatch(loadData());
+
+    // Listen to address changes in the wallet in the future
+    window.ethereum.on("accountsChanged", async (accounts) => {
+      await gameContractStore.init();
+      dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
+    });
   };
+  // ****** (Only on disconnection) Check: the provider is connected
+  /* console.log(window.ethereum.isConnected());
+  if (!window.ethereum.isConnected()) {
+    alert(
+      `Your wallet is disconnected from the chain. Re-connect to reload the page.`
+    );
+    throw new Error("initThunk: ethereum.isConnected() returns false");
+  } */
 }
