@@ -44,7 +44,7 @@ describe("Spaceship contract", function() {
       );
 
       console.log('\t', 'minting 1 more nft for later tests...');
-      await contract.callStatic.safeMint(owner.address);
+      await contract.safeMint(owner.address);
     });
   });
 
@@ -149,6 +149,54 @@ describe("Spaceship contract", function() {
       expect(unitPost.points).to.equal(unitPre.points - 1);
       expect(unitPost.x).to.equal(unitPre.x + 1);
       expect(unitPost.y).to.equal(unitPre.y + 1);
+    });
+
+  });
+
+
+  describe('givePoints()', function() {
+
+    it('should fail to give more points than available', async function() {
+      const unitPre0 = await contract.callStatic.$getUnit(0);
+      const unitPre1 = await contract.callStatic.$getUnit(1);
+
+      console.log('\t', `trying to gib ${unitPre1.points + 1}/${unitPre1.points} points from unit 1 to unit 0`);
+      await expect(contract.givePoints(1, 0, unitPre1.points + 1)).to.be.revertedWith('NotEnoughPoints');
+    });
+
+    it('should gib points', async function() {
+      const unitPre0 = await contract.callStatic.$getUnit(0);
+      const unitPre1 = await contract.callStatic.$getUnit(1);
+
+      console.log('\t', 'trying to gib 1 point from unit 1 to unit 0');
+      const tx = await contract.givePoints(1, 0, 1);
+      const txResult = await tx.wait();
+      expect(txResult.status).to.equal(1);
+
+      console.log('\t', 'checking the game state');
+      const unitPost0 = await contract.callStatic.$getUnit(0);
+      const unitPost1 = await contract.callStatic.$getUnit(1);
+      expect(unitPost0.points).to.equal(unitPre0.points + 1);
+      expect(unitPost1.points).to.equal(unitPre1.points - 1);
+    });
+
+  });
+
+
+  describe('shoot()', function() {
+
+    it('should shoot enemies', async function() {
+      const unitPre0 = await contract.callStatic.$getUnit(0);
+      const unitPre1 = await contract.callStatic.$getUnit(1);
+
+      console.log('\t', 'trying to shoot unit 1 with unit 0...');
+      await contract.shoot(0, 1, 1);
+
+      console.log('\t', 'checking the game state');
+      const unitPost0 = await contract.callStatic.$getUnit(0);
+      const unitPost1 = await contract.callStatic.$getUnit(1);
+      expect(unitPost0.points).to.equal(unitPre0.points - 1);
+      expect(unitPost1.lives).to.equal(unitPre1.lives - 1);
     });
 
   });
