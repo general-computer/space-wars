@@ -70,6 +70,10 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         return _tokenIdCounter.current() + 1;
     }
 
+    function getPlayfieldSize() public pure returns (uint56) {
+        return unsignedPlayfieldSize;
+    }
+
     //
     // DEBUG
     //
