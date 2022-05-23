@@ -117,7 +117,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // this is where the magic happens
     // simulates 1 day worth of "external" changes to a unit
     function simulateUnitOnce(UnitData memory unit) internal pure returns (UnitData memory) {
-        unit.lastSimulatedDay++;
+        ++unit.lastSimulatedDay;
 
         // take helth from zon
         if (unit.lives > 0 && !inCircle(playfieldSize/2, playfieldSize/2, int56(uint56(getZoneRadius(unit.lastSimulatedDay))), unit.x, unit.y)) {
@@ -126,7 +126,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
         // gib points
         if (unit.lives > 0) {
-            unit.points++;
+            ++unit.points;
         }
 
         return unit;
@@ -135,7 +135,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // simulates the unit out until today
     // TODO: cap the amount of days (according to the block gas limit)
     function simulateUnitOut(UnitData memory unit) internal view returns (UnitData memory) {
-        for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); day++) {
+        for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); ++day) {
             unit = simulateUnitOnce(unit);
         }
 
@@ -148,7 +148,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     function getAllUnits() internal view returns (UnitData[SUPPLY] memory) {
         UnitData[SUPPLY] memory units;
-        for (uint256 id = 0; id <= _tokenIdCounter.current(); id++) {
+        for (uint256 id = 0; id <= _tokenIdCounter.current(); ++id) {
             units[id] = getUnit(id);
         }
         return units;
@@ -159,7 +159,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         uint256 amt = _tokenIdCounter.current();
         string[SUPPLY] memory images;
 
-        for (uint256 i = 0; i < amt; i++) {
+        for (uint256 i = 0; i < amt; ++i) {
             images[i] = imageURI(i);
         }
 
