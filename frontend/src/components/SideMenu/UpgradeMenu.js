@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
-import confirmUpgrade from "../../store/sideMenu/confirmUpgradeThunk";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
@@ -51,7 +51,7 @@ export default function UpgradeMenu() {
   };
 
   const confirm = () => {
-    dispatch(confirmUpgrade({ tokenId, mockRangeIncr }));
+    dispatch(confirmAction("upgrade", { tokenId, mockRangeIncr }));
   };
 
   return (

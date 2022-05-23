@@ -4,6 +4,8 @@ import gameABI from "./gameABI";
 const gameContractStore = (function () {
   // !!! This contract address may change
   const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  // Set the required block confirmations here
+  const BLOCK_CONFIRMATIONS = 1;
   // The extracted contract object
   let _contract;
 
@@ -46,6 +48,7 @@ const gameContractStore = (function () {
   return {
     init,
     getContract,
+    BLOCK_CONFIRMATIONS,
   };
 })();
 

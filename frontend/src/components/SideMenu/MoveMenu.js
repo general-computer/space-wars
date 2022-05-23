@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
-import confirmMove from "../../store/sideMenu/confirmMoveThunk";
 import { moveCheck } from "../../utils/moveCheck";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import cl from "./MoveMenu.module.css";
 import actionPtSvg from "../../img/actionPt.svg";
@@ -60,7 +60,7 @@ export default (function () {
       );
       throw new Error("confirmMove: multiple moves not allowed at the moment");
     }
-    dispatch(confirmMove({ tokenId, translatedX, translatedY }));
+    dispatch(confirmAction("move", { tokenId, translatedX, translatedY }));
   };
 
   return (
