@@ -24,6 +24,7 @@ const gameABI = [
   "function safeMint(address to) public",
   "function getMaxSupply() external pure returns (uint256)",
   "function getCurrentSupply() public view returns (uint256)",
+  // startGame() is onlyOwner and is for testing only
   "function startGame() public",
   "function hasGameStarted() public view returns (bool)",
   "function getCurrentDay() public view returns (uint56)",
