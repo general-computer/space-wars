@@ -30,22 +30,37 @@ export default (function () {
   /**
    * Data processing
    */
-  const { moves, outOfAP, outOfMap, clashEnemyShips, isMoveAllowed } =
-    moveCheck({
-      shipDataArray,
-      clickedShipIndex,
-      transX,
-      transY,
-      mapLength,
-    });
-  const { avatarString, actionPoints } = shipDataArray[clickedShipIndex];
+  const {
+    moves,
+    translatedX,
+    translatedY,
+    outOfAP,
+    outOfMap,
+    clashEnemyShips,
+    isMoveAllowed,
+  } = moveCheck({
+    shipDataArray,
+    clickedShipIndex,
+    transX,
+    transY,
+    mapLength,
+  });
+  const { avatarString, actionPoints, tokenId } =
+    shipDataArray[clickedShipIndex];
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
   };
 
   const confirm = () => {
-    dispatch(confirmMove());
+    // **** Dispatch single transaction for multiple move steps later!
+    if (moves > 1) {
+      alert(
+        "Mulitple moves in one go is disabled for now. Please make moves of one block each time."
+      );
+      throw new Error("confirmMove: multiple moves not allowed at the moment");
+    }
+    dispatch(confirmMove({ tokenId, translatedX, translatedY }));
   };
 
   return (
