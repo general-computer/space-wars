@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
+import confirmUpgrade from "../../store/sideMenu/confirmUpgradeThunk";
 
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
@@ -31,6 +32,7 @@ export default function UpgradeMenu() {
     avatarString,
     range: currRange,
     actionPoints,
+    tokenId,
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
   const dispatch = useDispatch();
 
@@ -46,6 +48,10 @@ export default function UpgradeMenu() {
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
+  };
+
+  const confirm = () => {
+    dispatch(confirmUpgrade({ tokenId, mockRangeIncr }));
   };
 
   return (
@@ -82,7 +88,7 @@ export default function UpgradeMenu() {
         <Button variant="outline-dark" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="dark" disabled={mockRangeIncr <= 0}>
+        <Button variant="dark" disabled={mockRangeIncr <= 0} onClick={confirm}>
           <span className="h4">Confirm Expansion</span>
         </Button>
       </ActionBtnsContainer>

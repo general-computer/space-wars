@@ -87,11 +87,18 @@ export default function init() {
     dispatch(dataSlice.actions.showData(processedGameState));
     // await dispatch(loadFakeData());
 
-    // Listen to address changes in the wallet in the future
+    /**
+     * Set up event listeners
+     */
+    // Listen to address changes in the wallet
     window.ethereum.on("accountsChanged", async (accounts) => {
       await gameContractStore.init();
       dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
     });
+    // Listen to contract events
+    /* gameContract.on(
+      "UnitMoved", 
+    ) */
   };
   // ****** (Only on disconnection) Check: the provider is connected
   /* console.log(window.ethereum.isConnected());
