@@ -52,7 +52,7 @@ export default function init() {
         gasLimit: "999999999999999",
       })),
     };
-    // Add owner details to rawGameState
+    // Add owner details & playfieldSize to rawGameState
     let tokenIdToOwner = {};
     const ownerReq = rawGameState.allUnits.map(
       // !!! tokenId HAPPENS to be the same as the indexes in rawGameState.allUnits
@@ -71,7 +71,9 @@ export default function init() {
       }
     );
     await Promise.allSettled(ownerReq);
+    const playfieldSize = await gameContract.getPlayfieldSize();
     rawGameState.tokenIdToOwner = tokenIdToOwner;
+    rawGameState.playfieldSize = playfieldSize;
 
     console.log(`Raw game state:`, rawGameState);
 

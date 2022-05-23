@@ -5,6 +5,7 @@ export const processGameState = (rawState) => {
     currentZoneRadius,
     s_gameStartTime,
     tokenIdToOwner,
+    playfieldSize,
   } = rawState;
 
   const shipDataArray = allUnits.map((ship, index) => {
@@ -27,8 +28,7 @@ export const processGameState = (rawState) => {
   });
 
   return {
-    // ********** Hardcode `mapLength` for now, should get from contract
-    mapLength: 100,
+    mapLength: +playfieldSize,
     zoneLength: +currentZoneRadius * 2,
     gameStartTime: +s_gameStartTime,
     shipDataArray,
