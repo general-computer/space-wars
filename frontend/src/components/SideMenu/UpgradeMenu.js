@@ -34,6 +34,9 @@ export default function UpgradeMenu() {
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
   const dispatch = useDispatch();
 
+  const mockFinalRange = currRange + mockRangeIncr;
+  const mockRemainingAP = actionPoints - mockRangeIncr;
+
   const tryUpgrade = () => {
     dispatch(sideMenuSlice.actions.tryUpgrade({ currRange }));
   };
@@ -52,20 +55,17 @@ export default function UpgradeMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-          <SubInfoSvgValue repeats={currRange + mockRangeIncr} url={rangeSvg} />
+          <SubInfoSvgValue repeats={mockFinalRange} url={rangeSvg} />
         </SubInfo>
         <SubInfo>
           <SubInfoProp>DARK MATTER</SubInfoProp>
-          <SubInfoSvgValue
-            repeats={actionPoints - mockRangeIncr}
-            url={actionPtSvg}
-          />
+          <SubInfoSvgValue repeats={mockRemainingAP} url={actionPtSvg} />
         </SubInfo>
       </InfoContainer>
 
       <Button
         variant="dark"
-        disabled={currRange + mockRangeIncr >= 3}
+        disabled={mockFinalRange >= 3 || mockRemainingAP <= 0}
         onClick={tryUpgrade}
       >
         <span className="h3">Expand</span>
