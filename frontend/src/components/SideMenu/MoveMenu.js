@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
-import { filterAliveShips } from "../../utils/shipFilters";
+import confirmMove from "../../store/sideMenu/confirmMoveThunk";
+import { moveCheck } from "../../utils/moveCheck";
 
 import cl from "./MoveMenu.module.css";
 import actionPtSvg from "../../img/actionPt.svg";
@@ -29,44 +30,22 @@ export default (function () {
   /**
    * Data processing
    */
-  const {
-    avatarString,
-    actionPoints,
-    posX: clickedShipX,
-    posY: clickedShipY,
-  } = shipDataArray[clickedShipIndex];
-  const aliveShipsData = filterAliveShips(shipDataArray);
-  // Calculate how many moves it takes to translate
-  const moves = Math.max(Math.abs(transX), Math.abs(transY));
-  //
-  const translatedX = clickedShipX + transX;
-  const translatedY = clickedShipY + transY;
-  const inRangeEnemyShipsXY = aliveShipsData
-    .filter((shipData) => shipData.shipIndex !== clickedShipIndex)
-    .filter(
-      (enemyShipData) =>
-        Math.abs(enemyShipData.posX - clickedShipX) <= actionPoints &&
-        Math.abs(enemyShipData.posY - clickedShipY) <= actionPoints
-    )
-    .map((inRangeShipData) => ({
-      x: inRangeShipData.posX,
-      y: inRangeShipData.posY,
-    }));
-  // Criteria that disables moves
-  const outOfAP = moves > actionPoints;
-  const outOfMap =
-    translatedX < 0 ||
-    translatedY < 0 ||
-    translatedX > mapLength - 1 ||
-    translatedY > mapLength - 1;
-  const clashEnemyShips = inRangeEnemyShipsXY.some(
-    (enemyXY) => enemyXY.x === translatedX && enemyXY.y === translatedY
-  );
-  const isMoveDisabled =
-    (transX === 0 && transY === 0) || outOfAP || outOfMap || clashEnemyShips;
+  const { moves, outOfAP, outOfMap, clashEnemyShips, isMoveAllowed } =
+    moveCheck({
+      shipDataArray,
+      clickedShipIndex,
+      transX,
+      transY,
+      mapLength,
+    });
+  const { avatarString, actionPoints } = shipDataArray[clickedShipIndex];
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
+  };
+
+  const confirm = () => {
+    dispatch(confirmMove());
   };
 
   return (
@@ -106,9 +85,9 @@ export default (function () {
         <Button variant="outline-light" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="light" disabled={isMoveDisabled}>
+        <Button variant="light" disabled={isMoveAllowed} onClick={confirm}>
           <span
-            className={[isMoveDisabled ? cl.disabledText : "", "h3"].join(" ")}
+            className={[isMoveAllowed ? cl.disabledText : "", "h3"].join(" ")}
           >
             Confirm Move
           </span>
