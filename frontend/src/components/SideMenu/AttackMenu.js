@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
@@ -35,11 +36,11 @@ export default function AttackMenu() {
   const mockHits = useSelector((state) => state.sideMenu.mockHits);
   const {
     avatarString,
-    tokenId,
+    tokenId: targetTokenId,
     owner,
     health: targetHealth,
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
-  const { actionPoints: ownerChosenShipAP } = useSelector(
+  const { tokenId: ocsTokenId, actionPoints: ownerChosenShipAP } = useSelector(
     (state) => state.data.shipDataArray[ownerChosenShip]
   );
   const dispatch = useDispatch();
@@ -61,6 +62,16 @@ export default function AttackMenu() {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
   };
 
+  const confirm = () => {
+    dispatch(
+      confirmAction("attack", {
+        attId: ocsTokenId,
+        victId: targetTokenId,
+        damage: mockHits,
+      })
+    );
+  };
+
   return (
     <StyledMenuContainer>
       <MenuHeader>Destabilize</MenuHeader>
@@ -68,7 +79,7 @@ export default function AttackMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>ID</SubInfoProp>
-          <SubInfoValue>{tokenId}</SubInfoValue>
+          <SubInfoValue>{targetTokenId}</SubInfoValue>
         </SubInfo>
         <SubInfo>
           <SubInfoProp>CAPTAIN</SubInfoProp>
@@ -103,7 +114,7 @@ export default function AttackMenu() {
         <Button variant="outline-light" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="light" disabled={mockHits <= 0}>
+        <Button variant="light" disabled={mockHits <= 0} onClick={confirm}>
           <DimmableSpan className="h4" dim={mockHits <= 0}>
             Confirm Destabilization
           </DimmableSpan>
