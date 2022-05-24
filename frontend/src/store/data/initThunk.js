@@ -1,8 +1,7 @@
-import loadFakeData from "./loadFakeDataThunk";
-import dataSlice from "./dataSlice";
 import userInfoSlice from "../userInfo/userInfoSlice";
 import gameContractStore from "../../contract/gameContractStore";
-import { processGameState } from "./processGameState";
+import loadFullState from "./loadFullState";
+import handleEvents from "./handleEvents";
 
 const chainNames = {
   "0x1": "the Mainnet",
@@ -14,9 +13,9 @@ const targetChain = "0x7a69"; // Hardhat
 
 export default function init() {
   return async (dispatch, getState) => {
-    /**
+    /********************************************************
      * Connecting to wallet; no wallet address needed at the moment
-     */
+     *********************************************************/
     // Check: the window object must have ethereum injected
     if (window?.ethereum === undefined) {
       alert(
@@ -36,85 +35,74 @@ export default function init() {
       throw new Error("initThunk: incorrect chain ID");
     }
 
-    /**
+    /********************************************************
      * Connecting to contract (read-only possible if no wallet address available)
-     */
+     *******************************************************/
     const gameContract = await gameContractStore.init();
 
-    /**
+    /***************************
      * Load game state
-     */
-    // !!! allow editing the rawGameState later by doing shallow copy
+     **************************/
+    const getStateBlockNum = await loadFullState();
 
-    // ***** Test: calling specific block
-    // *** Add to the remaining
-    // const currBlockNum = (await gameContract.provider.getBlock()).number;
-
-    const rawGameState = {
-      ...(await gameContract.getState({
-        // !!! Wallet like Metamask will do gas fee estimation but it is both unnecesarry for read-only functions,
-        // and will throw for "Transaction run out of gas". So just hard-code it here.
-        gasLimit: "999999999999999",
-        // **** Test
-        // blockTag: currBlockNum,
-      })),
-    };
-    // Add owner details & playfieldSize to rawGameState
-    let tokenIdToOwner = {};
-    const ownerReq = rawGameState.allUnits.map(
-      // !!! tokenId HAPPENS to be the same as the indexes in rawGameState.allUnits
-      async (unit, tokenId) => {
-        let owner;
-        try {
-          owner = await gameContract.ownerOf(tokenId);
-        } catch (err) {
-          // Allow a token to have no owner
-          console.warn(
-            `initThunk: cannot get owner of tokenId ${tokenId}, is it minted and still has an owner?`
-          );
-          owner = "";
-        }
-        tokenIdToOwner[tokenId] = owner;
-      }
-    );
-    await Promise.allSettled(ownerReq);
-    // const playfieldSize = await gameContract.getPlayfieldSize();
-    // Hard-code it for now
-    const playfieldSize = 100;
-    rawGameState.tokenIdToOwner = tokenIdToOwner;
-    rawGameState.playfieldSize = playfieldSize;
-
-    console.log(`Raw game state:`, rawGameState);
-
-    /**
-     * Process Game state
-     */
-    const processedGameState = processGameState(rawGameState);
-    console.log(`Processed game state:`, processedGameState);
-
-    /** Alternatively, use loadFakeData() for faking the data loaded */
-    dispatch(dataSlice.actions.showData(processedGameState));
-    // await dispatch(loadFakeData());
-
-    /**
+    /*********************************************************
      * Set up event listeners
+     * - Putting it here is to prevent us from missing any events between setting up the listeners & making the inital state calls
+     *********************************************************/
+    /**
+     * Preparations
      */
-    // Listen to address changes in the wallet
+    handleEvents.gotStateAt(getStateBlockNum);
+    /**
+     * Listen to address changes in the wallet
+     */
     window.ethereum.on("accountsChanged", async (accounts) => {
       await gameContractStore.init();
       dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
     });
-    // Listen to contract events
-    /* gameContract.on(
-      "UnitMoved", 
-    ) */
-  };
-  // ****** (Only on disconnection) Check: the provider is connected
-  /* console.log(window.ethereum.isConnected());
-  if (!window.ethereum.isConnected()) {
-    alert(
-      `Your wallet is disconnected from the chain. Re-connect to reload the page.`
+    /**
+     * TODO: Listen to new blocks
+     */
+    // *** TODO: May add some new UI changes when a new block/events arrive
+    // gameContract.provider.on(
+    //   "block",
+    //   // ***** pending
+    //   async (blockNum) => {
+    //     console.log(
+    //       "New block timestamp:",
+    //       (await gameContract.provider.getBlock()).timestamp
+    //     );
+    //     console.log("New block number:", blockNum);
+    //   }
+    // );
+    /**
+     * Listen to all contract events
+     * - !!!! ethers.js + Hardhat Network has a weird behaviour that on initial listener set up, ...
+     * ... it will query the events from the latest block + the last block as well; and sometimes, it just shows every events it has since block 0
+     *    - So, remember to put a filter in the callback for blockNum
+     *    - This behaviour may be useful though , as it let us check for events missed out between our initial call and setting up the event listeners
+     * - You may also want to use contract.queryFilter as a safe check
+     */
+    gameContract.on(
+      // If use a string eventName here (the event specified in the ABI), ...
+      // ... then the callback will receive all the params specified in the ABI + the event object
+      // If using "*" to match any events, only the event object will be passed
+      // - filter specifications: https://docs.ethers.io/v5/api/providers/types/#providers-Filter
+      "*",
+      (event) => {
+        handleEvents.on(event);
+      }
     );
-    throw new Error("initThunk: ethereum.isConnected() returns false");
-  } */
+
+    /******
+     * TODO: Check: the provider is connected
+     */
+    // console.log(window.ethereum.isConnected());
+    // if (!window.ethereum.isConnected()) {
+    //   alert(
+    //     `Your wallet is disconnected from the chain. Re-connect to reload the page.`
+    //   );
+    //   throw new Error("initThunk: ethereum.isConnected() returns false");
+    // }
+  };
 }

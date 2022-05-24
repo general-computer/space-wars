@@ -14,6 +14,8 @@ const gameABI = [
   "event UnitShot(uint256 tokenId, uint8 newHealth)",
   "event UnitUpgraded(uint256 tokenId, uint8 level)",
   "event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount)",
+  // From ERC721A: https://chiru-labs.github.io/ERC721A/#/erc721a?id=events
+  "event Transfer(address from, address to, uint256 tokenId)",
 
   "error ExceedsSupply()",
   "error NotEnoughPoints()",
