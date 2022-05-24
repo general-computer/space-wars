@@ -207,8 +207,9 @@ describe("Spaceship contract", function() {
 
 
   describe('getState()', function() {
+    let zoneRadius, gameStartTime, units, images
     it('should return the correct game state after our manipulations', async function() {
-      const [zoneRadius, gameStartTime, units, images] = await contract.callStatic.getState();
+      [zoneRadius, gameStartTime, units, images] = await contract.callStatic.getState();
       expect(zoneRadius).to.equal(49);
       //expect(gameStartTime).to.equal(99);
       //expect(units.length).to.equal(1);
@@ -223,6 +224,13 @@ describe("Spaceship contract", function() {
 
       expect(images[0]).to.equal('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
     });
+
+    it('should return all units in an initialized state', async function() {
+      console.log('\t', 'Checking whether the lives of all units != 0...');
+      for (i = 0; i < (await contract.callStatic.getMaxSupply()); i++) {
+        expect(units[i].lives).to.not.equal(0);
+      }
+    })
   });
 
 
