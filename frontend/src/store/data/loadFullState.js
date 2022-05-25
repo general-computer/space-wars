@@ -4,6 +4,7 @@ import store from "../mainStore";
 import dataSlice from "./dataSlice";
 import handleEventStore from "./handleEventsStore";
 import loadFakeData from "./loadFakeDataThunk";
+import handleNewBlock from "./handleNewBlock";
 
 export default async function loadFullState() {
   /**
@@ -67,6 +68,9 @@ export default async function loadFullState() {
   /** Alternatively, use loadFakeData() for faking the data loaded */
   // await dispatch(loadFakeData());
 
-  // Tell handleEvents that we have the latest state
+  // Tell handlers that we have the latest state
   handleEventStore.gotStateAt(currBlockNum);
+  handleNewBlock.gotStateAt(currBlockNum);
+  // And log the gameStartTime
+  handleNewBlock.gameStartedAt(processedGameState.gameStartTime);
 }

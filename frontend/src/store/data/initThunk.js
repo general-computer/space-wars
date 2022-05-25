@@ -2,6 +2,7 @@ import userInfoSlice from "../userInfo/userInfoSlice";
 import gameContractStore from "../../contract/gameContractStore";
 import loadFullState from "./loadFullState";
 import handleEvents from "./handleEvents";
+import handleNewBlock from "./handleNewBlock";
 
 const chainNames = {
   "0x1": "the Mainnet",
@@ -60,21 +61,11 @@ export default function init() {
      * TODO: Listen to new blocks
      */
     // *** TODO: May add some new UI changes when a new block/events arrive
-    // gameContract.provider.on(
-    //   "block",
-    //   // ***** pending
-    //   async (blockNum) => {
-    //     console.log(
-    //       "New block timestamp:",
-    //       (await gameContract.provider.getBlock()).timestamp
-    //     );
-    //     console.log("New block number:", blockNum);
-    //   }
-    // );
+    gameContract.provider.on("block", handleNewBlock.on);
     /**
      * Listen to all contract events
      * - !!!! ethers.js + Hardhat Network has a weird behaviour that on initial listener set up, ...
-     * ... it will query the events from the latest block + the last block as well; and sometimes, it just shows every events it has since block 0
+     * ... it will query the events from the latest block + the last block as well
      *    - So, remember to put a filter in the callback for blockNum
      *    - This behaviour may be useful though , as it let us check for events missed out between our initial call and setting up the event listeners
      * - You may also want to use contract.queryFilter as a safe check

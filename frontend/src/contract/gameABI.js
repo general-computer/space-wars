@@ -23,6 +23,8 @@ const gameABI = [
   "error NoAccess()",
   "error DeadSpaceship()",
 
+  "function s_gameStartTime() public view returns(uint256)",
+
   "function mint(uint256 quantity) public",
   "function getMaxSupply() external pure returns (uint256)",
   // "function getPlayfieldSize() public pure returns (uint56)",
