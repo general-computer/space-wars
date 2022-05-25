@@ -64,6 +64,10 @@ contract Spaceship is ERC721A {
         return SUPPLY;
     }
 
+    function getPlayfieldSize() public pure returns (uint56) {
+        return unsignedPlayfieldSize;
+    }
+
     //
     // DEBUG
     //
