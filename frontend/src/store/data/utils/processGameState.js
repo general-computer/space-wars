@@ -34,18 +34,3 @@ export const processGameState = (rawState) => {
     shipDataArray,
   };
 };
-
-/* 
-{
-      avatarString: SHIPS[genRandomNum(NUM_OF_SPACESHIPS) - 1],
-      tokenId: genRandomNum(10000).toString(),
-      owner: SAMPLE_OWNERS[genRandomNum(2)],
-      posX: genRandomNum(MAP_LENGTH - 1),
-      posY: genRandomNum(MAP_LENGTH - 1),
-      /// Note: range = level + 1
-      range: genRandomNum(2) + 1,
-      actionPoints: genRandomNum(10),
-      health: genRandomNum(3),
-    };
-
-*/

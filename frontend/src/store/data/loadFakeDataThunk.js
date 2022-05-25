@@ -1,7 +1,7 @@
 import dataSlice from "./dataSlice";
 
 // **************** The svg code is an example only
-import SHIPS from "./example_ships";
+import SHIPS from "./utils/example_ships";
 
 /******** Generating random sample tank data *****/
 // The first three addresses in HardHat Network

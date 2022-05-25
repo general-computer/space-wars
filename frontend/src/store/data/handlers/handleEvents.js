@@ -1,4 +1,4 @@
-import loadFullState from "./loadFullState";
+import loadFullState from "../scripts/loadFullState";
 import handleEventsStore from "./handleEventsStore";
 
 const handleEvents = (function () {

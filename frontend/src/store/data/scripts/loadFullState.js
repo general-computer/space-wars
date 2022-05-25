@@ -1,10 +1,10 @@
-import gameContractStore from "../../contract/gameContractStore";
-import { processGameState } from "./processGameState";
-import store from "../mainStore";
-import dataSlice from "./dataSlice";
-import handleEventStore from "./handleEventsStore";
-import loadFakeData from "./loadFakeDataThunk";
-import handleNewBlock from "./handleNewBlock";
+import store from "../../mainStore";
+import dataSlice from "../dataSlice";
+import gameContractStore from "../../../contract/gameContractStore";
+import { processGameState } from "../utils/processGameState";
+import handleEventStore from "../handlers/handleEventsStore";
+import handleNewBlock from "../handlers/handleNewBlock";
+import loadFakeData from "../loadFakeDataThunk";
 
 export default async function loadFullState() {
   /**

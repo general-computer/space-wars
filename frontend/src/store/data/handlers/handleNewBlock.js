@@ -1,5 +1,5 @@
-import gameContractStore from "../../contract/gameContractStore";
-import loadFullState from "./loadFullState";
+import gameContractStore from "../../../contract/gameContractStore";
+import loadFullState from "../scripts/loadFullState";
 
 const handleNewBlock = (function () {
   let _gameStartTime, _lastSyncedDay;

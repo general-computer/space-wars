@@ -1,8 +1,8 @@
 import userInfoSlice from "../userInfo/userInfoSlice";
 import gameContractStore from "../../contract/gameContractStore";
-import loadFullState from "./loadFullState";
-import handleEvents from "./handleEvents";
-import handleNewBlock from "./handleNewBlock";
+import loadFullState from "./scripts/loadFullState";
+import handleEvents from "./handlers/handleEvents";
+import handleNewBlock from "./handlers/handleNewBlock";
 
 const chainNames = {
   "0x1": "the Mainnet",
