@@ -36,8 +36,8 @@ const handleNewBlock = (function () {
      * !!! gameStartTime should never change in real contract, but for testing purpose it may move back
      * !!! Comment these out if not testing
      */
-    const newGameStartTime = await gameContract.s_gameStartTime();
-    gameStartedAt(newGameStartTime);
+    // const newGameStartTime = await gameContract.s_gameStartTime();
+    // gameStartedAt(newGameStartTime);
 
     /** Check if one day has passed */
     const newIntDays = _calcIntDay(newTimestamp);
