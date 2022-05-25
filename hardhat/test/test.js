@@ -24,15 +24,17 @@ describe("Spaceship contract", function() {
     });
   }
 
-  describe('safeMint()', function() {
+  describe('mint()', function() {
+    let owner;
+
     it('should be able to mint an nft', async function() {
-      const [owner] = await ethers.getSigners();
+      [owner] = await ethers.getSigners();
       console.log('\t', 'tester/deployer address', owner.address);
 
       const startingBalance = await contract.balanceOf(owner.address);
       console.log('\t', 'startingBalance', startingBalance);
 
-      const mintTx = await contract.safeMint(owner.address);
+      const mintTx = await contract.mint(1);
       console.log('\t', 'meeeeeeenting tx', mintTx.hash);
 
       const txResult = await mintTx.wait();
@@ -42,23 +44,26 @@ describe("Spaceship contract", function() {
       expect(await contract.balanceOf(owner.address)).to.equal(
         startingBalance.add(1)
       );
-
-      console.log('\t', 'minting 1 more nft for later tests...');
-      await contract.safeMint(owner.address);
     });
-  });
 
-  describe('startGame()', function() {
-    it('should be able to force start the game', async function() {
-      const tx = await contract.startGame();
+    it('should be able to start the game when all nfts are minted', async function() {
+      const SUPPLY = await contract.callStatic.getMaxSupply();
+      console.log('\t', `minting ${SUPPLY - 1} more nfts...`);
 
-      const txResult = await tx.wait();
-      expect(txResult.status).to.equal(1);
+      await contract.mint(SUPPLY - 1);
+
+      console.log('\t', 'checking the total supply...');
+      expect(await contract.totalSupply()).to.equal(SUPPLY);
 
       console.log('\t', 'checking whether the game has started...');
       expect(await contract.hasGameStarted()).to.equal(true);
+    });
+
+    it('shouldn\'t be able to mint (SUPPLY+1) nfts', async function() {
+      await expect(contract.mint(1)).to.be.revertedWith('ExceedsSupply');
     })
   });
+
 
   describe('getCurrentDay()', function() {
     it('should correctly return the current simulation day', async function() {
@@ -86,7 +91,6 @@ describe("Spaceship contract", function() {
       expect(unitPre.lives).to.equal(2); // (0,0) = in zone after a day
     });
   });
-
 
   describe('upgrade()', function() {
     it('should allow upgrading', async function() {
@@ -203,8 +207,9 @@ describe("Spaceship contract", function() {
 
 
   describe('getState()', function() {
+    let zoneRadius, gameStartTime, units, images
     it('should return the correct game state after our manipulations', async function() {
-      const [zoneRadius, gameStartTime, units, images] = await contract.callStatic.getState();
+      [zoneRadius, gameStartTime, units, images] = await contract.callStatic.getState();
       expect(zoneRadius).to.equal(49);
       //expect(gameStartTime).to.equal(99);
       //expect(units.length).to.equal(1);
@@ -219,6 +224,14 @@ describe("Spaceship contract", function() {
 
       expect(images[0]).to.equal('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
     });
+
+    it('should return all units in an initialized state', async function() {
+      console.log('\t', 'Checking whether the lives of all units != 0...');
+      for (i = 0; i < (await contract.callStatic.getMaxSupply()); i++) {
+        expect(units[i].lives).to.not.equal(0);
+      }
+    })
   });
+
 
 });
