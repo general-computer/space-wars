@@ -2,6 +2,7 @@ import gameContractStore from "../../contract/gameContractStore";
 import { processGameState } from "./processGameState";
 import store from "../mainStore";
 import dataSlice from "./dataSlice";
+import handleEventStore from "./handleEventsStore";
 import loadFakeData from "./loadFakeDataThunk";
 
 export default async function loadFullState() {
@@ -50,6 +51,7 @@ export default async function loadFullState() {
     playfieldSize = 100;
   })();
   await Promise.all([...ownerReq, playfieldSizeReq]);
+
   rawGameState.tokenIdToOwner = tokenIdToOwner;
   rawGameState.playfieldSize = playfieldSize;
 
@@ -65,5 +67,6 @@ export default async function loadFullState() {
   /** Alternatively, use loadFakeData() for faking the data loaded */
   // await dispatch(loadFakeData());
 
-  return currBlockNum;
+  // Tell handleEvents that we have the latest state
+  handleEventStore.gotStateAt(currBlockNum);
 }

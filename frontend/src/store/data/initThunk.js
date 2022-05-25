@@ -43,16 +43,12 @@ export default function init() {
     /***************************
      * Load game state
      **************************/
-    const getStateBlockNum = await loadFullState();
+    await loadFullState();
 
     /*********************************************************
      * Set up event listeners
      * - Putting it here is to prevent us from missing any events between setting up the listeners & making the inital state calls
      *********************************************************/
-    /**
-     * Preparations
-     */
-    handleEvents.gotStateAt(getStateBlockNum);
     /**
      * Listen to address changes in the wallet
      */

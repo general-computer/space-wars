@@ -1,15 +1,11 @@
 import loadFullState from "./loadFullState";
+import handleEventsStore from "./handleEventsStore";
 
 const handleEvents = (function () {
-  let _GETSTATE_BLOCKNUM;
-
-  function gotStateAt(getStateBlockNum) {
-    _GETSTATE_BLOCKNUM = getStateBlockNum;
-  }
-
   async function on(event) {
+    const getStateBlockNum = handleEventsStore.getStateBlockNum();
     // Filter blockNum
-    if (event.blockNumber <= _GETSTATE_BLOCKNUM) {
+    if (event.blockNumber <= getStateBlockNum) {
       return;
     }
     console.log(event);
@@ -20,7 +16,6 @@ const handleEvents = (function () {
   }
 
   return {
-    gotStateAt,
     on,
   };
 })();
