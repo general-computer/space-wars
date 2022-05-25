@@ -3,11 +3,12 @@
  */
 export async function mint1(contractName, contractAddr) {
   const spaceship = await ethers.getContractAt(contractName, contractAddr);
+  const signerAddr = await spaceship.signer.getAddress();
 
-  console.log(`Minting one NFT to ${process.env.WALLET_ADDRESS}`);
+  console.log(`Minting one NFT to ${signerAddr}`);
 
-  await spaceship.safeMint(process.env.WALLET_ADDRESS);
-  console.log("One NFT minted to", process.env.WALLET_ADDRESS);
+  await spaceship.mint(1);
+  console.log("One NFT minted to", signerAddr);
 
   const currentSupply = await spaceship.getCurrentSupply();
   console.log("Total NFT supply:", currentSupply - 1);

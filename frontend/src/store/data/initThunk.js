@@ -45,11 +45,18 @@ export default function init() {
      * Load game state
      */
     // !!! allow editing the rawGameState later by doing shallow copy
+
+    // ***** Test: calling specific block
+    // *** Add to the remaining
+    // const currBlockNum = (await gameContract.provider.getBlock()).number;
+
     const rawGameState = {
       ...(await gameContract.getState({
         // !!! Wallet like Metamask will do gas fee estimation but it is both unnecesarry for read-only functions,
         // and will throw for "Transaction run out of gas". So just hard-code it here.
         gasLimit: "999999999999999",
+        // **** Test
+        // blockTag: currBlockNum,
       })),
     };
     // Add owner details & playfieldSize to rawGameState
@@ -71,7 +78,9 @@ export default function init() {
       }
     );
     await Promise.allSettled(ownerReq);
-    const playfieldSize = await gameContract.getPlayfieldSize();
+    // const playfieldSize = await gameContract.getPlayfieldSize();
+    // Hard-code it for now
+    const playfieldSize = 100;
     rawGameState.tokenIdToOwner = tokenIdToOwner;
     rawGameState.playfieldSize = playfieldSize;
 
