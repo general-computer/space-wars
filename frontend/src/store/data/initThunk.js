@@ -3,17 +3,11 @@ import gameContractStore from "../../contract/gameContractStore";
 import loadFullState from "./scripts/loadFullState";
 import handleEvents from "./handlers/handleEvents";
 import handleNewBlock from "./handlers/handleNewBlock";
-
-const chainNames = {
-  "0x1": "the Mainnet",
-  "0x4": "Rinkeby Testnet",
-  "0x7a69": "Hardhat Network",
-};
-
-const targetChain = "0x7a69"; // Hardhat
+import config, { chainNames } from "../../contract/config";
 
 export default function init() {
   return async (dispatch, getState) => {
+    const { TARGET_CHAIN } = config;
     /********************************************************
      * Connecting to wallet; no wallet address needed at the moment
      *********************************************************/
@@ -27,11 +21,11 @@ export default function init() {
     // Check: the chain ID is correct. Note: this is a HEX string
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     console.log(`Chain ID: ${chainId}`);
-    if (chainId !== targetChain) {
+    if (chainId !== TARGET_CHAIN) {
       alert(
         `You are now on ${
           chainNames[chainId] || "a network with an unrecognised chain ID"
-        }. Switch to ${chainNames[targetChain]} in your wallet to use the app.`
+        }. Switch to ${chainNames[TARGET_CHAIN]} in your wallet to use the app.`
       );
       throw new Error("initThunk: incorrect chain ID");
     }
@@ -48,7 +42,6 @@ export default function init() {
 
     /*********************************************************
      * Set up event listeners
-     * - Putting it here is to prevent us from missing any events between setting up the listeners & making the inital state calls
      *********************************************************/
     /**
      * Listen to address changes in the wallet
@@ -58,7 +51,7 @@ export default function init() {
       dispatch(userInfoSlice.actions.changeUserAddr(accounts[0] ?? ""));
     });
     /**
-     * TODO: Listen to new blocks
+     * Listen to new blocks
      */
     // *** TODO: May add some new UI changes when a new block/events arrive
     gameContract.provider.on("block", handleNewBlock.on);
