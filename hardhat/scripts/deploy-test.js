@@ -13,11 +13,8 @@ async function main() {
   await spaceship.deployed();
   console.log("Spaceship deployed to:", spaceship.address);
 
-  await spaceship.callStatic.safeMint(process.env.WALLET_ADDRESS);
-  console.log('One NFT minted to', process.env.WALLET_ADDRESS);
-
-  await spaceship.callStatic.startGame();
-  console.log('Game forcefully started');
+  await spaceship.callStatic.mint(69);
+  console.log('68+1 NFTs minted to', process.env.WALLET_ADDRESS);
 
   return [Spaceship, spaceship];
 }

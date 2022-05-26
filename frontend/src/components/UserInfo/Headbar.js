@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import connectWallet from "../../store/userInfo/connectThunk";
+import connect from "../../store/userInfo/connectThunk";
 import userInfoSlice from "../../store/userInfo/userInfoSlice";
 import cl from "./Headbar.module.css";
 
@@ -14,11 +14,11 @@ export default function Headbar() {
   );
   const dispatch = useDispatch();
 
-  // Allow wallet connection after data loaded, but disable again when an address is already detected
+  // Allow connection after data loaded (to prevent error loading the ChossingShip menu), but disable again when an address is connected
   const isConnectable = isDataLoaded && walletAddress === "";
 
   const handleConnect = () => {
-    dispatch(connectWallet());
+    dispatch(connect());
   };
 
   const handleChooseShip = () => {

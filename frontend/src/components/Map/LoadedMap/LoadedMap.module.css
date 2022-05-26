@@ -1,0 +1,17 @@
+.wrapperClass {
+  /** Both the wrapper and the component are set to `fit-content` for both width and height
+   * Set width/height to % of parent to override that behaviour
+   * !!! Setting width/height to ABOSOLUTE units here will make it UNRESPOSIVE instantly
+  */
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.contentClass {
+  width: 100% !important;
+  height: 100% !important;
+
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}

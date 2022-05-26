@@ -38,7 +38,7 @@ export default (function () {
     actionPoints,
     health,
   } = useSelector((state) =>
-    clickedShipIndex ? state.data.shipDataArray[clickedShipIndex] : {}
+    clickedShipIndex !== null ? state.data.shipDataArray[clickedShipIndex] : {}
   );
   const {
     range: ownerChosenShipRange,
@@ -97,7 +97,7 @@ export default (function () {
         </SubInfo>
         <SubInfo>
           <SubInfoProp>CAPTAIN</SubInfoProp>
-          <SubInfoValue clipOverflow>{owner}</SubInfoValue>
+          <SubInfoValue>{owner}</SubInfoValue>
         </SubInfo>
         {health > 0 ? (
           <>
@@ -154,7 +154,7 @@ export default (function () {
               disabled={ownerChosenShipAP <= 0}
               onClick={chooseGiveAP}
             >
-              <span className="h5">Teleport Dark Matter</span>
+              <span className="h4">Teleport Dark Matter</span>
             </Button>
             <Button
               variant="danger"

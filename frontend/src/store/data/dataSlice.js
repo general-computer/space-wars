@@ -3,9 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const dataSlice = createSlice({
   name: "data",
   initialState: {
+    // isDataLoaded: when the contract has replied with results
     isDataLoaded: false,
     mapLength: 0,
     zoneLength: 0,
+    gameStartTime: 0,
     // The array below is has items with this structure:
     /* 
       {
@@ -17,18 +19,21 @@ const dataSlice = createSlice({
         level: genRandomNum(2) + 1,
         actionPoints: genRandomNum(5),
         health: genRandomNum(3),
+        lastSimulatedDay: block.timestamp
       }
     */
     shipDataArray: [],
   },
   reducers: {
     showData(state, action) {
-      const { mapLength, shipDataArray, zoneLength } = action.payload;
+      const { mapLength, shipDataArray, zoneLength, gameStartTime } =
+        action.payload;
       return {
         ...state,
         isDataLoaded: true,
         mapLength,
         zoneLength,
+        gameStartTime,
         shipDataArray,
       };
     },

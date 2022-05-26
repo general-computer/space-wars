@@ -2,16 +2,10 @@
 // https://twitter.com/Kibou_web3
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; // TODO: use a more optimized base
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "erc721a/contracts/ERC721A.sol";
+import "hardhat/console.sol";
 
-contract Spaceship is ERC721, ERC721Burnable, Ownable {
-    using Counters for Counters.Counter;
-
-    // TODO: replace the counter
-    Counters.Counter private _tokenIdCounter;
+contract Spaceship is ERC721A {
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
     int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
     uint56 constant unsignedPlayfieldSize = uint56(playfieldSize);
@@ -35,30 +29,34 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     UnitData[SUPPLY] public s_units;
     uint256 public s_gameStartTime = 0;
 
-    constructor() ERC721("Spaceship", "SHIP") {}
+    constructor() ERC721A("Spaceship", "SHIP") {}
 
     error ExceedsSupply();
+    error GameNotStarted();
 
-    function safeMint(address to) public {
-        uint256 tokenId = _tokenIdCounter.current();
+    function mint(uint256 quantity) public {
+        console.log('mint', quantity);
         if (hasGameStarted())
             revert ExceedsSupply();
 
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        _safeMint(msg.sender, quantity);
 
-        s_units[tokenId] = UnitData({
-            x: 0,
-            y: 0,
+        uint256 tokenId = totalSupply() - quantity;
+        for (; tokenId < totalSupply(); ++tokenId) {
+            s_units[tokenId] = UnitData({
+                x: 0,
+                y: 0,
 
-            level: 0,
-            points: 1,
-            lives: 3,
-            lastSimulatedDay: 0
-        });
+                level: 0,
+                points: 1,
+                lives: 3,
+                lastSimulatedDay: 0
+            });
+        }
 
         if (tokenId == SUPPLY) {
             s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
+            console.log('Started the game.');
         }
     }
 
@@ -66,17 +64,15 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         return SUPPLY;
     }
 
-    function getCurrentSupply() public view returns (uint256) {
-        return _tokenIdCounter.current() + 1;
-    }
-
     //
     // DEBUG
     //
 
+/*
     function startGame() public onlyOwner {
         s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
     }
+*/
 
     function moveGameOneDay() internal {
         s_gameStartTime -= 1 days;
@@ -88,11 +84,14 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     //
 
     function hasGameStarted() public view returns (bool) {
-        //return getCurrentSupply() >= SUPPLY;
+        //return totalSupply() >= SUPPLY;
         return s_gameStartTime != 0;
     }
 
     function getCurrentDay() public view returns (uint56) { // it's prob gonna be shorter than 256 later
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
         return uint56((block.timestamp - s_gameStartTime) / (1 days));
     }
 
@@ -102,27 +101,33 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     }
 
     function getCurrentZoneRadius() public view returns (uint256) {
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
         return getZoneRadius(getCurrentDay());
     }
 
     // TODO: returns true when only 1 player left alive
     function isGameOver() public view returns (bool) {
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
         return false;
     }
 
     // this is where the magic happens
     // simulates 1 day worth of "external" changes to a unit
     function simulateUnitOnce(UnitData memory unit) internal pure returns (UnitData memory) {
-        unit.lastSimulatedDay++;
+        ++unit.lastSimulatedDay;
 
         // take helth from zon
         if (unit.lives > 0 && !inCircle(playfieldSize/2, playfieldSize/2, int56(uint56(getZoneRadius(unit.lastSimulatedDay))), unit.x, unit.y)) {
-            unit.lives--;
+            --unit.lives;
         }
 
         // gib points
         if (unit.lives > 0) {
-            unit.points++;
+            ++unit.points;
         }
 
         return unit;
@@ -131,7 +136,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // simulates the unit out until today
     // TODO: cap the amount of days (according to the block gas limit)
     function simulateUnitOut(UnitData memory unit) internal view returns (UnitData memory) {
-        for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); day++) {
+        for (uint256 day = unit.lastSimulatedDay; day < getCurrentDay(); ++day) {
             unit = simulateUnitOnce(unit);
         }
 
@@ -144,7 +149,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     function getAllUnits() internal view returns (UnitData[SUPPLY] memory) {
         UnitData[SUPPLY] memory units;
-        for (uint256 id = 0; id <= _tokenIdCounter.current(); id++) {
+        for (uint256 id = 0; id < totalSupply(); ++id) {
             units[id] = getUnit(id);
         }
         return units;
@@ -152,10 +157,13 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
     // this function is called by the browser when you open the game
     function getState() external view returns(uint256, uint256, UnitData[SUPPLY] memory, string[SUPPLY] memory) {
-        uint256 amt = _tokenIdCounter.current();
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
+        uint256 amt = totalSupply();
         string[SUPPLY] memory images;
 
-        for (uint256 i = 0; i < amt; i++) {
+        for (uint256 i = 0; i < amt; ++i) {
             images[i] = imageURI(i);
         }
 
@@ -176,11 +184,14 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
     // TODO: check that the slot is empty
     function move(uint256 unit, int56 x, int56 y) public {
         // limit the play field
-        if (x >= 0 || y >= 0 || x < playfieldSize || y < playfieldSize)
+        if (x < 0 || y < 0 || x >= playfieldSize || y >= playfieldSize)
             revert BadArguments();
 
         if (ownerOf(unit) != msg.sender)
             revert NoAccess();
+
+        if (!hasGameStarted())
+            revert GameNotStarted();
 
         UnitData memory data = getUnit(unit);
 
@@ -194,7 +205,7 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if ((data.x == x && data.y == y) || (!inCircle(data.x, data.y, 1, x, y)))
             revert BadArguments();
 
-        data.points--;
+        --data.points;
         data.x = x;
         data.y = y;
         s_units[unit] = data;
@@ -209,6 +220,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
         if (ownerOf(attId) != msg.sender)
             revert NoAccess();
+
+        if (!hasGameStarted())
+            revert GameNotStarted();
 
         UnitData memory att = getUnit(attId);
 
@@ -242,6 +256,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
         if (ownerOf(fromId) != msg.sender)
             revert NoAccess();
 
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
         UnitData memory from = getUnit(fromId);
 
         if (amount > from.points)
@@ -251,6 +268,10 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
             revert DeadSpaceship();
 
         UnitData memory to = getUnit(toId);
+
+        if (!inCircle(from.x, from.y, int56(uint56(from.level) + 1), to.x, to.y))
+            revert BadArguments();
+
         from.points -= amount;
         to.points += amount;
 
@@ -266,6 +287,9 @@ contract Spaceship is ERC721, ERC721Burnable, Ownable {
 
         if (ownerOf(unitId) != msg.sender)
             revert NoAccess();
+
+        if (!hasGameStarted())
+            revert GameNotStarted();
 
         UnitData memory unit = getUnit(unitId);
 

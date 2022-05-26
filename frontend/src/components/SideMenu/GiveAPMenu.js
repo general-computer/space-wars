@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
@@ -29,10 +30,12 @@ export default function GiveAPMenu() {
     (state) => state.sideMenu.clickedShipIndex
   );
   const mockAPIncr = useSelector((state) => state.sideMenu.mockAPIncr);
-  const { avatarString, actionPoints: targetAP } = useSelector(
-    (state) => state.data.shipDataArray[clickedShipIndex]
-  );
-  const { actionPoints: ownerChosenShipAP } = useSelector(
+  const {
+    avatarString,
+    tokenId: targetTokenId,
+    actionPoints: targetAP,
+  } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
+  const { tokenId: ocsTokenId, actionPoints: ownerChosenShipAP } = useSelector(
     (state) => state.data.shipDataArray[ownerChosenShip]
   );
   const dispatch = useDispatch();
@@ -51,6 +54,16 @@ export default function GiveAPMenu() {
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
+  };
+
+  const confirm = () => {
+    dispatch(
+      confirmAction("giveAP", {
+        from: ocsTokenId,
+        to: targetTokenId,
+        amount: mockAPIncr,
+      })
+    );
   };
 
   return (
@@ -87,7 +100,11 @@ export default function GiveAPMenu() {
         <Button variant="outline-light" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="secondary" disabled={mockAPIncr <= 0}>
+        <Button
+          variant="secondary"
+          disabled={mockAPIncr <= 0}
+          onClick={confirm}
+        >
           <span className="h4">Confirm Teleportation</span>
         </Button>
       </ActionBtnsContainer>
