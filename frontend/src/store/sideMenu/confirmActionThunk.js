@@ -1,3 +1,4 @@
+import config from "../../contract/config";
 import gameContractStore from "../../contract/gameContractStore";
 import sideMenuSlice from "./sideMenuSlice";
 
@@ -45,7 +46,7 @@ export default function confirmAction(type, payload) {
         throw new Error("confirmActionThunk: unrecognised action type");
     }
 
-    await tx.wait(gameContractStore.BLOCK_CONFIRMATIONS);
+    await tx.wait(config.BLOCK_CONFIRMATIONS);
 
     // **** For testing only
     alert(successMsgs[type]);

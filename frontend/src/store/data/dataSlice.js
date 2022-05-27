@@ -37,6 +37,30 @@ const dataSlice = createSlice({
         shipDataArray,
       };
     },
+    mapEvent(state, action) {
+      const { actionType } = action.payload;
+      switch (actionType) {
+        case "move":
+          (() => {
+            const { tokenId, x, y } = action.payload;
+            const targetShipIndex = state.shipDataArray.findIndex(
+              (shipData) => shipData.tokenId === tokenId
+            );
+            if (targetShipIndex < 0) {
+              throw new Error(
+                "dataSlice.reducers.mapEvent: tokenId does not match any ships in state.data.shipDataArray"
+              );
+            }
+            Object.assign(state.shipDataArray[targetShipIndex], {
+              posX: x,
+              posY: y,
+            });
+          })();
+          break;
+        default:
+      }
+      console.log(`Event type "${actionType}" successfully mapped`);
+    },
   },
 });
 
