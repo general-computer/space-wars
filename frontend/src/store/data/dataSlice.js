@@ -63,7 +63,7 @@ const dataSlice = createSlice({
               Math.abs(newX - origX),
               Math.abs(newY - origY)
             );
-            const finalAP = getFinalAP(origAP, -moves);
+            const finalAP = getFinalPts(origAP, -moves);
             Object.assign(state.shipDataArray[targetShipIndex], {
               posX: newX,
               posY: newY,
@@ -87,7 +87,7 @@ const dataSlice = createSlice({
             const { range: origRange, actionPoints: origAP } =
               state.shipDataArray[targetShipIndex];
             const rangeIncr = newRange - origRange;
-            const finalAP = getFinalAP(origAP, -rangeIncr);
+            const finalAP = getFinalPts(origAP, -rangeIncr);
             Object.assign(state.shipDataArray[targetShipIndex], {
               range: newRange,
               actionPoints: finalAP,
@@ -114,8 +114,8 @@ const dataSlice = createSlice({
             const { actionPoints: fromOrigAP } =
               state.shipDataArray[fromShipIndex];
             const { actionPoints: toOrigAP } = state.shipDataArray[toShipIndex];
-            const fromFinalAP = getFinalAP(fromOrigAP, -amount);
-            const toFinalAP = getFinalAP(toOrigAP, +amount);
+            const fromFinalAP = getFinalPts(fromOrigAP, -amount);
+            const toFinalAP = getFinalPts(toOrigAP, +amount);
             state.shipDataArray[fromShipIndex].actionPoints = fromFinalAP;
             state.shipDataArray[toShipIndex].actionPoints = toFinalAP;
           })();
@@ -140,8 +140,8 @@ const dataSlice = createSlice({
             const { actionPoints: fromOrigAP } =
               state.shipDataArray[fromShipIndex];
             const { health: toOrigHealth } = state.shipDataArray[toShipIndex];
-            const fromFinalAP = getFinalAP(fromOrigAP, -damage);
-            const toFinalHealth = getFinalAP(toOrigHealth, -damage);
+            const fromFinalAP = getFinalPts(fromOrigAP, -damage);
+            const toFinalHealth = getFinalPts(toOrigHealth, -damage);
             state.shipDataArray[fromShipIndex].actionPoints = fromFinalAP;
             state.shipDataArray[toShipIndex].health = toFinalHealth;
           })();
@@ -184,7 +184,7 @@ const numsAreValid = (numArr, extraTest) => {
   return true;
 };
 
-const getFinalAP = (origAP, change) => {
+const getFinalPts = (origAP, change) => {
   const finalAP = origAP + change;
   if (finalAP < 0) {
     throw new Error(

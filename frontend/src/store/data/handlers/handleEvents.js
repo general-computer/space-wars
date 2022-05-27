@@ -88,7 +88,7 @@ const handleEvents = (function () {
       }
     } catch (error) {
       console.error(error.message);
-      console.warn("Event mapping unsucessful, loading full state again...");
+      console.warn("Event mapping unsuccessful, loading full state again...");
       await loadFullState();
     }
   }
