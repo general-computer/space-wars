@@ -42,26 +42,85 @@ const dataSlice = createSlice({
       switch (actionType) {
         case "move":
           (() => {
-            const { tokenId, x, y } = action.payload;
-            const targetShipIndex = state.shipDataArray.findIndex(
-              (shipData) => shipData.tokenId === tokenId
+            const { tokenId, x: newX, y: newY } = action.payload;
+            const targetShipIndex = getShipIndexFromTokenId(
+              tokenId,
+              state.shipDataArray
             );
-            if (targetShipIndex < 0) {
+            if (!numsAreValid([newX, newY], (num) => num > 0)) {
               throw new Error(
-                "dataSlice.reducers.mapEvent: tokenId does not match any ships in state.data.shipDataArray"
+                `dataSlice.reducers.mapEvent: (${newX},${newY}) are not valid co-ordinates`
               );
             }
+            // check the number of moves for dedecuting APs
+            const {
+              posX: origX,
+              posY: origY,
+              actionPoints: origAP,
+            } = state.shipDataArray[targetShipIndex];
+            const moves = Math.max(
+              Math.abs(newX - origX),
+              Math.abs(newY - origY)
+            );
             Object.assign(state.shipDataArray[targetShipIndex], {
-              posX: x,
-              posY: y,
+              posX: newX,
+              posY: newY,
+              actionPoints: origAP - moves,
             });
           })();
           break;
+        // case "upgrade":
+        //   (() => {
+        //     const { tokenId, level } = action.payload;
+        //     const targetShipIndex = getShipIndexFromTokenId(
+        //       tokenId,
+        //       state.shipDataArray
+        //     );
+        //     if (!numsAreValid([level], (num) => num > 0)) {
+        //       throw new Error(
+        //         `dataSlice.reducers.mapEvent: ${level} is not a valid level`
+        //       );
+        //     }
+        //     Object.assign(state.shipDataArray[targetShipIndex], {
+        //       level,
+        //       /// TODO: how many levels changed and deduct AP!!!
+        //     });
+        //   })();
+        //   break;
         default:
+          throw new Error(
+            `dataSlice.reducers.mapEvent: unrecognised actionType "${actionType}"`
+          );
       }
-      console.log(`Event type "${actionType}" successfully mapped`);
+      console.log(`One "${actionType}" action successfully mapped`);
     },
   },
 });
 
 export default dataSlice;
+
+const getShipIndexFromTokenId = (tokenId, shipDataArray) => {
+  const targetShipIndex = shipDataArray.findIndex(
+    (shipData) => shipData.tokenId === tokenId
+  );
+  if (targetShipIndex < 0) {
+    throw new Error(
+      `dataSlice.getShipIndexFromTokenId: tokenId ${tokenId} does not match any ships in state.data.shipDataArray`
+    );
+  }
+  return targetShipIndex;
+};
+
+const numsAreValid = (numArr, extraTest) => {
+  for (const num of numArr) {
+    if (typeof num !== "number" || isNaN(num)) {
+      return false;
+    }
+    if (typeof extraTest === "function") {
+      if (!extraTest(num)) {
+        return false;
+      }
+    }
+  }
+  return true;
+};

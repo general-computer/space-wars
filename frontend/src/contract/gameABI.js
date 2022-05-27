@@ -11,7 +11,7 @@ const SUPPLY = 69;
 
 const gameABI = [
   "event UnitMoved(uint256 tokenId, int56 x, int56 y)",
-  "event UnitShot(uint256 tokenId, uint8 newHealth)",
+  "event UnitShot(uint256 attId, uint256 victId, uint8 damage)",
   "event UnitUpgraded(uint256 tokenId, uint8 level)",
   "event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount)",
   // From ERC721A: https://chiru-labs.github.io/ERC721A/#/erc721a?id=events
