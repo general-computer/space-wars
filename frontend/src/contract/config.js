@@ -6,9 +6,8 @@ export const chainNames = {
 
 const config = {
   // !!! This contract address may change
-  CONTRACT_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  // Hardhat
-  TARGET_CHAIN: "0x7a69",
+  CONTRACT_ADDRESS: "0xADd7798556e0C226F7174DE27CdC3385bf96F1f3",
+  TARGET_CHAIN: "0x4",
   // Set the required block confirmations here
   BLOCK_CONFIRMATIONS: 1,
 };

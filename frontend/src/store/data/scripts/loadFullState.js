@@ -18,57 +18,53 @@ export default async function loadFullState() {
 
   // !!! allow editing the rawGameState later by doing shallow copy
   const rawGameState = {
-    ...(await gameContract.getState({
-      // !!! Wallet like Metamask will do gas fee estimation but it is both unnecesarry for read-only functions,
-      // and will throw for "Transaction run out of gas". So just hard-code it here.
-      gasLimit: "999999999999999",
-      blockTag: currBlockNum,
-    })),
+    gameStartTime: +(await gameContract.s_gameStartTime()),
   };
   // Add owner details & playfieldSize to rawGameState
-  let tokenIdToOwner = {};
-  let playfieldSize;
-  const ownerReq = rawGameState.allUnits.map(
-    // !!! tokenId HAPPENS to be the same as the indexes in rawGameState.allUnits
-    async (unit, tokenId) => {
-      let owner;
-      try {
-        owner = await gameContract.ownerOf(tokenId, {
-          blockTag: currBlockNum,
-        });
-      } catch (err) {
-        // Allow a token to have no owner, just give warnings
-        console.warn(
-          `initThunk: cannot get owner of tokenId ${tokenId}, is it minted and still has an owner?`
-        );
-        owner = "";
-      }
-      tokenIdToOwner[tokenId] = owner;
-    }
-  );
-  const playfieldSizeReq = (async () => {
-    playfieldSize = +(await gameContract.getPlayfieldSize());
-  })();
-  await Promise.all([...ownerReq, playfieldSizeReq]);
+  // let tokenIdToOwner = {};
+  // let playfieldSize;
+  // const ownerReq = rawGameState.allUnits.map(
+  //   // !!! tokenId HAPPENS to be the same as the indexes in rawGameState.allUnits
+  //   async (unit, tokenId) => {
+  //     let owner;
+  //     try {
+  //       owner = await gameContract.ownerOf(tokenId, {
+  //         blockTag: currBlockNum,
+  //       });
+  //     } catch (err) {
+  //       // Allow a token to have no owner, just give warnings
+  //       console.warn(
+  //         `initThunk: cannot get owner of tokenId ${tokenId}, is it minted and still has an owner?`
+  //       );
+  //       owner = "";
+  //     }
+  //     tokenIdToOwner[tokenId] = owner;
+  //   }
+  // );
+  // const playfieldSizeReq = (async () => {
+  //   playfieldSize = +(await gameContract.getPlayfieldSize());
+  // })();
+  // await Promise.all([...ownerReq, playfieldSizeReq]);
 
-  rawGameState.tokenIdToOwner = tokenIdToOwner;
-  rawGameState.playfieldSize = playfieldSize;
+  // rawGameState.tokenIdToOwner = tokenIdToOwner;
+  // rawGameState.playfieldSize = playfieldSize;
 
   console.log(`Raw game state:`, rawGameState);
 
   /**
    * Process Game state
    */
-  const processedGameState = processGameState(rawGameState);
-  console.log(`Processed game state:`, processedGameState);
+  // const processedGameState = processGameState(rawGameState);
+  // console.log(`Processed game state:`, processedGameState);
 
-  store.dispatch(dataSlice.actions.showData(processedGameState));
+  // store.dispatch(dataSlice.actions.showData(processedGameState));
   /** Alternatively, use loadFakeData() for faking the data loaded */
-  // await dispatch(loadFakeData());
+  await store.dispatch(loadFakeData());
 
   // Tell handlers that we have the latest state
   handleEventStore.gotStateAt(currBlockNum);
   handleNewBlock.gotStateAt(currBlockNum);
   // And log the gameStartTime
-  handleNewBlock.gameStartedAt(processedGameState.gameStartTime);
+  // handleNewBlock.gameStartedAt(processedGameState.gameStartTime);
+  handleNewBlock.gameStartedAt(rawGameState.gameStartTime);
 }

@@ -5,7 +5,7 @@ pragma solidity ^0.8.9;
 import "erc721a/contracts/ERC721A.sol";
 import "hardhat/console.sol";
 
-contract Spaceship is ERC721A {
+contract Spaceship_Real is ERC721A {
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
     int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
     uint56 constant unsignedPlayfieldSize = uint56(playfieldSize);

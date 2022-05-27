@@ -1,6 +1,7 @@
 import userInfoSlice from "../userInfo/userInfoSlice";
 import gameContractStore from "../../contract/gameContractStore";
 import loadFullState from "./scripts/loadFullState";
+
 import handleEvents from "./handlers/handleEvents";
 import handleNewBlock from "./handlers/handleNewBlock";
 import config, { chainNames } from "../../contract/config";
@@ -38,6 +39,7 @@ export default function init() {
     /***************************
      * Load game state
      **************************/
+
     await loadFullState();
 
     /*********************************************************
