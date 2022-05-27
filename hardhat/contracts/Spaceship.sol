@@ -273,9 +273,6 @@ contract Spaceship is ERC721A {
 
         UnitData memory to = getUnit(toId);
 
-        if (!inCircle(from.x, from.y, int56(uint56(from.level) + 1), to.x, to.y))
-            revert BadArguments();
-
         from.points -= amount;
         to.points += amount;
 
