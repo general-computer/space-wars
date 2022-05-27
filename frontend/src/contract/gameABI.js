@@ -27,7 +27,7 @@ const gameABI = [
 
   "function mint(uint256 quantity) public",
   "function getMaxSupply() external pure returns (uint256)",
-  // "function getPlayfieldSize() public pure returns (uint56)",
+  "function getPlayfieldSize() public pure returns (uint56)",
   "function hasGameStarted() public view returns (bool)",
   "function getCurrentDay() public view returns (uint56)",
   "function getCurrentZoneRadius() public view returns (uint256)",
