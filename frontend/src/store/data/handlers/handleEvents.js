@@ -49,7 +49,8 @@ const handleEvents = (function () {
               dataSlice.actions.mapEvent({
                 actionType: "upgrade",
                 tokenId: +tokenId,
-                level: +level,
+                /// Note: `level` in the contract is in the range 0 ~ 2
+                range: +level + 1,
               })
             );
           })();

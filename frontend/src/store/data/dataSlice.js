@@ -11,15 +11,16 @@ const dataSlice = createSlice({
     // The array below is has items with this structure:
     /* 
       {
-        avatarString: "",
-        tokenId: genRandomNum(1000000).toString(),
-        owner: genRandomNum(100000000000).toString(16),
-        posX: genRandomNum(MAP_LENGTH - 1),
-        posY: genRandomNum(MAP_LENGTH - 1),
-        level: genRandomNum(2) + 1,
-        actionPoints: genRandomNum(5),
-        health: genRandomNum(3),
-        lastSimulatedDay: block.timestamp
+        avatarString: images[index],
+        tokenId: index,
+        owner: tokenIdToOwner[tokenId],
+        posX: +x,
+        posY: +y,
+        /// Note: `level` in the contract is in the range 0 ~ 2
+        range: +level + 1,
+        actionPoints: +points,
+        health: +lives,
+        lastSimulatedDay: +lastSimulatedDay,
       }
     */
     shipDataArray: [],
@@ -47,7 +48,7 @@ const dataSlice = createSlice({
               tokenId,
               state.shipDataArray
             );
-            if (!numsAreValid([newX, newY], (num) => num > 0)) {
+            if (!numsAreValid([newX, newY])) {
               throw new Error(
                 `dataSlice.reducers.mapEvent: (${newX},${newY}) are not valid co-ordinates`
               );
@@ -62,31 +63,89 @@ const dataSlice = createSlice({
               Math.abs(newX - origX),
               Math.abs(newY - origY)
             );
+            const finalAP = getFinalAP(origAP, -moves);
             Object.assign(state.shipDataArray[targetShipIndex], {
               posX: newX,
               posY: newY,
-              actionPoints: origAP - moves,
+              actionPoints: finalAP,
             });
           })();
           break;
-        // case "upgrade":
-        //   (() => {
-        //     const { tokenId, level } = action.payload;
-        //     const targetShipIndex = getShipIndexFromTokenId(
-        //       tokenId,
-        //       state.shipDataArray
-        //     );
-        //     if (!numsAreValid([level], (num) => num > 0)) {
-        //       throw new Error(
-        //         `dataSlice.reducers.mapEvent: ${level} is not a valid level`
-        //       );
-        //     }
-        //     Object.assign(state.shipDataArray[targetShipIndex], {
-        //       level,
-        //       /// TODO: how many levels changed and deduct AP!!!
-        //     });
-        //   })();
-        //   break;
+        case "upgrade":
+          (() => {
+            const { tokenId, range: newRange } = action.payload;
+            const targetShipIndex = getShipIndexFromTokenId(
+              tokenId,
+              state.shipDataArray
+            );
+            if (!numsAreValid([newRange])) {
+              throw new Error(
+                `dataSlice.reducers.mapEvent: ${newRange} is not a valid range`
+              );
+            }
+            // Check how much the range has been increased for changing AP
+            const { range: origRange, actionPoints: origAP } =
+              state.shipDataArray[targetShipIndex];
+            const rangeIncr = newRange - origRange;
+            const finalAP = getFinalAP(origAP, -rangeIncr);
+            Object.assign(state.shipDataArray[targetShipIndex], {
+              range: newRange,
+              actionPoints: finalAP,
+            });
+          })();
+          break;
+        case "giveAP":
+          (() => {
+            const { fromTokenId, toTokenId, amount } = action.payload;
+            const fromShipIndex = getShipIndexFromTokenId(
+              fromTokenId,
+              state.shipDataArray
+            );
+            const toShipIndex = getShipIndexFromTokenId(
+              toTokenId,
+              state.shipDataArray
+            );
+            if (!numsAreValid([amount])) {
+              throw new Error(
+                `dataSlice.reducers.mapEvent: ${amount} is not a valid AP amount`
+              );
+            }
+            // Assign final APs
+            const { actionPoints: fromOrigAP } =
+              state.shipDataArray[fromShipIndex];
+            const { actionPoints: toOrigAP } = state.shipDataArray[toShipIndex];
+            const fromFinalAP = getFinalAP(fromOrigAP, -amount);
+            const toFinalAP = getFinalAP(toOrigAP, +amount);
+            state.shipDataArray[fromShipIndex].actionPoints = fromFinalAP;
+            state.shipDataArray[toShipIndex].actionPoints = toFinalAP;
+          })();
+          break;
+        case "shoot":
+          (() => {
+            const { attId, victId, damage } = action.payload;
+            const fromShipIndex = getShipIndexFromTokenId(
+              attId,
+              state.shipDataArray
+            );
+            const toShipIndex = getShipIndexFromTokenId(
+              victId,
+              state.shipDataArray
+            );
+            if (!numsAreValid([damage])) {
+              throw new Error(
+                `dataSlice.reducers.mapEvent: ${damage} is not a valid damage amount`
+              );
+            }
+            // Assign final APs & health
+            const { actionPoints: fromOrigAP } =
+              state.shipDataArray[fromShipIndex];
+            const { health: toOrigHealth } = state.shipDataArray[toShipIndex];
+            const fromFinalAP = getFinalAP(fromOrigAP, -damage);
+            const toFinalHealth = getFinalAP(toOrigHealth, -damage);
+            state.shipDataArray[fromShipIndex].actionPoints = fromFinalAP;
+            state.shipDataArray[toShipIndex].health = toFinalHealth;
+          })();
+          break;
         default:
           throw new Error(
             `dataSlice.reducers.mapEvent: unrecognised actionType "${actionType}"`
@@ -123,4 +182,14 @@ const numsAreValid = (numArr, extraTest) => {
     }
   }
   return true;
+};
+
+const getFinalAP = (origAP, change) => {
+  const finalAP = origAP + change;
+  if (finalAP < 0) {
+    throw new Error(
+      `dataSlice.getFinalAP: finalAP < 0. origAP: ${origAP}, change: ${change}`
+    );
+  }
+  return finalAP;
 };
