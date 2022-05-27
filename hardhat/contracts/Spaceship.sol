@@ -11,7 +11,7 @@ contract Spaceship is ERC721A {
     uint56 constant unsignedPlayfieldSize = uint56(playfieldSize);
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
-    event UnitShot(uint256 tokenId, uint8 newHealth);
+    event UnitShot(uint256 attId, uint256 victId, uint8 damage);
     event UnitUpgraded(uint256 tokenId, uint8 level);
     event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount);
 
@@ -250,7 +250,7 @@ contract Spaceship is ERC721A {
         s_units[attId] = att;
         s_units[victId] = vict;
 
-        emit UnitShot(victId, vict.lives);
+        emit UnitShot(attId, victId, damage);
     }
 
     function givePoints(uint256 fromId, uint256 toId, uint64 amount) public {
