@@ -37,7 +37,7 @@ describe("Spaceship contract", function() {
 
     console.log('\t', 'Deploying the main contract...');
     const ContractFactory = await ethers.getContractFactory("$Spaceship");
-    contract = await ContractFactory.deploy(subscriptionId, vrfCoordinatorAddress);
+    contract = await ContractFactory.deploy(subscriptionId, vrfCoordinatorAddress, "0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc");
   });
 
   describe('mint()', function() {

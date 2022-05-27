@@ -50,7 +50,8 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     // The gas lane to use, which specifies the maximum gas price to bump to.
     // For a list of available gas lanes on each network,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
-    bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
+    //bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
+    bytes32 keyHash;
 
     struct RequestRange {
         uint128 start;
@@ -64,9 +65,10 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     // minting & chainlink vrf code
     //
 
-    constructor(uint64 subscriptionId, address vrfCoordinator) VRFConsumerBaseV2(vrfCoordinator) ERC721A("Spaceship", "SHIP") {
+    constructor(uint64 subscriptionId, address vrfCoordinator, bytes32 _keyHash) VRFConsumerBaseV2(vrfCoordinator) ERC721A("Spaceship", "SHIP") {
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
         s_subscriptionId = subscriptionId;
+        keyHash = _keyHash;
     }
 
     function mint(uint256 quantity) public {
@@ -115,7 +117,6 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
 
             // increment the seed
             seedArray[0] = seedArray[0] + 2;
-            console.log('\tinitialized', tokenId);
         }
 
         // since the order of requests is not guaranteed this won't always work
