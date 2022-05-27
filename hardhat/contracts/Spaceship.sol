@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: MIT
-// https://twitter.com/Kibou_web3
 pragma solidity ^0.8.9;
 
 import "erc721a/contracts/ERC721A.sol";
 import "hardhat/console.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
-contract Spaceship is ERC721A {
+contract Spaceship is ERC721A, VRFConsumerBaseV2 {
+    VRFCoordinatorV2Interface COORDINATOR;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
     int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
     uint56 constant unsignedPlayfieldSize = uint56(playfieldSize);
 
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
-    event UnitShot(uint256 tokenId, uint8 newHealth);
+    event UnitShot(uint256 attId, uint256 victId, uint8 damage);
     event UnitUpgraded(uint256 tokenId, uint8 level);
     event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount);
 
@@ -29,39 +31,122 @@ contract Spaceship is ERC721A {
     UnitData[SUPPLY] public s_units;
     uint256 public s_gameStartTime = 0;
 
-    constructor() ERC721A("Spaceship", "SHIP") {}
+    error GameNotStarted();
+
+    function getMaxSupply() external pure returns (uint256) {
+        return SUPPLY;
+    }
+
+    function getPlayfieldSize() public pure returns (uint56) {
+        return unsignedPlayfieldSize;
+    }
+
+    //
+    // minting & chainlink vrf variables/constants
+    //
+
+    uint64 s_subscriptionId;
+
+    // The gas lane to use, which specifies the maximum gas price to bump to.
+    // For a list of available gas lanes on each network,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
+
+    struct RequestRange {
+        uint128 start;
+        uint128 end;
+    }
+    mapping(uint256 => RequestRange) public s_vrfRequests; // maps request ids to a range of units [(last_unit_at_-1_-1), (s_vrfRequests[requestId]))
 
     error ExceedsSupply();
-    error GameNotStarted();
+
+    //
+    // minting & chainlink vrf code
+    //
+
+    constructor(uint64 subscriptionId, address vrfCoordinator) VRFConsumerBaseV2(vrfCoordinator) ERC721A("Spaceship", "SHIP") {
+        COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
+        s_subscriptionId = subscriptionId;
+    }
 
     function mint(uint256 quantity) public {
         console.log('mint', quantity);
-        if (hasGameStarted())
+        if (totalSupply() >= SUPPLY)
             revert ExceedsSupply();
 
         _safeMint(msg.sender, quantity);
 
-        uint256 tokenId = totalSupply() - quantity;
-        for (; tokenId < totalSupply(); ++tokenId) {
+        uint256 requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            3, // request confirmations
+            uint32(50000 + 30000*quantity), // callback gas limit
+            //4294967295,
+            1 // amount of words
+        );
+
+        s_vrfRequests[requestId] = RequestRange(uint128(totalSupply() - quantity), uint128(totalSupply()));
+        emit RandomWordsRequested(requestId);
+    }
+
+    event ReturnedRandomness(); // todo: better name?
+    event RandomWordsRequested(uint256 requestId);
+
+    function fulfillRandomWords(
+        uint256 requestId, /* requestId */
+        uint256[] memory seedArray // seedArray[0] is the random seed
+    ) internal override {
+        RequestRange memory range = s_vrfRequests[requestId];
+        uint256 lastTokenId = range.end;
+        uint256 tokenId = range.start;
+        console.log('fulfillRandomWords', requestId, seedArray[0]);
+        console.log('from', tokenId, 'until', lastTokenId);
+
+        for (; tokenId < lastTokenId; ++tokenId) {
             s_units[tokenId] = UnitData({
-                x: 0,
-                y: 0,
+                x: int56(uint56(randomRange(seedArray[0], unsignedPlayfieldSize))),
+                y: int56(uint56(randomRange(seedArray[0] + 1, unsignedPlayfieldSize))),
 
                 level: 0,
                 points: 1,
                 lives: 3,
                 lastSimulatedDay: 0
             });
+
+            // increment the seed
+            seedArray[0] = seedArray[0] + 2;
+            console.log('\tinitialized', tokenId);
         }
 
-        if (tokenId == SUPPLY) {
-            s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
-            console.log('Started the game.');
-        }
+        // since the order of requests is not guaranteed this won't always work
+        //if (tokenId == SUPPLY) {
+        //    s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
+        //    console.log('Started the game.');
+        //}
+
+        emit ReturnedRandomness();
     }
 
-    function getMaxSupply() external pure returns (uint256) {
-        return SUPPLY;
+    error UnitsNotMintedYet();
+    error GameAlreadyStarted();
+    error UnitsNotInitializedYet(uint256 uninitializedTokenId);
+
+    function startGame() public {
+        if (totalSupply() != SUPPLY)
+            revert UnitsNotMintedYet();
+
+        if (hasGameStarted())
+            revert GameAlreadyStarted();
+
+        for (uint256 tokenId = 0; tokenId < SUPPLY; ++tokenId) {
+            // checks whether the unit has been initialized
+            // it'd be better to check whether the entire word is 0 but idk how
+            if (s_units[tokenId].lives == 0)
+                revert UnitsNotInitializedYet(tokenId);
+        }
+
+        s_gameStartTime = block.timestamp;
+        console.log('Started the game.');
     }
 
     //
@@ -76,6 +161,13 @@ contract Spaceship is ERC721A {
 
     function moveGameOneDay() internal {
         s_gameStartTime -= 1 days;
+    }
+
+    function unitsTestFormation() internal {
+        s_units[0].x = 0;
+        s_units[0].y = 0;
+        s_units[1].x = 0;
+        s_units[1].y = 0;
     }
 
     //
@@ -246,7 +338,7 @@ contract Spaceship is ERC721A {
         s_units[attId] = att;
         s_units[victId] = vict;
 
-        emit UnitShot(victId, vict.lives);
+        emit UnitShot(attId, victId, damage);
     }
 
     function givePoints(uint256 fromId, uint256 toId, uint64 amount) public {
@@ -269,8 +361,8 @@ contract Spaceship is ERC721A {
 
         UnitData memory to = getUnit(toId);
 
-        if (!inCircle(from.x, from.y, int56(uint56(from.level) + 1), to.x, to.y))
-            revert BadArguments();
+        if (to.lives == 0)
+            revert DeadSpaceship();
 
         from.points -= amount;
         to.points += amount;
@@ -339,5 +431,16 @@ contract Spaceship is ERC721A {
     // is actually a square, am dumb.
     function inCircle(int56 centre_x, int56 centre_y, int56 size, int56 x, int56 y) internal pure returns (bool) {
         return ((abs(centre_x - x) <= size) && (abs(centre_y - y) <= size));
+    }
+
+    // returns a number generated from seed
+    // will always return the same number for the same seed
+    function random(uint256 seed) internal pure returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(seed)));
+    }
+
+    // returns a number in range [0, max)
+    function randomRange(uint256 seed, uint256 max) internal pure returns (uint256) {
+        return random(seed) % max;
     }
 }

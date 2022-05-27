@@ -47,9 +47,7 @@ export default async function loadFullState() {
     }
   );
   const playfieldSizeReq = (async () => {
-    // playfieldSize = +(await gameContract.getPlayfieldSize());
-    // Hard-code it for now
-    playfieldSize = 100;
+    playfieldSize = +(await gameContract.getPlayfieldSize());
   })();
   await Promise.all([...ownerReq, playfieldSizeReq]);
 

@@ -1,11 +1,10 @@
 import { ethers } from "ethers";
 import gameABI from "./gameABI";
+import config from "./config";
 
 const gameContractStore = (function () {
-  // !!! This contract address may change
-  const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  // Set the required block confirmations here
-  const BLOCK_CONFIRMATIONS = 1;
+  const { CONTRACT_ADDRESS, BLOCK_CONFIRMATIONS } = config;
+
   // The extracted contract object
   let _contract;
 
