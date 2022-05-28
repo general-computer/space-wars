@@ -259,18 +259,11 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     }
 
     // this function is called by the browser when you open the game
-    function getState() external view returns(uint256, uint256, UnitData[SUPPLY] memory, string[SUPPLY] memory) {
+    function getState() external view returns(uint256, uint256, UnitData[SUPPLY] memory) {
         if (!hasGameStarted())
             revert GameNotStarted();
 
-        uint256 amt = totalSupply();
-        string[SUPPLY] memory images;
-
-        for (uint256 i = 0; i < amt; ++i) {
-            images[i] = imageURI(i);
-        }
-
-        return (getCurrentZoneRadius(), s_gameStartTime, getAllUnits(), images);
+        return (getCurrentZoneRadius(), s_gameStartTime, getAllUnits());
     }
 
     //

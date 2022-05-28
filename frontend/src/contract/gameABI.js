@@ -33,7 +33,7 @@ const gameABI = [
   "function getCurrentDay() public view returns (uint56)",
   "function getCurrentZoneRadius() public view returns (uint256)",
   "function isGameOver() public view returns (bool)",
-  `function getState() public view returns(uint256 currentZoneRadius, uint256 s_gameStartTime, ${UnitData}[${SUPPLY}] memory allUnits, string[${SUPPLY}] memory images)`,
+  `function getState() public view returns(uint256 currentZoneRadius, uint256 s_gameStartTime, ${UnitData}[${SUPPLY}] memory allUnits)`,
   `function move(uint256 unit, int56 x, int56 y) public`,
   `function shoot(uint256 attId, uint256 victId, uint8 damage) public`,
   `function givePoints(uint256 fromId, uint256 toId, uint56 amount) public`,
