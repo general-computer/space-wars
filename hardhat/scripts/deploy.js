@@ -1,4 +1,7 @@
 const hre = require("hardhat");
+const { networkConfig } = require("./../helper-hardhat-config");
+
+const chainId = network.config.chainId;
 
 async function main() {
   const [signer] = await ethers.getSigners();
@@ -7,9 +10,14 @@ async function main() {
   const balance = await signer.getBalance();
   console.log('balance:', ethers.utils.formatEther(balance));
 
+  subscriptionId = process.env.VRF_SUBSCRIPTION_ID;
+  linkTokenAddress = networkConfig[chainId]["linkToken"];
+  vrfCoordinatorAddress = networkConfig[chainId]["vrfCoordinator"];
+  const keyHash = networkConfig[chainId]["keyHash"];
+
   const Spaceship = await hre.ethers.getContractFactory("Spaceship");
 
-  const spaceship = await Spaceship.deploy();
+  const spaceship = await Spaceship.deploy(subscriptionId, vrfCoordinatorAddress, keyHash);
   await spaceship.deployed();
   console.log("Spaceship deployed to:", spaceship.address);
   return [Spaceship, spaceship];
