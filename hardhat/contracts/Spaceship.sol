@@ -164,7 +164,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     }
 */
 
-    uint256 oneDay = 1 days;
+    uint256 public oneDay = 1 days;
 
     function setGameSpeed(uint256 _oneDay) external onlyOwner {
         oneDay = _oneDay;
