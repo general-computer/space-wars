@@ -3,6 +3,7 @@ import loadFullState from "../scripts/loadFullState";
 
 const handleNewBlock = (function () {
   let _gameStartTime, _lastSyncedDay;
+  let _dayLength = 60 * 60 * 24;
 
   function gameStartedAt(time) {
     _gameStartTime = time;
@@ -13,7 +14,7 @@ const handleNewBlock = (function () {
   }
 
   function _calcIntDay(time) {
-    return Math.floor((time - _gameStartTime) / (60 * 60 * 24));
+    return Math.floor((time - _gameStartTime) / _dayLength);
   }
 
   async function gotStateAt(blockNum) {
@@ -31,6 +32,8 @@ const handleNewBlock = (function () {
     const newTimestamp = (await gameContract.provider.getBlock(blockNum))
       .timestamp;
     console.log("New block timestamp:", newTimestamp);
+
+    _dayLength = await gameContract.oneDay();
 
     /**
      * !!! gameStartTime should never change in real contract, but for testing purpose it may move back
