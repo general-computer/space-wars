@@ -5,8 +5,10 @@ import "erc721a/contracts/ERC721A.sol";
 import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Spaceship is ERC721A, VRFConsumerBaseV2 {
+contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     VRFCoordinatorV2Interface COORDINATOR;
     uint256 constant SUPPLY = 69; // supply has to be a constant or else we have to use dynamic arrays
     int56 constant playfieldSize = 100; // it's (playfieldSize)x(playfieldSize)
@@ -15,7 +17,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     event UnitMoved(uint256 tokenId, int56 x, int56 y);
     event UnitShot(uint256 attId, uint256 victId, uint8 damage);
     event UnitUpgraded(uint256 tokenId, uint8 level);
-    event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint64 amount);
+    event UnitGavePoints(uint256 fromTokenId, uint256 toTokenId, uint56 amount);
 
     // this in theory should take 1 slot
     struct UnitData {
@@ -23,8 +25,9 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
         int56 y;
         uint8 level; // 0 or 1 or 2
         uint8 lives; // 0 (ded) or 1 or 2 or 3
-        uint64 points;
+        uint56 points;
         uint56 lastSimulatedDay;
+        uint8 colorSeed;
     }
 
     // structs in ethers.js https://github.com/ethers-io/ethers.js/issues/315
@@ -112,11 +115,12 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
                 level: 0,
                 points: 1,
                 lives: 3,
-                lastSimulatedDay: 0
+                lastSimulatedDay: 0,
+                colorSeed: uint8(random(seedArray[0] + 2))
             });
 
             // increment the seed
-            seedArray[0] = seedArray[0] + 2;
+            seedArray[0] = seedArray[0] + 3;
         }
 
         // since the order of requests is not guaranteed this won't always work
@@ -160,8 +164,14 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     }
 */
 
+    uint256 oneDay = 1 days;
+
+    function setGameSpeed(uint256 _oneDay) external onlyOwner {
+        oneDay = _oneDay;
+    }
+
     function moveGameOneDay() internal {
-        s_gameStartTime -= 1 days;
+        s_gameStartTime -= oneDay;
     }
 
     function unitsTestFormation() internal {
@@ -185,7 +195,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
         if (!hasGameStarted())
             revert GameNotStarted();
 
-        return uint56((block.timestamp - s_gameStartTime) / (1 days));
+        return uint56((block.timestamp - s_gameStartTime) / oneDay);
     }
 
     // zone size decreases by 1 per day (speed is subject to change)
@@ -342,7 +352,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
         emit UnitShot(attId, victId, damage);
     }
 
-    function givePoints(uint256 fromId, uint256 toId, uint64 amount) public {
+    function givePoints(uint256 fromId, uint256 toId, uint56 amount) public {
         if (fromId == toId || amount == 0)
             revert BadArguments();
 
@@ -407,8 +417,147 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     // metadata
     //
 
-    function imageURI(uint256 _tokenId) public pure returns (string memory) {
-        return string('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
+    string constant g_fill_open_a = '<g fill=';
+    string constant g_fill_open_b = '>';
+    string constant g_fill_close = '</g>';
+
+    string constant rect_x = '<rect x="';
+    string constant x_y = '" y="';
+    string constant y_width = '" width="';
+    string constant w_height = '" height="';
+    string constant h_rect = '"/>';
+
+    uint24[] s_frame_numbers = [ // 34
+        0x090021,
+        0x080111,
+        0x0B0111,
+        0x010211,
+        0x120211,
+        0x07021E,
+        0x0C021E,
+        0x00031D,
+        0x13031D,
+        0x020315,
+        0x110315,
+        0x090321,
+        0x080411,
+        0x0B0411,
+        0x090521,
+        0x030815,
+        0x100815,
+        0x040921,
+        0x0E0921,
+        0x060811,
+        0x0D0811,
+        0x020D31,
+        0x0F0D31,
+        0x010E11,
+        0x120E11,
+        0x050E12,
+        0x0E0E12,
+        0x061031,
+        0x0B1031,
+        0x081111,
+        0x0B1111,
+        0x071211,
+        0x0C1211,
+        0x071361
+    ];
+
+    uint24[] s_wings_numbers = [ // 4
+        0x01031B,
+        0x020815,
+        0x12031B,
+        0x110815
+    ];
+
+    uint24[] s_body_numbers = [ // 5
+        0x08081B,
+        0x0B051B,
+        0x09061C,
+        0x0A061C,
+        0x081241
+    ];
+
+    uint24[] s_extension_numbers = [ // 6
+        0x040A13,
+        0x0E0A13,
+        0x050A14,
+        0x0E0A14,
+        0x060917,
+        0x0D0917
+    ];
+
+    uint24[] s_cockpit_window_numbers = [ // 1
+        0x090421
+    ];
+
+    uint24[] s_cockpit_numbers = [ // 3
+        0x080212,
+        0x090122,
+        0x0B0212
+    ];
+
+    function imageSection(uint24[] storage arr, uint8 seed) internal view returns(string memory) {
+        string memory result = string(abi.encodePacked(g_fill_open_a, randomHsl(seed), g_fill_open_b));
+
+        for (uint256 i = 0; i < arr.length; ++i) {
+            uint24 blob = arr[i];
+            uint8 x = uint8(blob >> 16 & 0x0000FF);
+            uint8 y = uint8(blob >> 8 & 0x0000FF);
+            uint8 w = uint8(blob >> 4 & 0x00000F);
+            uint8 h = uint8(blob & 0x00000F);
+            result = string(abi.encodePacked(result,
+                rect_x,
+                Strings.toString(x),
+                x_y,
+                Strings.toString(y),
+                y_width,
+                Strings.toString(w),
+                w_height,
+                Strings.toString(h)
+            ));
+            result = string(abi.encodePacked(result, h_rect)); // too deep for the stack
+        }
+
+        result = string(abi.encodePacked(result, g_fill_close));
+        return result;
+    }
+
+    function imageURI(uint256 _tokenId) public view returns (string memory) {
+        //return string('data:image/svg+xml, <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="120"> <rect x="14" y="23" width="200" height="50" fill="lime" stroke="black" /> </svg>');
+
+        uint8 seed = s_units[_tokenId].colorSeed;
+        string memory result = string(abi.encodePacked(
+            '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+            '<svg width="500" height="500" version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">'
+        ));
+
+        // ship frame/border
+        result = string(abi.encodePacked(result, imageSection(s_frame_numbers, seed)));
+        ++seed;
+
+        // both wings
+        result = string(abi.encodePacked(result, imageSection(s_wings_numbers, seed)));
+        ++seed;
+
+        // ship body
+        result = string(abi.encodePacked(result, imageSection(s_body_numbers, seed)));
+        ++seed;
+
+        // extension from body to the wings
+        result = string(abi.encodePacked(result, imageSection(s_extension_numbers, seed)));
+        ++seed;
+
+        // cockpit window
+        result = string(abi.encodePacked(result, imageSection(s_cockpit_window_numbers, seed)));
+        ++seed;
+
+        // cockpit
+        result = string(abi.encodePacked(result, imageSection(s_cockpit_numbers, seed)));
+
+        result = string(abi.encodePacked(result, '</svg>'));
+        return result;
     }
 
     // TODO: return properties
@@ -443,5 +592,15 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2 {
     // returns a number in range [0, max)
     function randomRange(uint256 seed, uint256 max) internal pure returns (uint256) {
         return random(seed) % max;
+    }
+
+    function randomHsl(uint8 seed) internal pure returns (string memory) {
+        return string(abi.encodePacked(
+            '"hsl(',
+            Strings.toString(randomRange(seed, 359)),
+            ' 100% ',
+            Strings.toString(randomRange(seed + 1, 40) + 20),
+            '%)"'
+        ));
     }
 }
