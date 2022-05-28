@@ -23,7 +23,9 @@ export const SubInfoProp = styled.span`
   ${(props) => (props.warning ? "color: red" : "")}
 `;
 export const SubInfoValue = styled.span`
-  ${(props) => (props.warning ? "color: red" : "")}
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const StyledSubInfoSvgValue = styled.span`

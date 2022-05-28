@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../../store/sideMenu/sideMenuSlice";
+import { filterAliveShips } from "../../../utils/shipFilters";
 
 import styled from "styled-components/macro";
 import Grid from "../components/Grid";
@@ -25,10 +26,8 @@ export default function ClickableLayer({ zIndex }) {
   );
   const dispatch = useDispatch();
 
-  const aliveShipsData = [];
-  shipDataArray.forEach((shipData, shipIndex) => {
-    if (shipData.health > 0) aliveShipsData.push({ ...shipData, shipIndex });
-  });
+  const aliveShipsData = filterAliveShips(shipDataArray);
+
   const clickedShipData =
     clickedShipIndex === null
       ? []

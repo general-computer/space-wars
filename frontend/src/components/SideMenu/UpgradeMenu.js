@@ -1,11 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import styled from "styled-components/macro";
 import { Button } from "react-bootstrap";
 
-import swordPtSvg from "../../img/sword-optimised.svg";
-import lightningSvg from "../../img/lightning-optimised.svg";
+import rangeSvg from "../../img/range.svg";
+
+import actionPtSvg from "../../img/actionPt.svg";
 
 import MenuContainer from "./components/MenuContainer";
 import MenuHeader from "./components/MenuHeader";
@@ -30,8 +32,12 @@ export default function UpgradeMenu() {
     avatarString,
     range: currRange,
     actionPoints,
+    tokenId,
   } = useSelector((state) => state.data.shipDataArray[clickedShipIndex]);
   const dispatch = useDispatch();
+
+  const mockFinalRange = currRange + mockRangeIncr;
+  const mockRemainingAP = actionPoints - mockRangeIncr;
 
   const tryUpgrade = () => {
     dispatch(sideMenuSlice.actions.tryUpgrade({ currRange }));
@@ -44,6 +50,10 @@ export default function UpgradeMenu() {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
   };
 
+  const confirm = () => {
+    dispatch(confirmAction("upgrade", { tokenId, mockRangeIncr }));
+  };
+
   return (
     <StyledMenuContainer>
       <MenuHeader>Expand</MenuHeader>
@@ -51,23 +61,17 @@ export default function UpgradeMenu() {
       <InfoContainer>
         <SubInfo>
           <SubInfoProp>IMPULSE HORIZON</SubInfoProp>
-          <SubInfoSvgValue
-            repeats={currRange + mockRangeIncr}
-            url={swordPtSvg}
-          />
+          <SubInfoSvgValue repeats={mockFinalRange} url={rangeSvg} />
         </SubInfo>
         <SubInfo>
           <SubInfoProp>DARK MATTER</SubInfoProp>
-          <SubInfoSvgValue
-            repeats={actionPoints - mockRangeIncr}
-            url={lightningSvg}
-          />
+          <SubInfoSvgValue repeats={mockRemainingAP} url={actionPtSvg} />
         </SubInfo>
       </InfoContainer>
 
       <Button
         variant="dark"
-        disabled={currRange + mockRangeIncr >= 3}
+        disabled={mockFinalRange >= 3 || mockRemainingAP <= 0}
         onClick={tryUpgrade}
       >
         <span className="h3">Expand</span>
@@ -84,7 +88,7 @@ export default function UpgradeMenu() {
         <Button variant="outline-dark" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="dark" disabled={mockRangeIncr <= 0}>
+        <Button variant="dark" disabled={mockRangeIncr <= 0} onClick={confirm}>
           <span className="h4">Confirm Expansion</span>
         </Button>
       </ActionBtnsContainer>

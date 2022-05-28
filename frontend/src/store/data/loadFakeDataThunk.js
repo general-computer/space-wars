@@ -1,7 +1,7 @@
 import dataSlice from "./dataSlice";
 
 // **************** The svg code is an example only
-import SHIPS from "./example_ships";
+import SHIPS from "./utils/example_ships";
 
 /******** Generating random sample tank data *****/
 // The first three addresses in HardHat Network
@@ -16,16 +16,20 @@ const MAP_LENGTH = 100;
 const ZONE_LENGTH = 50;
 // Random ship data
 const NUM_OF_SPACESHIPS = 69;
+// Random number generator
+function genRandomNum(maxNum) {
+  return Math.floor(Math.random() * (maxNum + 1));
+}
 const SHIP_DATA_ARRAY = (function () {
   const arr = [];
   for (let i = 0; i < NUM_OF_SPACESHIPS; i++) {
     const ship = {
-      avatarString: SHIPS[genRandomNum(2)],
+      avatarString: SHIPS[genRandomNum(NUM_OF_SPACESHIPS) - 1],
       tokenId: genRandomNum(10000).toString(),
       owner: SAMPLE_OWNERS[genRandomNum(2)],
       posX: genRandomNum(MAP_LENGTH - 1),
       posY: genRandomNum(MAP_LENGTH - 1),
-      // range = level + 1
+      /// Note: range = level + 1
       range: genRandomNum(2) + 1,
       actionPoints: genRandomNum(10),
       health: genRandomNum(3),
@@ -34,9 +38,7 @@ const SHIP_DATA_ARRAY = (function () {
   }
   return arr;
 })();
-function genRandomNum(maxNum) {
-  return Math.floor(Math.random() * (maxNum + 1));
-}
+
 /*****************************************/
 
 /******** Faking data loading delay. Change it to a real data fetching function later ****/
@@ -48,8 +50,8 @@ async function timeoutFunc(timeout) {
   });
 }
 
-export default function loadData() {
-  return async (dispatch, getState) => {
+export default function loadFakeData() {
+  return async (dispatch) => {
     await timeoutFunc(1000);
     dispatch(
       dataSlice.actions.showData({

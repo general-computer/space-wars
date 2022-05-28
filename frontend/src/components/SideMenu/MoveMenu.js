@@ -1,9 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import sideMenuSlice from "../../store/sideMenu/sideMenuSlice";
-import { filterAliveShips } from "../../utils/filterAliveShips";
+import { moveCheck } from "../../utils/moveCheck";
+import confirmAction from "../../store/sideMenu/confirmActionThunk";
 
 import cl from "./MoveMenu.module.css";
-import lightningSvg from "../../img/lightning-optimised.svg";
+import actionPtSvg from "../../img/actionPt.svg";
 
 import { Button } from "react-bootstrap";
 import MenuContainer from "./components/MenuContainer";
@@ -30,43 +31,36 @@ export default (function () {
    * Data processing
    */
   const {
-    avatarString,
-    actionPoints,
-    posX: clickedShipX,
-    posY: clickedShipY,
-  } = shipDataArray[clickedShipIndex];
-  const aliveShipsData = filterAliveShips(shipDataArray);
-  // Calculate how many moves it takes to translate
-  const moves = Math.max(Math.abs(transX), Math.abs(transY));
-  //
-  const translatedX = clickedShipX + transX;
-  const translatedY = clickedShipY + transY;
-  const inRangeEnemyShipsXY = aliveShipsData
-    .filter((shipData) => shipData.shipIndex !== clickedShipIndex)
-    .filter(
-      (enemyShipData) =>
-        Math.abs(enemyShipData.posX - clickedShipX) <= actionPoints &&
-        Math.abs(enemyShipData.posY - clickedShipY) <= actionPoints
-    )
-    .map((inRangeShipData) => ({
-      x: inRangeShipData.posX,
-      y: inRangeShipData.posY,
-    }));
-  // Criteria that disables moves
-  const outOfAP = moves > actionPoints;
-  const outOfMap =
-    translatedX < 0 ||
-    translatedY < 0 ||
-    translatedX > mapLength - 1 ||
-    translatedY > mapLength - 1;
-  const clashEnemyShips = inRangeEnemyShipsXY.some(
-    (enemyXY) => enemyXY.x === translatedX && enemyXY.y === translatedY
-  );
-  const isMoveDisabled =
-    (transX === 0 && transY === 0) || outOfAP || outOfMap || clashEnemyShips;
+    moves,
+    translatedX,
+    translatedY,
+    outOfAP,
+    outOfMap,
+    clashEnemyShips,
+    isMoveAllowed,
+  } = moveCheck({
+    shipDataArray,
+    clickedShipIndex,
+    transX,
+    transY,
+    mapLength,
+  });
+  const { avatarString, actionPoints, tokenId } =
+    shipDataArray[clickedShipIndex];
 
   const goBack = () => {
     dispatch(sideMenuSlice.actions.chooseMenuType("info"));
+  };
+
+  const confirm = () => {
+    // **** Dispatch single transaction for multiple move steps later!
+    if (moves > 1) {
+      alert(
+        "Mulitple moves in one go is disabled for now. Please make moves of one block each time."
+      );
+      throw new Error("confirmMove: multiple moves not allowed at the moment");
+    }
+    dispatch(confirmAction("move", { tokenId, translatedX, translatedY }));
   };
 
   return (
@@ -97,10 +91,7 @@ export default (function () {
         ) : (
           <SubInfo>
             <SubInfoProp>DARK MATTER</SubInfoProp>
-            <SubInfoSvgValue
-              repeats={actionPoints - moves}
-              url={lightningSvg}
-            />
+            <SubInfoSvgValue repeats={actionPoints - moves} url={actionPtSvg} />
           </SubInfo>
         )}
       </InfoContainer>
@@ -109,9 +100,9 @@ export default (function () {
         <Button variant="outline-light" onClick={goBack}>
           <span className="h5">Back to Ship Info</span>
         </Button>
-        <Button variant="light" disabled={isMoveDisabled}>
+        <Button variant="light" disabled={isMoveAllowed} onClick={confirm}>
           <span
-            className={[isMoveDisabled ? cl.disabledText : "", "h3"].join(" ")}
+            className={[isMoveAllowed ? cl.disabledText : "", "h3"].join(" ")}
           >
             Confirm Move
           </span>

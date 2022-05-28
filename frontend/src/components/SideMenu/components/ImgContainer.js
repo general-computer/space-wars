@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 const ImgContainer = styled.div`
   height: 30vh;
   width: 30vh;
-  border: 0.1rem solid black;
+  /* border: 0.1rem solid black; */
   margin-bottom: 1rem;
 
   display: flex;

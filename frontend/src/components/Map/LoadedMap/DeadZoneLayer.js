@@ -30,11 +30,14 @@ export default function DeadZoneLayer({ zIndex }) {
   const deadZoneWidth = (mapLength - zoneLength) / 2;
 
   return (
-    <Grid zIndex={zIndex}>
-      <DeadZone1 deadZoneWidth={deadZoneWidth} />
-      <DeadZone2A deadZoneWidth={deadZoneWidth} />
-      <DeadZone2B deadZoneWidth={deadZoneWidth} />
-      <DeadZone3 deadZoneWidth={deadZoneWidth} />
-    </Grid>
+    // if no dead zone exist yet, renders nothing
+    zoneLength < mapLength && (
+      <Grid zIndex={zIndex}>
+        <DeadZone1 deadZoneWidth={deadZoneWidth} />
+        <DeadZone2A deadZoneWidth={deadZoneWidth} />
+        <DeadZone2B deadZoneWidth={deadZoneWidth} />
+        <DeadZone3 deadZoneWidth={deadZoneWidth} />
+      </Grid>
+    )
   );
 }
