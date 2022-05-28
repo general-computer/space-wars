@@ -5,6 +5,7 @@ import "erc721a/contracts/ERC721A.sol";
 import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -522,8 +523,6 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
 
         uint8 seed = s_units[_tokenId].colorSeed;
         string memory result = string(abi.encodePacked(
-            'data:image/svg+xml, ',
-            '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
             '<svg width="500" height="500" version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">'
         ));
 
@@ -551,7 +550,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
         result = string(abi.encodePacked(result, imageSection(s_cockpit_numbers, seed)));
 
         result = string(abi.encodePacked(result, '</svg>'));
-        return result;
+        return string(abi.encodePacked('data:image/svg+xml;base64,', Base64.encode(bytes(result))));
     }
 
     // TODO: return properties
