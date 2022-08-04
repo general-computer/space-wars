@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("@nomiclabs/hardhat-ethers");
-//require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-etherscan");
 require('hardhat-exposed');
 require("hardhat-gas-reporter");
 
@@ -34,12 +34,12 @@ module.exports = {
 
   },
 
-/*  etherscan: {
+  etherscan: {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
       rinkeby: process.env.ETHERSCAN_API_KEY
     },
-  }*/
+  },
 
   gasReporter: {
     enabled: true,
