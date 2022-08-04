@@ -7,9 +7,11 @@ const gameContractStore = (function () {
 
   // The extracted contract object
   let _contract;
+  let _provider;
 
   async function init() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
+    _provider = provider;
     const signer = provider.getSigner();
     // !!! signer.getAddress will throw if no address is connected in the wallet
     // Such signer cannot sign transactions
@@ -42,6 +44,10 @@ const gameContractStore = (function () {
 
   function getContract() {
     return _contract;
+  }
+
+  function getBaseFee() {
+    return (await provider.getFeeData()).maxFeePerGas;
   }
 
   return {

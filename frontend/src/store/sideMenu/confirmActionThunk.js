@@ -23,24 +23,30 @@ export default function confirmAction(type, payload) {
             // x
             payload.translatedX,
             // y
-            payload.translatedY
+            payload.translatedY,
+            // tax
+            {value: gameContractStore.getBaseFee()}
           );
           break;
         case "upgrade":
-          tx = await contract.upgrade(payload.tokenId, payload.mockRangeIncr);
+          tx = await contract.upgrade(payload.tokenId, payload.mockRangeIncr, {value: gameContractStore.getBaseFee()});
           break;
         case "giveAP":
           tx = await contract.givePoints(
             payload.from,
             payload.to,
-            payload.amount
+            payload.amount,
+            // tax
+            {value: gameContractStore.getBaseFee()}
           );
           break;
         case "attack":
           tx = await contract.shoot(
             payload.attId,
             payload.victId,
-            payload.damage
+            payload.damage,
+            // tax
+            {value: gameContractStore.getBaseFee()}
           );
           break;
         default:
