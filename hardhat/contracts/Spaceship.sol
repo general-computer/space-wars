@@ -75,7 +75,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
         keyHash = _keyHash;
     }
 
-    function mint(uint256 quantity) public {
+    function mint(uint256 quantity) external {
         console.log('mint', quantity);
         if (totalSupply() >= SUPPLY)
             revert ExceedsSupply();
@@ -137,7 +137,7 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     error GameAlreadyStarted();
     error UnitsNotInitializedYet(uint256 uninitializedTokenId);
 
-    function startGame() public {
+    function startGame() external {
         if (totalSupply() != SUPPLY)
             revert UnitsNotMintedYet();
 
@@ -156,11 +156,45 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     }
 
     //
+    // rewards
+    //
+
+    error GameNotFinishedYet();
+    error SendingMoneyFailed();
+
+    // TODO: this only covers the case of a single winner
+    function takePrize(uint256 id) external {
+        if (totalSupply() != SUPPLY)
+            revert UnitsNotMintedYet();
+
+        if (!hasGameStarted())
+            revert GameNotStarted();
+
+        if (ownerOf(id) != msg.sender)
+            revert NoAccess();
+
+        if (getUnit(id).lives == 0)
+            revert DeadSpaceship();
+
+        for (uint i = 0; i < SUPPLY; ++i) {
+            UnitData memory unit = getUnit(i);
+
+            if (unit.lives != 0 && i != id) {
+                revert GameNotFinishedYet();
+            }
+        }
+
+        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        if (!success)
+            revert SendingMoneyFailed();
+    }
+
+    //
     // DEBUG
     //
 
 /*
-    function startGame() public onlyOwner {
+    function startGame() external onlyOwner {
         s_gameStartTime = block.timestamp; // TODO: maybe use a better source of time?
     }
 */
@@ -277,9 +311,14 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     error BadArguments();
     error NoAccess();
     error DeadSpaceship();
+    error NotEnoughTaxMoney();
 
     // TODO: check that the slot is empty
-    function move(uint256 unit, int56 x, int56 y) public {
+    function move(uint256 unit, int56 x, int56 y) external payable {
+        if (msg.value < block.basefee) {
+            revert NotEnoughTaxMoney();
+        }
+
         // limit the play field
         if (x < 0 || y < 0 || x >= playfieldSize || y >= playfieldSize)
             revert BadArguments();
@@ -311,7 +350,11 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
     }
 
     // the damage type matches UnitData.lives type here
-    function shoot(uint256 attId, uint256 victId, uint8 damage) public {
+    function shoot(uint256 attId, uint256 victId, uint8 damage) external payable {
+        if (msg.value < block.basefee) {
+            revert NotEnoughTaxMoney();
+        }
+
         if (attId == victId || damage == 0)
             revert BadArguments();
 
@@ -346,7 +389,11 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
         emit UnitShot(attId, victId, damage);
     }
 
-    function givePoints(uint256 fromId, uint256 toId, uint56 amount) public {
+    function givePoints(uint256 fromId, uint256 toId, uint56 amount) external payable {
+        if (msg.value < block.basefee) {
+            revert NotEnoughTaxMoney();
+        }
+
         if (fromId == toId || amount == 0)
             revert BadArguments();
 
@@ -378,7 +425,11 @@ contract Spaceship is ERC721A, VRFConsumerBaseV2, Ownable {
         emit UnitGavePoints(fromId, toId, amount);
     }
 
-    function upgrade(uint256 unitId, uint8 byLevels) public {
+    function upgrade(uint256 unitId, uint8 byLevels) external payable {
+        if (msg.value < block.basefee) {
+            revert NotEnoughTaxMoney();
+        }
+
         if (byLevels == 0)
             revert BadArguments();
 

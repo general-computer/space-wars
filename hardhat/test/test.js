@@ -6,6 +6,11 @@ const { networkConfig } = require("./../helper-hardhat-config");
 const POINT_ONE_LINK = "100000000000000000";
 
 
+async function getBaseFee() {
+  return (await ethers.provider.getFeeData()).maxFeePerGas;
+}
+
+
 use(solidity)
 
 describe("Spaceship contract", function() {
@@ -42,10 +47,13 @@ describe("Spaceship contract", function() {
   });
 
   describe('mint()', function() {
+    //let signers;
     let owner;
     let requestId;
 
     it('should be able to mint an nft', async function() {
+      //signers = await ethers.getSigners();
+      //console.log('\t', 'signers', signers);
       [owner] = await ethers.getSigners();
       console.log('\t', 'tester/deployer address', owner.address);
 
@@ -163,7 +171,7 @@ describe("Spaceship contract", function() {
   describe('upgrade()', function() {
     it('should allow upgrading', async function() {
       console.log('\t', 'trying to upgrade by 1 level...');
-      const tx = await contract.upgrade(0, 1);
+      const tx = await contract.upgrade(0, 1, {value: await getBaseFee()});
       const txResult = await tx.wait();
       expect(txResult.status).to.equal(1);
 
@@ -175,7 +183,7 @@ describe("Spaceship contract", function() {
 
     it('should fail if unit doesn\'t have enough points', async function() {
       console.log('\t', 'trying to upgrade by 2 more levels (should be impossible)...');
-      await expect(contract.upgrade(0, 2)).to.be.revertedWith('NotEnoughPoints');
+      await expect(contract.upgrade(0, 2, {value: await getBaseFee()})).to.be.revertedWith('NotEnoughPoints');
     });
 
   });
@@ -186,13 +194,13 @@ describe("Spaceship contract", function() {
       const unitPre = await contract.$getUnit(0);
 
       console.log('\t', 'trying to move +(2,0)');
-      await expect(contract.move(0, unitPre.x + 2, unitPre.y)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x + 2, unitPre.y, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
 
       console.log('\t', 'trying to move +(2,0)');
-      await expect(contract.move(0, unitPre.x, unitPre.y + 2)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x, unitPre.y + 2, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
 
       console.log('\t', 'trying to move +(2,2)');
-      await expect(contract.move(0, unitPre.x + 2, unitPre.y + 2)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x + 2, unitPre.y + 2, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
     });
 
     it('should fail to move out of bounds', async function() {
@@ -200,20 +208,20 @@ describe("Spaceship contract", function() {
       const playfield = await contract.$unsignedPlayfieldSize();
 
       console.log('\t', `trying to move -(${playfield},0)`);
-      await expect(contract.move(0, unitPre.x - playfield, unitPre.y)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x - playfield, unitPre.y, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
 
       console.log('\t', `trying to move -(${playfield},0)`);
-      await expect(contract.move(0, unitPre.x, unitPre.y - playfield)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x, unitPre.y - playfield, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
 
       console.log('\t', `trying to move -(${playfield},${playfield})`);
-      await expect(contract.move(0, unitPre.x - playfield, unitPre.y - playfield)).to.be.revertedWith('BadArguments');
+      await expect(contract.move(0, unitPre.x - playfield, unitPre.y - playfield, {value: await getBaseFee()})).to.be.revertedWith('BadArguments');
     });
 
     it('should allow to move', async function() {
       const unitPre = await contract.$getUnit(0);
 
       console.log('\t', 'trying to move 1 square to the bottom-right');
-      const tx = await contract.move(0, unitPre.x + 1, unitPre.y + 1);
+      const tx = await contract.move(0, unitPre.x + 1, unitPre.y + 1, {value: await getBaseFee()});
       const txResult = await tx.wait();
       expect(txResult.status).to.equal(1);
 
@@ -234,7 +242,7 @@ describe("Spaceship contract", function() {
       const unitPre1 = await contract.$getUnit(1);
 
       console.log('\t', `trying to gib ${unitPre1.points + 1}/${unitPre1.points} points from unit 1 to unit 0`);
-      await expect(contract.givePoints(1, 0, unitPre1.points + 1)).to.be.revertedWith('NotEnoughPoints');
+      await expect(contract.givePoints(1, 0, unitPre1.points + 1, {value: await getBaseFee()})).to.be.revertedWith('NotEnoughPoints');
     });
 
     it('should gib points', async function() {
@@ -242,7 +250,7 @@ describe("Spaceship contract", function() {
       const unitPre1 = await contract.$getUnit(1);
 
       console.log('\t', 'trying to gib 1 point from unit 1 to unit 0');
-      const tx = await contract.givePoints(1, 0, 1);
+      const tx = await contract.givePoints(1, 0, 1, {value: await getBaseFee()});
       const txResult = await tx.wait();
       expect(txResult.status).to.equal(1);
 
@@ -263,7 +271,7 @@ describe("Spaceship contract", function() {
       const unitPre1 = await contract.$getUnit(1);
 
       console.log('\t', 'trying to shoot unit 1 with unit 0...');
-      await contract.shoot(0, 1, 1);
+      await contract.shoot(0, 1, 1, {value: await getBaseFee()});
 
       console.log('\t', 'checking the game state');
       const unitPost0 = await contract.$getUnit(0);
