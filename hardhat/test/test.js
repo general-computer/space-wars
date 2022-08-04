@@ -47,13 +47,10 @@ describe("Spaceship contract", function() {
   });
 
   describe('mint()', function() {
-    //let signers;
     let owner;
     let requestId;
 
     it('should be able to mint an nft', async function() {
-      //signers = await ethers.getSigners();
-      //console.log('\t', 'signers', signers);
       [owner] = await ethers.getSigners();
       console.log('\t', 'tester/deployer address', owner.address);
 
